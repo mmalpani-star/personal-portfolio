@@ -31,6 +31,12 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <h1>{project.title}</h1>
           <StatusBadge status={project.status} />
           <p style={{ marginTop: 18 }}>{project.statusNote}</p>
+          {project.achievement ? (
+            <div className="project-achievement project-achievement-detail">
+              <span>{project.achievement.label}</span>
+              <strong>{project.achievement.detail}</strong>
+            </div>
+          ) : null}
           {project.heroMedia ? (
             <div style={{ marginTop: 32 }}>
               <ProjectMediaFrame media={project.heroMedia} metadata={project.shortTitle} priority />
@@ -62,7 +68,10 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
       {project.galleryImages?.length ? (
         <section className="section">
           <PageShell>
-            <SectionHeading eyebrow="Project media" title="Build details" />
+            <SectionHeading
+              eyebrow={project.gallerySection?.eyebrow || 'Project media'}
+              title={project.gallerySection?.title || 'Build details'}
+            />
             <div className="two-col">
               {project.galleryImages.map((media) => (
                 <ProjectMediaFrame key={media.src} media={media} />

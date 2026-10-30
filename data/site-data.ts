@@ -38,6 +38,14 @@ export type Project = {
   externalLinks?: Array<{ label: string; href: string }>;
   sections?: string[];
   nextSteps?: string[];
+  achievement?: {
+    label: string;
+    detail: string;
+  };
+  gallerySection?: {
+    eyebrow: string;
+    title: string;
+  };
   heroMedia?: ProjectMediaItem;
   galleryImages?: ProjectMediaItem[];
   showcaseMedia?: ProjectMediaItem[];
@@ -57,6 +65,11 @@ export type Experience = {
     caption?: string;
     width: number;
     height: number;
+  }>;
+  videos?: Array<{
+    src: string;
+    alt: string;
+    caption?: string;
   }>;
 };
 
@@ -253,6 +266,94 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: 'borderpulse',
+    title: 'BorderPulse',
+    shortTitle: 'BorderPulse',
+    category: 'Hackathon / Logistics',
+    status: 'PROTOTYPE',
+    statusNote: 'Hackathon prototype demonstrated at cOmpiled-16; not a deployed commercial logistics system.',
+    summary:
+      'A logistics platform concept for dispatchers and receivers that helps evaluate border-crossing conditions, identify delays, and make rerouting decisions.',
+    description:
+      'BorderPulse addresses uncertainty in cross-border freight logistics. It helps dispatchers evaluate border-crossing conditions, identify delays, and make rerouting decisions. Its core innovation is an automated driver communication workflow that can contact truck drivers and communicate rerouting instructions, reducing the need for manual coordination.',
+    role: 'cOmpiled-16 UCSD Hackathon project',
+    technologies: ['Logistics', 'Routing Decisions', 'Driver Communication'],
+    github: 'https://github.com/mmalpani-star/borderpulse',
+    highlights: [
+      'Top 7 at the cOmpiled-16 UCSD Hackathon',
+      'Built for dispatchers and receivers navigating cross-border freight uncertainty',
+      'Border-condition and delay awareness for rerouting decisions',
+      'Automated driver communication workflow concept',
+    ],
+    sections: ['Overview', 'Hackathon / Presentation'],
+    achievement: {
+      label: 'cOmpiled-16 UCSD Hackathon',
+      detail: 'Top 7 · 441 participants · 200+ teams',
+    },
+    gallerySection: {
+      eyebrow: 'Hackathon / presentation',
+      title: 'BorderPulse at cOmpiled-16',
+    },
+    heroMedia: {
+      type: 'image',
+      src: '/images/projects/borderpulse/borderpulse-presentation.jpeg',
+      alt: 'BorderPulse presentation at the cOmpiled-16 UCSD Hackathon',
+      caption: 'BorderPulse presentation',
+      width: 2000,
+      height: 1333,
+    },
+    galleryImages: [
+      {
+        type: 'image',
+        src: '/images/projects/borderpulse/borderpulse-demo-setup.jpeg',
+        alt: 'BorderPulse demo setup during the cOmpiled-16 presentation',
+        caption: 'Demo setup',
+        width: 2000,
+        height: 1333,
+      },
+      {
+        type: 'image',
+        src: '/images/projects/borderpulse/borderpulse-demo-walkthrough.jpeg',
+        alt: 'BorderPulse product walkthrough projected during the hackathon',
+        caption: 'Product walkthrough',
+        width: 2000,
+        height: 1333,
+      },
+      {
+        type: 'image',
+        src: '/images/projects/borderpulse/borderpulse-presentation-wide.jpeg',
+        alt: 'BorderPulse team presentation on the cOmpiled-16 stage',
+        caption: 'Presentation stage',
+        width: 2000,
+        height: 1333,
+      },
+      {
+        type: 'video',
+        src: '/videos/projects/borderpulse/borderpulse.mp4',
+        alt: 'BorderPulse project demonstration video',
+        caption: 'BorderPulse demo',
+        poster: '/images/projects/borderpulse/borderpulse-presentation.jpeg',
+      },
+    ],
+    showcaseMedia: [
+      {
+        type: 'video',
+        src: '/videos/projects/borderpulse/borderpulse.mp4',
+        alt: 'BorderPulse project demonstration video',
+        caption: 'BorderPulse demo',
+        poster: '/images/projects/borderpulse/borderpulse-presentation.jpeg',
+      },
+      {
+        type: 'image',
+        src: '/images/projects/borderpulse/borderpulse-demo-walkthrough.jpeg',
+        alt: 'BorderPulse product walkthrough projected during the hackathon',
+        caption: 'Product walkthrough',
+        width: 2000,
+        height: 1333,
+      },
+    ],
+  },
+  {
     slug: 'hydrosafe',
     title: 'HydroSafe',
     shortTitle: 'HydroSafe',
@@ -308,7 +409,7 @@ export const currentlyBuilding: {
   dates: 'Aug 2026 – Present',
   status: 'CURRENTLY BUILDING',
   description:
-    'Working on the legacy center-board design by reviewing power and signal distribution, modifying the PCB during week 2, and building a LM555 timer circuit on a general-purpose board during training. For capstone week 4, I am designing and building an armor panel for the Seafantry robot to be powered and lit independently of the PMM module for testing damage without the robot being connected to the PMM.',
+    'Working on the legacy center-board design by reviewing power and signal distribution, modifying the PCB during week 2, and building a LM555 timer circuit on a general-purpose board during training. For the capstone, I am designing and building a CAN FD transceiver breakout board, with PCB Version 1 followed by PCB Version 3.',
 };
 
 export const experience: Experience[] = [
@@ -334,23 +435,37 @@ export const experience: Experience[] = [
       'Reviewed an older center-board design for power and signal distribution',
       'Modified the center-board PCB during week 2 of training',
       'Built an LM555 timer circuit on a general-purpose board during week 1 and week 3 training',
-      'Designing an armor panel PCB for the Seafantry robot to power and light the panel without being attached to the PMM module',
-      'Capstone project focuses on enabling damage testing independently of the PMM module',
+      'Designing and building a CAN FD transceiver breakout board as the capstone project',
+      'Developed PCB Version 1 and PCB Version 3 in chronological order',
     ],
     images: [
       {
-        src: '/images/experience/triton-center-board.png',
-        alt: 'Triton Robotics center-board PCB layout showing board routing and components',
-        caption: 'Center-board PCB design',
-        width: 1530,
-        height: 968,
+        src: '/images/experience/lm555.jpg',
+        alt: 'LM555 timer circuit prototype',
+        caption: 'LM555 timer prototype',
+        width: 827,
+        height: 1536,
       },
       {
-        src: '/images/experience/triton-electronics-training.jpeg',
-        alt: 'LM555 timer circuit assembled on a general-purpose board',
-        caption: 'LM555 timer',
-        width: 1200,
-        height: 1600,
+        src: '/images/experience/caps_!',
+        alt: 'CAN FD transceiver breakout board PCB Version 1 layout with bottom-layer copper',
+        caption: 'Initial PCB layout — bottom-layer copper',
+        width: 1064,
+        height: 1128,
+      },
+      {
+        src: '/images/experience/caps_3.png',
+        alt: 'CAN FD transceiver breakout board PCB Version 3 layout with top-layer copper',
+        caption: 'Final PCB layout — top-layer copper',
+        width: 498,
+        height: 792,
+      },
+    ],
+    videos: [
+      {
+        src: '/videos/experience/lm555 demo.mp4',
+        alt: 'LM555 timer demonstration',
+        caption: 'LM555 timer demonstration',
       },
     ],
   },

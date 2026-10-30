@@ -167,6 +167,12 @@ export default function HomePage() {
                         <h3>{project.title}</h3>
                         <StatusBadge status={project.status} />
                       </div>
+                      {project.achievement ? (
+                        <div className="project-achievement">
+                          <span>{project.achievement.label}</span>
+                          <strong>{project.achievement.detail}</strong>
+                        </div>
+                      ) : null}
                       <p>{project.summary}</p>
                       {hasVideoDemo ? <span className="project-video-available">Video demonstration</span> : null}
                       <div className="tag-list project-tags">
@@ -287,6 +293,19 @@ export default function HomePage() {
                         height={image.height}
                         sizes="(max-width: 980px) 100vw, 60vw"
                         style={{ width: '100%', height: 'auto' }}
+                      />
+                    </MediaFrame>
+                  ))}
+                  {item.videos?.map((video) => (
+                    <MediaFrame key={video.src} caption={video.caption}>
+                      <video
+                        src={video.src}
+                        aria-label={video.alt}
+                        controls
+                        playsInline
+                        muted
+                        preload="metadata"
+                        style={{ display: 'block', width: '100%', height: 'auto' }}
                       />
                     </MediaFrame>
                   ))}

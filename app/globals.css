@@ -493,6 +493,34 @@ p {
   margin-bottom: 10px;
 }
 
+.project-achievement {
+  display: grid;
+  gap: 4px;
+  margin: 14px 0 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  background: var(--accent-soft);
+}
+
+.project-achievement span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.project-achievement strong {
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.project-achievement-detail {
+  max-width: 720px;
+  margin-top: 20px;
+}
+
 .project-showcase-heading {
   display: flex;
   align-items: flex-start;
