@@ -16,10 +16,15 @@ export type ProjectMediaItem =
     }
   | {
       type: 'video';
+      /** Source for full playback (an optimized derivative where one exists). */
       src: string;
       alt: string;
       caption?: string;
       poster?: string;
+      /** Short, lightweight clip for homepage previews. Falls back to `src`. */
+      previewSrc?: string;
+      width?: number;
+      height?: number;
     };
 
 export type Project = {
@@ -70,6 +75,7 @@ export type Experience = {
     src: string;
     alt: string;
     caption?: string;
+    poster?: string;
   }>;
 };
 
@@ -257,12 +263,12 @@ export const projects: Project[] = [
     },
     galleryImages: [
       { type: 'image', src: '/images/projects/air-quality/AQI readings.jpeg', alt: 'Measurements shown on the air-quality monitor', caption: 'On-device sensor readings', width: 960, height: 1280 },
-      { type: 'video', src: '/videos/projects/air-quality/AQI demo.mp4', alt: 'Air quality monitor demonstration video', caption: 'AQI monitor demo' },
-      { type: 'video', src: '/videos/projects/air-quality/AQI monitor side view.mp4', alt: 'Side view of the air quality monitor', caption: 'Monitor side view' },
+      { type: 'video', src: '/videos/projects/air-quality/AQI demo.mp4', previewSrc: '/videos/projects/air-quality/aqi-demo-preview.mp4', poster: '/images/projects/air-quality/aqi-demo-poster.jpg', width: 480, height: 848, alt: 'Air quality monitor demonstration video', caption: 'AQI monitor demo' },
+      { type: 'video', src: '/videos/projects/air-quality/AQI monitor side view.mp4', poster: '/images/projects/air-quality/aqi-side-view-poster.jpg', width: 848, height: 480, alt: 'Side view of the air quality monitor', caption: 'Monitor side view' },
     ],
     showcaseMedia: [
       { type: 'image', src: '/images/projects/air-quality/AQI readings.jpeg', alt: 'Measurements shown on the air-quality monitor', caption: 'On-device sensor readings', width: 960, height: 1280 },
-      { type: 'video', src: '/videos/projects/air-quality/AQI demo.mp4', alt: 'Air quality monitor demonstration video', caption: 'AQI monitor demo' },
+      { type: 'video', src: '/videos/projects/air-quality/AQI demo.mp4', previewSrc: '/videos/projects/air-quality/aqi-demo-preview.mp4', poster: '/images/projects/air-quality/aqi-demo-poster.jpg', width: 480, height: 848, alt: 'Air quality monitor demonstration video', caption: 'AQI monitor demo' },
     ],
   },
   {
@@ -329,19 +335,25 @@ export const projects: Project[] = [
       },
       {
         type: 'video',
-        src: '/videos/projects/borderpulse/borderpulse.mp4',
+        src: '/videos/projects/borderpulse/borderpulse-720p.mp4',
+        previewSrc: '/videos/projects/borderpulse/borderpulse-preview.mp4',
         alt: 'BorderPulse project demonstration video',
         caption: 'BorderPulse demo',
-        poster: '/images/projects/borderpulse/borderpulse-presentation.jpeg',
+        poster: '/images/projects/borderpulse/borderpulse-demo-poster.jpg',
+        width: 1280,
+        height: 720,
       },
     ],
     showcaseMedia: [
       {
         type: 'video',
-        src: '/videos/projects/borderpulse/borderpulse.mp4',
+        src: '/videos/projects/borderpulse/borderpulse-720p.mp4',
+        previewSrc: '/videos/projects/borderpulse/borderpulse-preview.mp4',
         alt: 'BorderPulse project demonstration video',
         caption: 'BorderPulse demo',
-        poster: '/images/projects/borderpulse/borderpulse-presentation.jpeg',
+        poster: '/images/projects/borderpulse/borderpulse-demo-poster.jpg',
+        width: 1280,
+        height: 720,
       },
       {
         type: 'image',
@@ -447,7 +459,7 @@ export const experience: Experience[] = [
         height: 1536,
       },
       {
-        src: '/images/experience/caps_!',
+        src: '/images/experience/caps_1.png',
         alt: 'CAN FD transceiver breakout board PCB Version 1 layout with bottom-layer copper',
         caption: 'Initial PCB layout — bottom-layer copper',
         width: 1064,
@@ -465,6 +477,7 @@ export const experience: Experience[] = [
       {
         src: '/videos/experience/lm555 demo.mp4',
         alt: 'LM555 timer demonstration',
+        poster: '/images/experience/lm555-demo-poster.jpg',
         caption: 'LM555 timer demonstration',
       },
     ],

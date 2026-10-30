@@ -4,6 +4,7 @@ import { Navbar, PageShell } from '@/components/layout';
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/animation';
 import { ProjectMediaFrame } from '@/components/project/ProjectMediaFrame';
 import { MediaFrame } from '@/components/ui/MediaFrame';
+import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import { Button, Card, SectionHeading, StatusBadge } from '@/components/ui';
 import {
   awards,
@@ -27,7 +28,7 @@ export default function HomePage() {
       <section className="section hero-section">
         <PageShell>
           <div className="hero-grid">
-            <Reveal>
+            <Reveal eager>
               <div className="hero-copy">
                 <div className="eyebrow">01 / Robotics · AI · Physical Systems</div>
                 <h1>Learning to build better robots, one iteration at a time.</h1>
@@ -53,7 +54,7 @@ export default function HomePage() {
               </div>
             </Reveal>
 
-            <Reveal delay={0.08}>
+            <Reveal eager delay={0.08}>
               <div className="hero-visual">
                 <div className="hero-media-placeholder">
                   {heroProject?.heroMedia ? (
@@ -156,6 +157,7 @@ export default function HomePage() {
                           metadata={`${String(index + 1).padStart(2, '0')} / ${project.shortTitle}`}
                           priority={isLeadProject}
                           fit="cover"
+                          aspectRatio="4 / 3"
                           className="project-showcase-frame"
                         />
                       </Link>
@@ -189,6 +191,9 @@ export default function HomePage() {
                               key={media.src}
                               media={media}
                               fit="cover"
+                              aspectRatio="4 / 3"
+                              videoMode="preview"
+                              sizes="(max-width: 768px) 50vw, 300px"
                               className="project-showcase-support-frame"
                             />
                           ))}
@@ -298,15 +303,7 @@ export default function HomePage() {
                   ))}
                   {item.videos?.map((video) => (
                     <MediaFrame key={video.src} caption={video.caption}>
-                      <video
-                        src={video.src}
-                        aria-label={video.alt}
-                        controls
-                        playsInline
-                        muted
-                        preload="metadata"
-                        style={{ display: 'block', width: '100%', height: 'auto' }}
-                      />
+                      <VideoPlayer src={video.src} poster={video.poster} label={video.alt} />
                     </MediaFrame>
                   ))}
                   {item.socialLink ? (

@@ -1,16 +1,22 @@
-import Link from 'next/link';
+import { Navbar, PageShell } from '@/components/layout';
+import { Button } from '@/components/ui';
 
 export default function NotFound() {
   return (
-    <main className="section">
-      <div className="container">
-        <div className="eyebrow">404</div>
-        <h1>Project not found.</h1>
-        <p>The requested project route does not exist or is unavailable.</p>
-        <Link href="/" className="link-button" style={{ marginTop: 12 }}>
-          Return home
-        </Link>
-      </div>
+    <main>
+      <Navbar />
+      <section className="section">
+        <PageShell>
+          <div className="eyebrow">404</div>
+          <h1>Page not found.</h1>
+          <p>The requested page does not exist or is unavailable.</p>
+          <div className="cta-row">
+            <Button href="/" variant="secondary">
+              Return home
+            </Button>
+          </div>
+        </PageShell>
+      </section>
     </main>
   );
 }

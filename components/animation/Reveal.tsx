@@ -3,24 +3,44 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import type { ReactNode } from 'react';
 
+type RevealElement = 'div' | 'section' | 'article' | 'span';
+
 type RevealProps = {
   children: ReactNode;
   className?: string;
   delay?: number;
-  as?: keyof JSX.IntrinsicElements;
+  as?: RevealElement;
+  /**
+   * For above-the-fold content. Uses a CSS entrance animation instead of
+   * Framer Motion so the content is visible in the server-rendered HTML and
+   * never waits on hydration (protects LCP). Reduced motion is handled in CSS.
+   */
+  eager?: boolean;
 };
 
-export function Reveal({ children, className, delay = 0, as = 'div' }: RevealProps) {
+const ElementMap = {
+  div: motion.div,
+  section: motion.section,
+  article: motion.article,
+  span: motion.span,
+} as const;
+
+export function Reveal({ children, className, delay = 0, as = 'div', eager = false }: RevealProps) {
   const reduceMotion = useReducedMotion();
 
-  const ElementMap = {
-    div: motion.div,
-    section: motion.section,
-    article: motion.article,
-    span: motion.span,
-  } as const;
+  if (eager) {
+    const Tag = as;
+    return (
+      <Tag
+        className={`reveal-eager ${className ?? ''}`.trim()}
+        style={delay ? { animationDelay: `${delay}s` } : undefined}
+      >
+        {children}
+      </Tag>
+    );
+  }
 
-  const Component = ElementMap[as as keyof typeof ElementMap] || motion.div;
+  const Component = ElementMap[as];
 
   return (
     <Component
