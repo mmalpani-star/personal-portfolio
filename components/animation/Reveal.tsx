@@ -1,13 +1,14 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
-type RevealElement = 'div' | 'section' | 'article' | 'span';
+type RevealElement = 'div' | 'section' | 'article' | 'span' | 'li';
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   delay?: number;
   as?: RevealElement;
   /**
@@ -23,9 +24,10 @@ const ElementMap = {
   section: motion.section,
   article: motion.article,
   span: motion.span,
+  li: motion.li,
 } as const;
 
-export function Reveal({ children, className, delay = 0, as = 'div', eager = false }: RevealProps) {
+export function Reveal({ children, className, style, delay = 0, as = 'div', eager = false }: RevealProps) {
   const reduceMotion = useReducedMotion();
 
   if (eager) {
@@ -33,7 +35,7 @@ export function Reveal({ children, className, delay = 0, as = 'div', eager = fal
     return (
       <Tag
         className={`reveal-eager ${className ?? ''}`.trim()}
-        style={delay ? { animationDelay: `${delay}s` } : undefined}
+        style={delay ? { ...style, animationDelay: `${delay}s` } : style}
       >
         {children}
       </Tag>
@@ -45,10 +47,11 @@ export function Reveal({ children, className, delay = 0, as = 'div', eager = fal
   return (
     <Component
       className={className}
-      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+      style={style}
+      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
     >
       {children}
     </Component>

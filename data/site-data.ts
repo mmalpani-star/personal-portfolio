@@ -27,8 +27,12 @@ export type ProjectMediaItem =
       height?: number;
     };
 
+/** Controls homepage emphasis: flagship robotics, hardware prototypes, software & hackathons. */
+export type ProjectTier = 'flagship' | 'hardware' | 'software';
+
 export type Project = {
   slug: string;
+  tier: ProjectTier;
   title: string;
   shortTitle: string;
   category: string;
@@ -43,6 +47,10 @@ export type Project = {
   externalLinks?: Array<{ label: string; href: string }>;
   sections?: string[];
   nextSteps?: string[];
+  /** Optional case-study content. Sections render only when provided. */
+  process?: string[];
+  challenges?: string[];
+  learnings?: string[];
   achievement?: {
     label: string;
     detail: string;
@@ -68,6 +76,8 @@ export type Experience = {
     src: string;
     alt: string;
     caption?: string;
+    /** Short label for iteration sequences, e.g. "PCB V1". */
+    label?: string;
     width: number;
     height: number;
   }>;
@@ -106,6 +116,7 @@ export type SecondaryWork = {
 export const projects: Project[] = [
   {
     slug: 'quadruped-leg-kinematics',
+    tier: 'flagship',
     title: 'Quadruped Leg Kinematics',
     shortTitle: 'Quadruped',
     category: 'Robotics / Kinematics',
@@ -157,6 +168,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'hexapod',
+    tier: 'flagship',
     title: 'Custom Hexapod',
     shortTitle: 'Hexapod',
     category: 'Robotics / Mechanical Systems',
@@ -196,6 +208,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'cubesat-antenna-mechanism',
+    tier: 'hardware',
     title: '1U CubeSat Antenna Deployment Mechanism',
     shortTitle: 'CubeSat',
     category: 'Space Systems / Mechanical Design',
@@ -234,6 +247,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'air-quality-monitor',
+    tier: 'hardware',
     title: 'ESP32 Multi-Sensor Air Quality Monitor',
     shortTitle: 'Air Quality',
     category: 'Embedded Systems / IoT',
@@ -273,6 +287,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'borderpulse',
+    tier: 'software',
     title: 'BorderPulse',
     shortTitle: 'BorderPulse',
     category: 'Hackathon / Logistics',
@@ -367,6 +382,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'hydrosafe',
+    tier: 'hardware',
     title: 'HydroSafe',
     shortTitle: 'HydroSafe',
     category: 'Environmental Engineering / Embedded Systems / Mechanical Systems',
@@ -406,6 +422,37 @@ export const projects: Project[] = [
     ],
   },
 ];
+
+const tierOrder: Record<ProjectTier, number> = { flagship: 0, hardware: 1, software: 2 };
+
+/** Projects in presentation order (stable within each tier). */
+export const displayProjects: Project[] = [...projects].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]);
+
+export type HeroAnnotation = {
+  /** Anchor position as a fraction of the image width / height. */
+  x: number;
+  y: number;
+  label: string;
+  value: string;
+  side: 'left' | 'right';
+};
+
+/**
+ * Hero callouts. Every value is taken from the verified project data above
+ * (hexapod and quadruped highlights / status notes).
+ */
+export const heroAnnotations: { desktop: HeroAnnotation[]; mobile: HeroAnnotation[]; desktopSpan: string } = {
+  desktop: [
+    { x: 0.52, y: 0.36, label: 'Hexapod', value: 'Mechanical assembly complete', side: 'right' },
+    { x: 0.696, y: 0.61, label: 'Actuation', value: '18 × MG996R servos', side: 'right' },
+    { x: 0.886, y: 0.457, label: 'Structure', value: '20+ 3D-printed parts', side: 'left' },
+  ],
+  desktopSpan: '≈ 70 cm wide',
+  mobile: [
+    { x: 0.38, y: 0.31, label: 'Quadruped', value: '4 × 3-DOF legs', side: 'right' },
+    { x: 0.79, y: 0.62, label: 'Leg', value: 'Coxa · Femur · Tibia', side: 'left' },
+  ],
+};
 
 export const currentlyBuilding: {
   organization: string;
@@ -455,6 +502,7 @@ export const experience: Experience[] = [
         src: '/images/experience/lm555.jpg',
         alt: 'LM555 timer circuit prototype',
         caption: 'LM555 timer prototype',
+        label: 'LM555',
         width: 827,
         height: 1536,
       },
@@ -462,6 +510,7 @@ export const experience: Experience[] = [
         src: '/images/experience/caps_1.png',
         alt: 'CAN FD transceiver breakout board PCB Version 1 layout with bottom-layer copper',
         caption: 'Initial PCB layout — bottom-layer copper',
+        label: 'PCB V1',
         width: 1064,
         height: 1128,
       },
@@ -469,6 +518,7 @@ export const experience: Experience[] = [
         src: '/images/experience/caps_3.png',
         alt: 'CAN FD transceiver breakout board PCB Version 3 layout with top-layer copper',
         caption: 'Final PCB layout — top-layer copper',
+        label: 'PCB V3',
         width: 498,
         height: 792,
       },

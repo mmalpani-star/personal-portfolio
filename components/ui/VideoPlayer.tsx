@@ -15,17 +15,29 @@ type VideoPlayerProps = {
    * never autoplays when the viewer prefers reduced motion.
    */
   mode?: 'player' | 'preview';
+  /** Preview only: when set, playback follows this flag (e.g. hover) instead of visibility. */
+  playing?: boolean;
   className?: string;
   style?: CSSProperties;
 };
 
-export function VideoPlayer({ src, label, poster, mode = 'player', className = '', style }: VideoPlayerProps) {
+export function VideoPlayer({ src, label, poster, mode = 'player', playing, className = '', style }: VideoPlayerProps) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const video = ref.current;
-    if (mode !== 'preview' || !video || reduceMotion) return;
+    if (mode !== 'preview' || !video || playing === undefined) return;
+    if (playing && !reduceMotion) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [mode, playing, reduceMotion]);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (mode !== 'preview' || !video || reduceMotion || playing !== undefined) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -42,7 +54,7 @@ export function VideoPlayer({ src, label, poster, mode = 'player', className = '
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, [mode, reduceMotion]);
+  }, [mode, playing, reduceMotion]);
 
   if (mode === 'preview') {
     return (
