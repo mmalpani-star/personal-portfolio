@@ -1,22 +1,43 @@
 import Image from 'next/image';
 import { MediaFrame } from '@/components/ui/MediaFrame';
+import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import type { ProjectMediaItem } from '@/data/site-data';
 
 type ProjectMediaFrameProps = {
   media: ProjectMediaItem;
   metadata?: string;
   priority?: boolean;
+  /**
+   * `natural`: render at the media's own aspect ratio (images and full video players).
+   * `cover`: fill a box, cropping to fit. The box uses `aspectRatio` when given,
+   * otherwise the media's own ratio, so nothing is forced into 4:3 by default.
+   */
   fit?: 'cover' | 'natural';
+  aspectRatio?: string;
+  /** Videos only. Use `preview` for lightweight looping previews on overview pages. */
+  videoMode?: 'player' | 'preview';
+  sizes?: string;
   className?: string;
 };
+
+function nativeRatio(media: ProjectMediaItem) {
+  if (media.type === 'image') return `${media.width} / ${media.height}`;
+  return media.width && media.height ? `${media.width} / ${media.height}` : '16 / 9';
+}
 
 export function ProjectMediaFrame({
   media,
   metadata,
   priority = false,
   fit = 'natural',
+  aspectRatio,
+  videoMode = 'player',
+  sizes = '(max-width: 768px) 100vw, 1240px',
   className = '',
 }: ProjectMediaFrameProps) {
+  const isPreview = media.type === 'video' && videoMode === 'preview';
+  const useBox = fit === 'cover' || isPreview;
+
   return (
     <MediaFrame
       caption={media.caption}
@@ -24,16 +45,15 @@ export function ProjectMediaFrame({
       className={`project-media-frame project-media-frame--${media.type} ${className}`.trim()}
     >
       {media.type === 'image' ? (
-        fit === 'cover' ? (
-          <div className="project-media-cover">
+        useBox ? (
+          <div className="media-box" style={{ aspectRatio: aspectRatio ?? nativeRatio(media) }}>
             <Image
               src={media.src}
               alt={media.alt}
               fill
               priority={priority}
-              loading={priority ? 'eager' : 'lazy'}
               style={{ objectFit: 'cover' }}
-              sizes="(max-width: 768px) 100vw, 1180px"
+              sizes={sizes}
             />
           </div>
         ) : (
@@ -43,34 +63,22 @@ export function ProjectMediaFrame({
             width={media.width}
             height={media.height}
             priority={priority}
-            loading={priority ? 'eager' : 'lazy'}
             style={{ width: '100%', height: 'auto' }}
-            sizes="(max-width: 768px) 100vw, 1180px"
+            sizes={sizes}
           />
         )
-      ) : fit === 'cover' ? (
-        <div className="project-media-cover project-media-cover--video">
-          <video
-            src={media.src}
-            aria-label={media.alt}
+      ) : useBox ? (
+        <div className="media-box" style={{ aspectRatio: aspectRatio ?? nativeRatio(media) }}>
+          <VideoPlayer
+            src={isPreview ? media.previewSrc ?? media.src : media.src}
             poster={media.poster}
-            controls
-            playsInline
-            muted
-            preload="metadata"
+            label={media.alt}
+            mode={videoMode}
           />
+          {isPreview ? <span className="video-preview-badge">Preview</span> : null}
         </div>
       ) : (
-        <video
-          src={media.src}
-          aria-label={media.alt}
-          poster={media.poster}
-          controls
-          playsInline
-          muted
-          preload="metadata"
-          style={{ display: 'block', width: '100%', height: 'auto' }}
-        />
+        <VideoPlayer src={media.src} poster={media.poster} label={media.alt} mode="player" />
       )}
     </MediaFrame>
   );

@@ -16,14 +16,23 @@ export type ProjectMediaItem =
     }
   | {
       type: 'video';
+      /** Source for full playback (an optimized derivative where one exists). */
       src: string;
       alt: string;
       caption?: string;
       poster?: string;
+      /** Short, lightweight clip for homepage previews. Falls back to `src`. */
+      previewSrc?: string;
+      width?: number;
+      height?: number;
     };
+
+/** Controls homepage emphasis: flagship robotics, hardware prototypes, software & hackathons. */
+export type ProjectTier = 'flagship' | 'hardware' | 'software';
 
 export type Project = {
   slug: string;
+  tier: ProjectTier;
   title: string;
   shortTitle: string;
   category: string;
@@ -38,6 +47,18 @@ export type Project = {
   externalLinks?: Array<{ label: string; href: string }>;
   sections?: string[];
   nextSteps?: string[];
+  /** Optional case-study content. Sections render only when provided. */
+  process?: string[];
+  challenges?: string[];
+  learnings?: string[];
+  achievement?: {
+    label: string;
+    detail: string;
+  };
+  gallerySection?: {
+    eyebrow: string;
+    title: string;
+  };
   heroMedia?: ProjectMediaItem;
   galleryImages?: ProjectMediaItem[];
   showcaseMedia?: ProjectMediaItem[];
@@ -55,8 +76,16 @@ export type Experience = {
     src: string;
     alt: string;
     caption?: string;
+    /** Short label for iteration sequences, e.g. "PCB V1". */
+    label?: string;
     width: number;
     height: number;
+  }>;
+  videos?: Array<{
+    src: string;
+    alt: string;
+    caption?: string;
+    poster?: string;
   }>;
 };
 
@@ -87,6 +116,7 @@ export type SecondaryWork = {
 export const projects: Project[] = [
   {
     slug: 'quadruped-leg-kinematics',
+    tier: 'flagship',
     title: 'Quadruped Leg Kinematics',
     shortTitle: 'Quadruped',
     category: 'Robotics / Kinematics',
@@ -138,6 +168,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'hexapod',
+    tier: 'flagship',
     title: 'Custom Hexapod',
     shortTitle: 'Hexapod',
     category: 'Robotics / Mechanical Systems',
@@ -177,6 +208,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'cubesat-antenna-mechanism',
+    tier: 'hardware',
     title: '1U CubeSat Antenna Deployment Mechanism',
     shortTitle: 'CubeSat',
     category: 'Space Systems / Mechanical Design',
@@ -215,6 +247,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'air-quality-monitor',
+    tier: 'hardware',
     title: 'ESP32 Multi-Sensor Air Quality Monitor',
     shortTitle: 'Air Quality',
     category: 'Embedded Systems / IoT',
@@ -244,16 +277,112 @@ export const projects: Project[] = [
     },
     galleryImages: [
       { type: 'image', src: '/images/projects/air-quality/AQI readings.jpeg', alt: 'Measurements shown on the air-quality monitor', caption: 'On-device sensor readings', width: 960, height: 1280 },
-      { type: 'video', src: '/videos/projects/air-quality/AQI demo.mp4', alt: 'Air quality monitor demonstration video', caption: 'AQI monitor demo' },
-      { type: 'video', src: '/videos/projects/air-quality/AQI monitor side view.mp4', alt: 'Side view of the air quality monitor', caption: 'Monitor side view' },
+      { type: 'video', src: '/videos/projects/air-quality/AQI demo.mp4', previewSrc: '/videos/projects/air-quality/aqi-demo-preview.mp4', poster: '/images/projects/air-quality/aqi-demo-poster.jpg', width: 480, height: 848, alt: 'Air quality monitor demonstration video', caption: 'AQI monitor demo' },
+      { type: 'video', src: '/videos/projects/air-quality/AQI monitor side view.mp4', poster: '/images/projects/air-quality/aqi-side-view-poster.jpg', width: 848, height: 480, alt: 'Side view of the air quality monitor', caption: 'Monitor side view' },
     ],
     showcaseMedia: [
       { type: 'image', src: '/images/projects/air-quality/AQI readings.jpeg', alt: 'Measurements shown on the air-quality monitor', caption: 'On-device sensor readings', width: 960, height: 1280 },
-      { type: 'video', src: '/videos/projects/air-quality/AQI demo.mp4', alt: 'Air quality monitor demonstration video', caption: 'AQI monitor demo' },
+      { type: 'video', src: '/videos/projects/air-quality/AQI demo.mp4', previewSrc: '/videos/projects/air-quality/aqi-demo-preview.mp4', poster: '/images/projects/air-quality/aqi-demo-poster.jpg', width: 480, height: 848, alt: 'Air quality monitor demonstration video', caption: 'AQI monitor demo' },
+    ],
+  },
+  {
+    slug: 'borderpulse',
+    tier: 'software',
+    title: 'BorderPulse',
+    shortTitle: 'BorderPulse',
+    category: 'Hackathon / Logistics',
+    status: 'PROTOTYPE',
+    statusNote: 'Hackathon prototype demonstrated at cOmpiled-16; not a deployed commercial logistics system.',
+    summary:
+      'A logistics platform concept for dispatchers and receivers that helps evaluate border-crossing conditions, identify delays, and make rerouting decisions.',
+    description:
+      'BorderPulse addresses uncertainty in cross-border freight logistics. It helps dispatchers evaluate border-crossing conditions, identify delays, and make rerouting decisions. Its core innovation is an automated driver communication workflow that can contact truck drivers and communicate rerouting instructions, reducing the need for manual coordination.',
+    role: 'cOmpiled-16 UCSD Hackathon project',
+    technologies: ['Logistics', 'Routing Decisions', 'Driver Communication'],
+    github: 'https://github.com/mmalpani-star/borderpulse',
+    highlights: [
+      'Top 7 at the cOmpiled-16 UCSD Hackathon',
+      'Built for dispatchers and receivers navigating cross-border freight uncertainty',
+      'Border-condition and delay awareness for rerouting decisions',
+      'Automated driver communication workflow concept',
+    ],
+    sections: ['Overview', 'Hackathon / Presentation'],
+    achievement: {
+      label: 'cOmpiled-16 UCSD Hackathon',
+      detail: 'Top 7 · 441 participants · 200+ teams',
+    },
+    gallerySection: {
+      eyebrow: 'Hackathon / presentation',
+      title: 'BorderPulse at cOmpiled-16',
+    },
+    heroMedia: {
+      type: 'image',
+      src: '/images/projects/borderpulse/borderpulse-presentation.jpeg',
+      alt: 'BorderPulse presentation at the cOmpiled-16 UCSD Hackathon',
+      caption: 'BorderPulse presentation',
+      width: 2000,
+      height: 1333,
+    },
+    galleryImages: [
+      {
+        type: 'image',
+        src: '/images/projects/borderpulse/borderpulse-demo-setup.jpeg',
+        alt: 'BorderPulse demo setup during the cOmpiled-16 presentation',
+        caption: 'Demo setup',
+        width: 2000,
+        height: 1333,
+      },
+      {
+        type: 'image',
+        src: '/images/projects/borderpulse/borderpulse-demo-walkthrough.jpeg',
+        alt: 'BorderPulse product walkthrough projected during the hackathon',
+        caption: 'Product walkthrough',
+        width: 2000,
+        height: 1333,
+      },
+      {
+        type: 'image',
+        src: '/images/projects/borderpulse/borderpulse-presentation-wide.jpeg',
+        alt: 'BorderPulse team presentation on the cOmpiled-16 stage',
+        caption: 'Presentation stage',
+        width: 2000,
+        height: 1333,
+      },
+      {
+        type: 'video',
+        src: '/videos/projects/borderpulse/borderpulse-720p.mp4',
+        previewSrc: '/videos/projects/borderpulse/borderpulse-preview.mp4',
+        alt: 'BorderPulse project demonstration video',
+        caption: 'BorderPulse demo',
+        poster: '/images/projects/borderpulse/borderpulse-demo-poster.jpg',
+        width: 1280,
+        height: 720,
+      },
+    ],
+    showcaseMedia: [
+      {
+        type: 'video',
+        src: '/videos/projects/borderpulse/borderpulse-720p.mp4',
+        previewSrc: '/videos/projects/borderpulse/borderpulse-preview.mp4',
+        alt: 'BorderPulse project demonstration video',
+        caption: 'BorderPulse demo',
+        poster: '/images/projects/borderpulse/borderpulse-demo-poster.jpg',
+        width: 1280,
+        height: 720,
+      },
+      {
+        type: 'image',
+        src: '/images/projects/borderpulse/borderpulse-demo-walkthrough.jpeg',
+        alt: 'BorderPulse product walkthrough projected during the hackathon',
+        caption: 'Product walkthrough',
+        width: 2000,
+        height: 1333,
+      },
     ],
   },
   {
     slug: 'hydrosafe',
+    tier: 'hardware',
     title: 'HydroSafe',
     shortTitle: 'HydroSafe',
     category: 'Environmental Engineering / Embedded Systems / Mechanical Systems',
@@ -294,6 +423,37 @@ export const projects: Project[] = [
   },
 ];
 
+const tierOrder: Record<ProjectTier, number> = { flagship: 0, hardware: 1, software: 2 };
+
+/** Projects in presentation order (stable within each tier). */
+export const displayProjects: Project[] = [...projects].sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier]);
+
+export type HeroAnnotation = {
+  /** Anchor position as a fraction of the image width / height. */
+  x: number;
+  y: number;
+  label: string;
+  value: string;
+  side: 'left' | 'right';
+};
+
+/**
+ * Hero callouts. Every value is taken from the verified project data above
+ * (hexapod and quadruped highlights / status notes).
+ */
+export const heroAnnotations: { desktop: HeroAnnotation[]; mobile: HeroAnnotation[]; desktopSpan: string } = {
+  desktop: [
+    { x: 0.52, y: 0.36, label: 'Hexapod', value: 'Mechanical assembly complete', side: 'right' },
+    { x: 0.696, y: 0.61, label: 'Actuation', value: '18 × MG996R servos', side: 'right' },
+    { x: 0.886, y: 0.457, label: 'Structure', value: '20+ 3D-printed parts', side: 'left' },
+  ],
+  desktopSpan: '≈ 70 cm wide',
+  mobile: [
+    { x: 0.38, y: 0.31, label: 'Quadruped', value: '4 × 3-DOF legs', side: 'right' },
+    { x: 0.79, y: 0.62, label: 'Leg', value: 'Coxa · Femur · Tibia', side: 'left' },
+  ],
+};
+
 export const currentlyBuilding: {
   organization: string;
   team: string;
@@ -308,7 +468,7 @@ export const currentlyBuilding: {
   dates: 'Aug 2026 – Present',
   status: 'CURRENTLY BUILDING',
   description:
-    'Working on the legacy center-board design by reviewing power and signal distribution, modifying the PCB during week 2, and building a LM555 timer circuit on a general-purpose board during training. For capstone week 4, I am designing and building an armor panel for the Seafantry robot to be powered and lit independently of the PMM module for testing damage without the robot being connected to the PMM.',
+    'Working on the legacy center-board design by reviewing power and signal distribution, modifying the PCB during week 2, and building a LM555 timer circuit on a general-purpose board during training. For the capstone, I am designing and building a CAN FD transceiver breakout board, with PCB Version 1 followed by PCB Version 3.',
 };
 
 export const experience: Experience[] = [
@@ -334,23 +494,41 @@ export const experience: Experience[] = [
       'Reviewed an older center-board design for power and signal distribution',
       'Modified the center-board PCB during week 2 of training',
       'Built an LM555 timer circuit on a general-purpose board during week 1 and week 3 training',
-      'Designing an armor panel PCB for the Seafantry robot to power and light the panel without being attached to the PMM module',
-      'Capstone project focuses on enabling damage testing independently of the PMM module',
+      'Designing and building a CAN FD transceiver breakout board as the capstone project',
+      'Developed PCB Version 1 and PCB Version 3 in chronological order',
     ],
     images: [
       {
-        src: '/images/experience/triton-center-board.png',
-        alt: 'Triton Robotics center-board PCB layout showing board routing and components',
-        caption: 'Center-board PCB design',
-        width: 1530,
-        height: 968,
+        src: '/images/experience/lm555.jpg',
+        alt: 'LM555 timer circuit prototype',
+        caption: 'LM555 timer prototype',
+        label: 'LM555',
+        width: 827,
+        height: 1536,
       },
       {
-        src: '/images/experience/triton-electronics-training.jpeg',
-        alt: 'LM555 timer circuit assembled on a general-purpose board',
-        caption: 'LM555 timer',
-        width: 1200,
-        height: 1600,
+        src: '/images/experience/caps_1.png',
+        alt: 'CAN FD transceiver breakout board PCB Version 1 layout with bottom-layer copper',
+        caption: 'Initial PCB layout — bottom-layer copper',
+        label: 'PCB V1',
+        width: 1064,
+        height: 1128,
+      },
+      {
+        src: '/images/experience/caps_3.png',
+        alt: 'CAN FD transceiver breakout board PCB Version 3 layout with top-layer copper',
+        caption: 'Final PCB layout — top-layer copper',
+        label: 'PCB V3',
+        width: 498,
+        height: 792,
+      },
+    ],
+    videos: [
+      {
+        src: '/videos/experience/lm555 demo.mp4',
+        alt: 'LM555 timer demonstration',
+        poster: '/images/experience/lm555-demo-poster.jpg',
+        caption: 'LM555 timer demonstration',
       },
     ],
   },
