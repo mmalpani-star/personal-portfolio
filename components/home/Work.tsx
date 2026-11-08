@@ -49,13 +49,15 @@ export function Work() {
           <>
             <div className={styles.tierHead}>
               <span className="label">Software & hackathons</span>
-              <span className={styles.tierCount}>{pad(software.length)} project</span>
+              <span className={styles.tierCount}>{pad(software.length)} {software.length === 1 ? 'project' : 'projects'}</span>
             </div>
-            {software.map(({ project, number }) => (
-              <Reveal key={project.slug}>
-                <SoftwareProject project={project} number={number} />
-              </Reveal>
-            ))}
+            <div className={styles.softwareList}>
+              {software.map(({ project, number }) => (
+                <Reveal key={project.slug}>
+                  <SoftwareProject project={project} number={number} />
+                </Reveal>
+              ))}
+            </div>
           </>
         ) : null}
       </div>

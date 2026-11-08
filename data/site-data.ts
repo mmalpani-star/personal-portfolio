@@ -286,6 +286,61 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: 'tritonspend-ai',
+    tier: 'software',
+    title: 'TritonSpend AI',
+    shortTitle: 'TritonSpend',
+    category: 'AI / Web Application',
+    status: 'COMPLETED',
+    statusNote:
+      'Live at tritonspend-ai.vercel.app. Venue stations do not show menus yet because permission to use official UC San Diego dining data has not been granted.',
+    summary:
+      'A web app that helps UC San Diego students make their Dining Dollars and Triton Cash last to the end of the term.',
+    description:
+      'Many UC San Diego students find it difficult to manage their Dining Dollars and Triton Cash, and run short by the end of the term. TritonSpend AI helps them become responsible, calculative spenders: it keeps both wallets side by side, tracks a spending trajectory, and forecasts whether each balance will last through any stretch of the quarter. It also recommends nearby food options, and its Food Chat lets students talk about food options and share what they thought of what they had. I built it through vibe coding with GitHub Copilot, ChatGPT and Claude Code.',
+    role: 'Independent builder — vibe coding',
+    technologies: ['Next.js', 'FastAPI', 'PostgreSQL', 'Vibe coding'],
+    highlights: [
+      'Dining Dollars and Triton Cash tracked as separate wallets, to the exact cent',
+      'Spending trajectory with predicted and ideal paths, plus forecasts for any stretch of the quarter',
+      'Food Nearby recommendations and a Food Chat for sharing what you ate',
+      'Vibe-coded with GitHub Copilot, ChatGPT and Claude Code',
+    ],
+    github: 'https://github.com/mmalpani-star/tritonspend-ai',
+    externalLinks: [{ label: 'Live app', href: 'https://tritonspend-ai.vercel.app/' }],
+    process: [
+      'Vibe-coded with GitHub Copilot, ChatGPT and Claude Code.',
+      'Next.js frontend deployed on Vercel; FastAPI, SQLAlchemy and PostgreSQL backend.',
+      'The spending trajectory uses a transparent, recency-weighted statistical model for each wallet, learned from dated balance updates. It sees net balance changes, never individual purchases.',
+      'Forecasts are deterministic: balances are stored in integer cents, with frugal, expected and higher spending scenarios.',
+    ],
+    challenges: [
+      'Official UC San Diego dining menu data is not available to the app yet, so venue stations launch without menus until permission is granted.',
+    ],
+    nextSteps: ['Add station menus once permission to use official UC San Diego dining data is granted'],
+    heroMedia: {
+      type: 'image',
+      src: '/images/projects/tritonspend/tritonspend-landing.jpg',
+      alt: 'TritonSpend AI landing page: "Make your Dining Dollars last."',
+      caption: 'Public landing page',
+      width: 2880,
+      height: 1800,
+    },
+    gallerySection: {
+      eyebrow: 'Product tour',
+      title: 'Inside TritonSpend',
+    },
+    galleryImages: [
+      { type: 'image', src: '/images/projects/tritonspend/tritonspend-dashboard-home.jpg', alt: 'TritonSpend dashboard home with navigation for Dashboard, Create Forecast, Food Nearby, Spending Trajectory and Wallet & Alerts', caption: 'Dashboard — signed-in home', width: 2000, height: 1256 },
+      { type: 'image', src: '/images/projects/tritonspend/tritonspend-dashboard.jpg', alt: 'TritonSpend dashboard showing Dining Dollars and Triton Cash balances with Create Forecast, Food Nearby and Spending Trajectory tools', caption: 'Dashboard — both wallets and the three tools', width: 2000, height: 1211 },
+      { type: 'image', src: '/images/projects/tritonspend/tritonspend-food-nearby.jpg', alt: 'Food Nearby page listing campus dining and Triton Cash spots with search and location', caption: 'Food Nearby — campus dining and Triton Cash spots', width: 2000, height: 1300 },
+      { type: 'image', src: '/images/projects/tritonspend/tritonspend-forecast.jpg', alt: 'Forecast form with starting balances, end date, spending scenario, eating habits and forecast history', caption: 'Forecast — eating habits, scenario and history', width: 2000, height: 1300 },
+      { type: 'image', src: '/images/projects/tritonspend/tritonspend-problem.jpg', alt: 'TritonSpend explainer: managing two wallets shouldn’t be a guessing game', caption: 'The problem — two wallets, different rules', width: 2000, height: 1300 },
+      { type: 'image', src: '/images/projects/tritonspend/tritonspend-trajectory-model.jpg', alt: 'Explainer of the trajectory model: your updates, predicted pace and ideal path', caption: 'The model — your updates, predicted and ideal paths', width: 2000, height: 1300 },
+      { type: 'image', src: '/images/projects/tritonspend/tritonspend-spending-trajectory.jpg', alt: 'Spending trajectory chart for Dining Dollars with saved balance, ideal path, forecast plan and warning line', caption: 'Spending trajectory — Dining Dollars', width: 2000, height: 1300 },
+    ],
+  },
+  {
     slug: 'borderpulse',
     tier: 'software',
     title: 'BorderPulse',
@@ -603,6 +658,7 @@ export const contactLinks: ContactLink[] = [
   { label: 'GitHub', href: 'https://github.com/mmalpani-star' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/madhav-malpani-a79189261/' },
   { label: 'Handshake', href: 'https://ucsd.joinhandshake.com/profiles/tg66pu' },
+  { label: 'Instagram', href: 'https://www.instagram.com/madhav_malpani105/' },
 ];
 
 export const secondaryWork: SecondaryWork[] = [
