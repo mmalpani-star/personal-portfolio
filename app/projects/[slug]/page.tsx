@@ -41,6 +41,7 @@ export default function ProjectPage({ params }: Params) {
   const hero = project.heroMedia?.type === 'image' ? project.heroMedia : undefined;
   const portrait = hero ? hero.height > hero.width : false;
 
+  const liveLink = project.externalLinks?.find((link) => link.label === 'Live app');
   const links = [
     ...(project.github ? [{ label: 'GitHub repository', href: project.github }] : []),
     ...(project.externalLinks ?? []),
@@ -82,6 +83,20 @@ export default function ProjectPage({ params }: Params) {
               <div className={`${styles.achievement} reveal-eager`} style={{ animationDelay: '0.24s' }}>
                 <span className="label">{project.achievement.label}</span>
                 <strong>{project.achievement.detail}</strong>
+              </div>
+            ) : null}
+            {liveLink ? (
+              <div className="cta-row reveal-eager" style={{ animationDelay: '0.24s' }}>
+                <a href={liveLink.href} className="button button-primary" target="_blank" rel="noreferrer">
+                  Open the live app
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+                {project.github ? (
+                  <a href={project.github} className="button button-secondary" target="_blank" rel="noreferrer">
+                    <Icon name="github" size={15} />
+                    Source code
+                  </a>
+                ) : null}
               </div>
             ) : null}
           </div>

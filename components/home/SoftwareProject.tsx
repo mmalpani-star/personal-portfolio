@@ -10,7 +10,7 @@ import { VideoPlayer } from '@/components/ui/VideoPlayer';
 import type { Project } from '@/data/site-data';
 import styles from './Work.module.css';
 
-/** Lower-key row for software and hackathon work, led by its achievement. */
+/** Lower-key row for software and hackathon work, led by its achievement when it has one. */
 export function SoftwareProject({ project, number }: { project: Project; number: string }) {
   const finePointer = useFinePointer();
   const [hovered, setHovered] = useState(false);
@@ -18,10 +18,11 @@ export function SoftwareProject({ project, number }: { project: Project; number:
   const hero = project.heroMedia;
   const [headline, ...facts] = project.achievement?.detail.split(' · ') ?? [];
   const href = `/projects/${project.slug}`;
+  const liveLink = project.externalLinks?.find((link) => link.label === 'Live app');
 
   return (
     <article
-      className={`${styles.software} spotlight`}
+      className={`${styles.software} ${project.achievement ? '' : styles.softwareNoStat} spotlight`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
       aria-labelledby={`${project.slug}-title`}
@@ -66,6 +67,12 @@ export function SoftwareProject({ project, number }: { project: Project; number:
             View project
             <Icon name="arrow-right" size={15} />
           </Link>
+          {liveLink ? (
+            <a href={liveLink.href} className="button button-primary" target="_blank" rel="noreferrer">
+              Live app
+              <Icon name="arrow-up-right" size={14} />
+            </a>
+          ) : null}
           {project.github ? (
             <a href={project.github} className="button button-text" target="_blank" rel="noreferrer">
               <Icon name="github" size={15} />

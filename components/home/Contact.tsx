@@ -8,6 +8,7 @@ const descriptions: Record<string, string> = {
   GitHub: 'Code for the quadruped, air-quality monitor and more',
   LinkedIn: 'Background, experience and updates',
   Handshake: 'UC San Diego student profile',
+  Instagram: '@madhav_malpani105',
 };
 
 export function Contact() {
