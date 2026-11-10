@@ -101,6 +101,9 @@ export type Award = {
   name: string;
   detail: string;
   year?: string;
+  /** Headline figure and its context, e.g. "#373" / "of 6,000 nationally". */
+  figure?: string;
+  context?: string;
 };
 
 export type ContactLink = {
@@ -111,6 +114,7 @@ export type ContactLink = {
 export type SecondaryWork = {
   title: string;
   details: string[];
+  image?: { src: string; alt: string; width: number; height: number };
 };
 
 export const projects: Project[] = [
@@ -534,10 +538,23 @@ export const experience: Experience[] = [
     details: ['3D-printed CubeSat model work', 'Antenna deployment mechanism design and testing support', 'Assembly and soldering support'],
   },
   {
-    title: 'Machine Learning Trainee',
+    title: 'Machine Learning Intern',
     organization: 'IIT Kanpur / Techkriti',
     dates: 'Jan 2025 – Feb 2025',
-    details: ['Fundamental machine learning and linear algebra study', 'SVM-based handwritten digit classifier using Python and scikit-learn'],
+    details: [
+      'Fundamental machine learning and linear algebra study',
+      'SVM-based handwritten digit classifier using Python and scikit-learn',
+      'Completed the IIT Kanpur Certification Program on Python for Artificial Intelligence, Machine Learning, and Deep Learning, organized by the Department of Electrical Engineering (1–28 June 2024)',
+    ],
+    images: [
+      {
+        src: '/images/experience/iitk-python-ai-ml-certificate.jpg',
+        alt: 'IIT Kanpur certificate for the Certification Program on Python for Artificial Intelligence, Machine Learning, and Deep Learning',
+        caption: 'Python for AI, ML & Deep Learning certificate',
+        width: 1400,
+        height: 939,
+      },
+    ],
   },
   {
     title: 'Electronics Sub-Team Recruit',
@@ -594,7 +611,8 @@ export const experience: Experience[] = [
     details: [
       'Co-founded a pickleball community that brought together 50+ players for tournaments and social events',
       'Managed venue booking, logistics, catering, and match-fixture planning',
-      'Built and grew an Instagram community to promote events and keep players engaged',
+      'Built and grew an Instagram community to promote events and keep players engaged — ~8,000 profile visits a month and 51,781+ views on reels',
+      'Earned ~₹50,000 (INR) in revenue',
       'Organised get-togethers and social sessions so players could meet new people and play together',
       'Motto: “We connect, you play.”',
     ],
@@ -628,15 +646,35 @@ export const education: Education[] = [
       'Senior secondary subjects: Mathematics, Physics, Chemistry, English, and Computer Science',
       'Scored 93 in Computer Science and 89 in Mathematics',
       'Captain of the school basketball team (2026)',
-      'Dragon House captain (one of four school houses)',
+      'Student Council House Captain — one of only 4 selected out of 200',
+      'Represented Dragon House (1,000+ students)',
     ],
   },
 ];
 
 export const awards: Award[] = [
-  { name: 'International Computer Science Competition Finalist', detail: '2025', year: '2025' },
+  {
+    name: 'International Computer Science Competition Finalist',
+    detail: 'Finalist — top 500 out of 10,000 participants',
+    year: '2025',
+    figure: 'Top 500',
+    context: 'of 10,000 participants',
+  },
   { name: 'Mental Math World Cup', detail: 'Rank 411 / 8600 globally', year: '2025' },
-  { name: 'Ramanujan National Math Competition', detail: 'National Rank 373', year: '2024' },
+  {
+    name: 'Aryabhatta National Math Competition',
+    detail: 'National Rank 639 out of 10,000',
+    year: '2025',
+    figure: '#639',
+    context: 'of 10,000 nationally',
+  },
+  {
+    name: 'Ramanujan National Math Competition',
+    detail: 'National Rank 373 out of 6,000',
+    year: '2024',
+    figure: '#373',
+    context: 'of 6,000 nationally',
+  },
 ];
 
 export const technicalInterests = [
@@ -649,7 +687,7 @@ export const technicalInterests = [
 ];
 
 export const verifiedSkills = {
-  programming: ['Python'],
+  programming: ['Python', 'TypeScript', 'C/C++'],
   engineering: ['Embedded Systems', 'PCB Design', 'Soldering', 'IoT Systems', 'AI-assisted Programming'],
   software: ['Onshape', 'GitHub', 'EasyEDA', 'CST Studio', 'Visual Studio Code', 'Microsoft Excel', 'Microsoft Word', 'Google Sheets'],
 };
@@ -669,6 +707,12 @@ export const secondaryWork: SecondaryWork[] = [
   {
     title: 'ROV',
     details: ['CAD/modeling project', 'Primarily visual/CAD work'],
+    image: {
+      src: '/images/projects/rov/rov-cad.jpg',
+      alt: 'CAD model of an ROV with a cylindrical hull, clear front dome and two ducted thrusters',
+      width: 1264,
+      height: 1102,
+    },
   },
   {
     title: 'Machine Learning',

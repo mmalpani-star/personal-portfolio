@@ -1,14 +1,20 @@
+import Image from 'next/image';
 import { Reveal } from '@/components/animation';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { awards, secondaryWork } from '@/data/site-data';
+import type { Award } from '@/data/site-data';
 import { Skills } from './Skills';
 import styles from './Capabilities.module.css';
 
 // Covered in full under Experience; the rest are smaller explorations shown here.
 const coveredInExperience = new Set(['Machine Learning', 'Pickle It Down']);
 
-/** Splits e.g. "Rank 411 / 8600 globally" into a headline figure ("#411") and its context ("of 8600 globally"). */
-function awardFigure(name: string, detail: string, year?: string) {
+/**
+ * Uses the award's explicit figure when given; otherwise splits e.g.
+ * "Rank 411 / 8600 globally" into "#411" and "of 8600 globally".
+ */
+function awardFigure({ name, detail, year, figure: explicitFigure, context: explicitContext }: Award) {
+  if (explicitFigure) return { figure: explicitFigure, context: explicitContext ?? '' };
   if (detail === year) return { figure: /finalist/i.test(name) ? 'Finalist' : detail, context: '' };
   const match = detail.match(/(\d[\d,]*)(?:\s*\/\s*(\d[\d,]*))?/);
   if (!match) return { figure: detail, context: '' };
@@ -44,7 +50,7 @@ export function Capabilities() {
             </div>
             <ol className={styles.awards}>
               {awards.map((award, index) => {
-                const { figure, context } = awardFigure(award.name, award.detail, award.year);
+                const { figure, context } = awardFigure(award);
                 return (
                   <Reveal as="li" key={award.name} className={`${styles.award} spotlight`} delay={index * 0.06}>
                     <span className={styles.awardYear}>{award.year}</span>
@@ -67,7 +73,12 @@ export function Capabilities() {
               </div>
               <ul className={styles.explored}>
                 {explored.map((item) => (
-                  <li key={item.title} className={styles.exploredItem}>
+                  <li key={item.title} className={`${styles.exploredItem} ${item.image ? styles.exploredWithImage : ''}`}>
+                    {item.image ? (
+                      <span className={styles.exploredImage}>
+                        <Image src={item.image.src} alt={item.image.alt} fill sizes="120px" style={{ objectFit: 'contain' }} />
+                      </span>
+                    ) : null}
                     <span className={styles.exploredTitle}>{item.title}</span>
                     <span className={styles.exploredDetail}>{item.details.join(' · ')}</span>
                   </li>

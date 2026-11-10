@@ -249,6 +249,8 @@ button.stripMedia { cursor: zoom-in; }
   margin: 0;
 }
 
+.entryFigureWide { width: 176px; }
+
 .entryFigure img {
   width: 100%;
   height: auto;

@@ -151,6 +151,27 @@
   border-bottom: 1px solid var(--border);
 }
 
+.exploredWithImage {
+  grid-template-columns: 112px minmax(0, 1fr);
+  column-gap: 18px;
+  align-items: center;
+}
+
+.exploredWithImage .exploredTitle { align-self: end; }
+.exploredWithImage .exploredDetail { grid-column: 2; align-self: start; }
+
+/* CAD renders sit on a light plate, like a drawing sheet */
+.exploredImage {
+  position: relative;
+  grid-row: span 2;
+  width: 112px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: #f4f2ee;
+}
+
 .exploredTitle {
   color: var(--text);
   font-family: var(--font-display);
