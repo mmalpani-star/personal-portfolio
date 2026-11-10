@@ -92,7 +92,10 @@ export function Experience() {
               {item.images?.length ? (
                 <div className={styles.entryMedia}>
                   {item.images.map((image) => (
-                    <figure key={image.src} className={styles.entryFigure}>
+                    <figure
+                      key={image.src}
+                      className={`${styles.entryFigure} ${image.width > image.height ? styles.entryFigureWide : ''}`}
+                    >
                       <Image
                         src={image.src}
                         alt={image.alt}
