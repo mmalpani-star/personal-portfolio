@@ -62,6 +62,13 @@ export type Project = {
   heroMedia?: ProjectMediaItem;
   galleryImages?: ProjectMediaItem[];
   showcaseMedia?: ProjectMediaItem[];
+  /** Optional source-code excerpts shown on the project page. */
+  codeSnippets?: Array<{
+    title: string;
+    filename: string;
+    language: string;
+    code: string;
+  }>;
 };
 
 export type Experience = {
@@ -125,22 +132,123 @@ export const projects: Project[] = [
     shortTitle: 'Quadruped',
     category: 'Robotics / Kinematics',
     status: 'IN PROGRESS',
-    statusNote: 'Kinematics framework developed / physical platform assembled / locomotion in progress.',
+    statusNote:
+      'Kinematics framework developed / physical platform assembled / walking in MuJoCo simulation / hardware locomotion in progress.',
     summary:
-      'I assembled an open-source quadruped platform with four 3-DOF legs and developed an object-oriented Python kinematics framework for control and workspace visualization.',
+      'I assembled an open-source quadruped platform with four 3-DOF legs, developed an object-oriented Python kinematics framework, and built a physics simulation of the robot from its own 3D-printed part files that walks in MuJoCo.',
     description:
-      'I assembled an open-source quadruped platform with four 3-DOF legs. Each leg consists of a Coxa, Femur, and Tibia. I developed a Python object-oriented framework for forward kinematics, inverse kinematics, servo control, joint-angle based control, end-effector coordinate based control, and workspace visualization. The physical quadruped is assembled but is not currently walking, and hardware issues are still being worked through.',
+      'I assembled an open-source quadruped platform with four 3-DOF legs. Each leg consists of a Coxa, Femur, and Tibia. I developed a Python object-oriented framework for forward kinematics, inverse kinematics, servo control, joint-angle based control, end-effector coordinate based control, and workspace visualization. I then built a MuJoCo physics simulation of the robot directly from its STL print files: joint pivots were located from the servo-mount and bearing holes in the meshes, the model was validated against my NumPy forward kinematics, and the simulated robot walks with a statically stable crawl gait. The physical quadruped is assembled but is not currently walking, and hardware issues are still being worked through.',
     role: 'Independent builder and developer',
-    technologies: ['Python', 'Robotics', 'Kinematics', 'Servo Control'],
+    technologies: ['Python', 'NumPy', 'MuJoCo', 'Matplotlib', 'Robotics', 'Kinematics', 'Servo Control'],
     highlights: [
       '4 x 3-DOF leg design',
       'Forward and inverse kinematics framework',
       'Joint-angle and end-effector coordinate control',
       'Workspace visualization',
+      'MuJoCo simulation built from the printed STL parts, validated against the FK model',
+      'Statically stable crawl gait walking in simulation',
     ],
     github: 'https://github.com/mmalpani-star/Quadruped-leg-kinematics',
-    sections: ['Overview', 'Implementation', 'Current Status'],
-    nextSteps: ['Resolve hardware issues', 'Continue locomotion development'],
+    sections: ['Overview', 'Implementation', 'Simulation', 'Current Status'],
+    nextSteps: [
+      'Resolve hardware issues',
+      'Transfer the simulated crawl gait to the physical robot',
+      'Continue locomotion development',
+    ],
+    codeSnippets: [
+      {
+        title: '3D forward kinematics for one 3-DOF leg',
+        filename: 'numpyfk3d.py',
+        language: 'python',
+        code: `import numpy as np
+
+class Leg:
+    def __init__(self, lc, lf, lt):
+        self.lc = lc
+        self.lf = lf
+        self.lt = lt
+
+    # Coxa endpoint in global coordinates
+    def coxa(self, theta_c):
+        return np.array([
+            self.lc * np.cos(np.radians(theta_c)),
+            0,
+            -self.lc * np.sin(np.radians(theta_c))
+        ])
+
+    # Knee position in global coordinates
+    def femur(self, theta_c, theta_f):
+
+        hip_position = self.coxa(theta_c)
+
+        theta_c_rad = np.radians(theta_c)
+        theta_f_rad = np.radians(theta_f)
+
+        femur_rel_coxa = np.array([
+            [np.cos(theta_c_rad), 0, np.sin(theta_c_rad)],
+            [0, 1, 0],
+            [-np.sin(theta_c_rad), 0, np.cos(theta_c_rad)]
+        ])
+
+        femur_local = np.array([
+            self.lf * np.cos(theta_f_rad),
+            self.lf * np.sin(theta_f_rad),
+            0
+        ])
+
+        knee_position = hip_position + femur_rel_coxa @ femur_local
+
+        return knee_position
+
+    # Foot position in global coordinates
+    def tibia(self, theta_c, theta_f, theta_t):
+
+        knee_position = self.femur(theta_c, theta_f)
+
+        theta_c_rad = np.radians(theta_c)
+        theta_f_rad = np.radians(theta_f)
+        theta_t_rad = np.radians(theta_t)
+
+        femur_rel_coxa = np.array([
+            [np.cos(theta_c_rad), 0, np.sin(theta_c_rad)],
+            [0, 1, 0],
+            [-np.sin(theta_c_rad), 0, np.cos(theta_c_rad)]
+        ])
+
+        femur_rotation = np.array([
+            [np.cos(theta_f_rad), -np.sin(theta_f_rad), 0],
+            [np.sin(theta_f_rad), np.cos(theta_f_rad), 0],
+            [0, 0, 1]
+        ])
+
+        tibia_rel_femur = np.array([
+            [np.cos(theta_t_rad), -np.sin(theta_t_rad), 0],
+            [np.sin(theta_t_rad), np.cos(theta_t_rad), 0],
+            [0, 0, 1]
+        ])
+
+        tibia_local = np.array([self.lt, 0, 0])
+
+        foot_position = (
+            knee_position
+            + femur_rel_coxa @ femur_rotation
+            @ tibia_rel_femur @ tibia_local
+        )
+
+        return foot_position
+
+
+# Testing
+if __name__ == "__main__":
+
+    leg = Leg(3, 5.6, 8)
+
+    print("Test 1:", leg.tibia(0, 0, 0))
+    print("Test 2:", leg.tibia(0, 90, 0))
+    print("Test 3:", leg.tibia(0, 30, 40))
+    `,
+      },
+    ],
     heroMedia: {
       type: 'image',
       src: '/images/projects/quadruped/quadruped_full_build.jpeg',
@@ -158,8 +266,35 @@ export const projects: Project[] = [
         width: 1600,
         height: 1200,
       },
+      {
+        type: 'video',
+        src: '/videos/projects/quadruped/quadruped-walk-sim.mp4',
+        poster: '/images/projects/quadruped/quadruped-walk-sim-poster.jpg',
+        alt: 'Simulated quadruped walking with a crawl gait in MuJoCo',
+        caption: 'MuJoCo simulation: crawl gait, built from the printed STL parts',
+        width: 1280,
+        height: 720,
+      },
+      {
+        type: 'video',
+        src: '/videos/projects/quadruped/matplotlib-fk-animation.mp4',
+        poster: '/images/projects/quadruped/matplotlib-fk-animation-poster.jpg',
+        alt: 'Animated 3D Matplotlib visualization of the leg forward kinematics with joint sliders and a foot trajectory trail',
+        caption: 'Forward kinematics in Matplotlib: animated joints, live sliders, and foot trail',
+        width: 1280,
+        height: 808,
+      },
     ],
     showcaseMedia: [
+      {
+        type: 'video',
+        src: '/videos/projects/quadruped/quadruped-walk-sim.mp4',
+        poster: '/images/projects/quadruped/quadruped-walk-sim-poster.jpg',
+        alt: 'Simulated quadruped walking with a crawl gait in MuJoCo',
+        caption: 'MuJoCo simulation: crawl gait',
+        width: 1280,
+        height: 720,
+      },
       {
         type: 'image',
         src: '/images/projects/quadruped/leg_closeup.jpeg',
