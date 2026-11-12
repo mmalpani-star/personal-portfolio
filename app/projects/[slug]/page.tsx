@@ -197,6 +197,21 @@ export default function ProjectPage({ params }: Params) {
               </ol>
             </Reveal>
 
+            {project.codeSnippets?.map((snippet) => (
+              <Reveal key={snippet.filename} className={styles.block}>
+                <span className="label">Code</span>
+                <figure className={styles.codeFrame}>
+                  <figcaption className={styles.codeHeader}>
+                    <span>{snippet.filename}</span>
+                    <span>{snippet.title}</span>
+                  </figcaption>
+                  <pre className={styles.codeBody} tabIndex={0} aria-label={`${snippet.filename} source code`}>
+                    <code className={`language-${snippet.language}`}>{snippet.code}</code>
+                  </pre>
+                </figure>
+              </Reveal>
+            ))}
+
             {caseSections.map((section) => (
               <Reveal key={section.id} className={styles.block}>
                 <span className="label">{section.title}</span>
