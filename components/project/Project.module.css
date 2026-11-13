@@ -520,3 +520,94 @@
   outline: 1px solid var(--border-strong);
   outline-offset: -1px;
 }
+
+/* ---------- Embedded PDF document ---------- */
+.docFrame {
+  margin: 0;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  overflow: hidden;
+}
+
+.docHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.docTitle {
+  display: grid;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--text);
+}
+
+.docPages {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--muted-strong);
+}
+
+.docActions {
+  display: flex;
+  gap: 8px;
+}
+
+.docActions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.04em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.docActions a:hover {
+  background: var(--surface-2);
+}
+
+.docDescription {
+  margin: 0;
+  padding: 12px 16px 0;
+  font-size: var(--text-sm);
+  color: var(--muted-strong);
+}
+
+.docViewer {
+  display: block;
+  width: 100%;
+  height: min(78vh, 760px);
+  margin-top: 12px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: #fff;
+}
+
+.docFallback {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  padding: 20px 16px;
+  color: var(--muted-strong);
+  font-size: var(--text-sm);
+  background: var(--surface-1);
+}
+
+.docFallback p {
+  margin: 0;
+}

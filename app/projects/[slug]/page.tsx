@@ -197,6 +197,43 @@ export default function ProjectPage({ params }: Params) {
               </ol>
             </Reveal>
 
+            {project.documents?.map((doc) => (
+              <Reveal key={doc.src} className={styles.block}>
+                <span className="label">Document</span>
+                <figure className={styles.docFrame}>
+                  <figcaption className={styles.docHeader}>
+                    <span className={styles.docTitle}>
+                      {doc.title}
+                      {doc.pages ? <span className={styles.docPages}>{doc.pages} pages · PDF</span> : null}
+                    </span>
+                    <span className={styles.docActions}>
+                      <a href={doc.src} target="_blank" rel="noopener noreferrer">
+                        Open
+                        <Icon name="arrow-up-right" size={13} />
+                      </a>
+                      <a href={doc.src} download>
+                        Download
+                      </a>
+                    </span>
+                  </figcaption>
+                  {doc.description ? <p className={styles.docDescription}>{doc.description}</p> : null}
+                  <object
+                    className={styles.docViewer}
+                    data={`${doc.src}#view=FitH`}
+                    type="application/pdf"
+                    aria-label={doc.title}
+                  >
+                    <div className={styles.docFallback}>
+                      <p>This browser can’t show the PDF inline.</p>
+                      <a className="button button-secondary" href={doc.src} target="_blank" rel="noopener noreferrer">
+                        Open PDF
+                      </a>
+                    </div>
+                  </object>
+                </figure>
+              </Reveal>
+            ))}
+
             {project.codeSnippets?.map((snippet) => (
               <Reveal key={snippet.filename} className={styles.block}>
                 <span className="label">Code</span>
