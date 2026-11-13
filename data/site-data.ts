@@ -151,6 +151,7 @@ export const projects: Project[] = [
       'Crouch-and-thrust jump: about 11 cm of liftoff, lands upright',
     ],
     github: 'https://github.com/mmalpani-star/Quadruped-leg-kinematics',
+    externalLinks: [{ label: '3D FK derivation (PDF)', href: '/documents/quadruped-3d-fk-derivation.pdf' }],
     sections: ['Overview', 'Implementation', 'Simulation', 'Current Status'],
     nextSteps: [
       'Resolve hardware issues',
@@ -303,6 +304,14 @@ if __name__ == "__main__":
         caption: 'Forward kinematics in Matplotlib: animated joints, live sliders, and foot trail',
         width: 1280,
         height: 808,
+      },
+      {
+        type: 'image',
+        src: '/images/projects/quadruped/fk-derivation-final-formula.jpg',
+        alt: 'Handwritten derivation of the 3D forward kinematics, ending in the boxed closed-form foot position',
+        caption: 'Hand derivation of the 3D foot position, R_y(θc)·R_z(θf)·R_z(θt), which matches numpyfk3d.py exactly',
+        width: 1100,
+        height: 833,
       },
     ],
     showcaseMedia: [
