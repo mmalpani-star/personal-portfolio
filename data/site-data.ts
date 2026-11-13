@@ -133,11 +133,11 @@ export const projects: Project[] = [
     category: 'Robotics / Kinematics',
     status: 'IN PROGRESS',
     statusNote:
-      'Kinematics framework developed / physical platform assembled / walking in MuJoCo simulation / hardware locomotion in progress.',
+      'Kinematics framework developed / physical platform assembled / walking, turning and jumping in MuJoCo simulation / hardware locomotion in progress.',
     summary:
-      'I assembled an open-source quadruped platform with four 3-DOF legs, developed an object-oriented Python kinematics framework, and built a physics simulation of the robot from its own 3D-printed part files that walks in MuJoCo.',
+      'I assembled an open-source quadruped platform with four 3-DOF legs, developed an object-oriented Python kinematics framework, and built a physics simulation of the robot from its own 3D-printed part files that walks, turns, and jumps in MuJoCo.',
     description:
-      'I assembled an open-source quadruped platform with four 3-DOF legs. Each leg consists of a Coxa, Femur, and Tibia. I developed a Python object-oriented framework for forward kinematics, inverse kinematics, servo control, joint-angle based control, end-effector coordinate based control, and workspace visualization. I then built a MuJoCo physics simulation of the robot directly from its STL print files: joint pivots were located from the servo-mount and bearing holes in the meshes, the model was validated against my NumPy forward kinematics, and the simulated robot walks with a statically stable crawl gait. The physical quadruped is assembled but is not currently walking, and hardware issues are still being worked through.',
+      'I assembled an open-source quadruped platform with four 3-DOF legs. Each leg consists of a Coxa, Femur, and Tibia. I developed a Python object-oriented framework for forward kinematics, inverse kinematics, servo control, joint-angle based control, end-effector coordinate based control, and workspace visualization. I then built a MuJoCo physics simulation of the robot directly from its STL print files: joint pivots were located from the servo-mount and bearing holes in the meshes, the model was validated against my NumPy forward kinematics, and the simulated robot walks with a statically stable crawl gait, turns in place by driving its left and right legs in opposite directions, and jumps about 11 cm using the same servo torque limits. The physical quadruped is assembled but is not currently walking, and hardware issues are still being worked through.',
     role: 'Independent builder and developer',
     technologies: ['Python', 'NumPy', 'MuJoCo', 'Matplotlib', 'Robotics', 'Kinematics', 'Servo Control'],
     highlights: [
@@ -147,12 +147,14 @@ export const projects: Project[] = [
       'Workspace visualization',
       'MuJoCo simulation built from the printed STL parts, validated against the FK model',
       'Statically stable crawl gait walking in simulation',
+      'In-place turning at about 14°/s with tank-steer leg control',
+      'Crouch-and-thrust jump: about 11 cm of liftoff, lands upright',
     ],
     github: 'https://github.com/mmalpani-star/Quadruped-leg-kinematics',
     sections: ['Overview', 'Implementation', 'Simulation', 'Current Status'],
     nextSteps: [
       'Resolve hardware issues',
-      'Transfer the simulated crawl gait to the physical robot',
+      'Transfer the simulated gaits to the physical robot',
       'Continue locomotion development',
     ],
     codeSnippets: [
@@ -268,12 +270,30 @@ if __name__ == "__main__":
       },
       {
         type: 'video',
-        src: '/videos/projects/quadruped/quadruped-walk-sim.mp4',
-        poster: '/images/projects/quadruped/quadruped-walk-sim-poster.jpg',
+        src: '/videos/projects/quadruped/quadruped-walking.mp4',
+        poster: '/images/projects/quadruped/quadruped-walking-poster.jpg',
         alt: 'Simulated quadruped walking with a crawl gait in MuJoCo',
-        caption: 'MuJoCo simulation: crawl gait, built from the printed STL parts',
+        caption: 'Walking: statically stable crawl gait in MuJoCo',
         width: 1280,
-        height: 720,
+        height: 808,
+      },
+      {
+        type: 'video',
+        src: '/videos/projects/quadruped/quadruped-turning.mp4',
+        poster: '/images/projects/quadruped/quadruped-turning-poster.jpg',
+        alt: 'Simulated quadruped turning in place in MuJoCo',
+        caption: 'Turning: left and right legs step in opposite directions',
+        width: 1280,
+        height: 808,
+      },
+      {
+        type: 'video',
+        src: '/videos/projects/quadruped/quadruped-jumping.mp4',
+        poster: '/images/projects/quadruped/quadruped-jumping-poster.jpg',
+        alt: 'Simulated quadruped crouching and jumping in MuJoCo',
+        caption: 'Jumping: crouch, thrust, about 11 cm of liftoff, land upright',
+        width: 1280,
+        height: 808,
       },
       {
         type: 'video',
@@ -288,12 +308,12 @@ if __name__ == "__main__":
     showcaseMedia: [
       {
         type: 'video',
-        src: '/videos/projects/quadruped/quadruped-walk-sim.mp4',
-        poster: '/images/projects/quadruped/quadruped-walk-sim-poster.jpg',
+        src: '/videos/projects/quadruped/quadruped-walking.mp4',
+        poster: '/images/projects/quadruped/quadruped-walking-poster.jpg',
         alt: 'Simulated quadruped walking with a crawl gait in MuJoCo',
-        caption: 'MuJoCo simulation: crawl gait',
+        caption: 'Walking: statically stable crawl gait in MuJoCo',
         width: 1280,
-        height: 720,
+        height: 808,
       },
       {
         type: 'image',
