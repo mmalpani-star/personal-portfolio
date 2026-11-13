@@ -860,7 +860,7 @@ export const technicalInterests = [
 
 export const verifiedSkills = {
   programming: ['Python', 'Java', 'TypeScript', 'C/C++', 'MySQL'],
-  engineering: ['Embedded Systems', 'PCB Design', 'Soldering', 'IoT Systems', 'AI-assisted Programming'],
+  engineering: ['Embedded Systems', 'PCB Design', 'CAD', 'Soldering', 'IoT Systems', 'Vibe Coding'],
   software: ['Onshape', 'GitHub', 'EasyEDA', 'CST Studio', 'Claude Code', 'Codex'],
 };
 
