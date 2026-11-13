@@ -859,9 +859,9 @@ export const technicalInterests = [
 ];
 
 export const verifiedSkills = {
-  programming: ['Python', 'Java', 'TypeScript', 'C/C++'],
+  programming: ['Python', 'Java', 'TypeScript', 'C/C++', 'MySQL'],
   engineering: ['Embedded Systems', 'PCB Design', 'Soldering', 'IoT Systems', 'AI-assisted Programming'],
-  software: ['Onshape', 'GitHub', 'EasyEDA', 'CST Studio', 'Visual Studio Code', 'Microsoft Excel', 'Microsoft Word', 'Google Sheets'],
+  software: ['Onshape', 'GitHub', 'EasyEDA', 'CST Studio', 'Claude Code', 'Codex'],
 };
 
 export const contactLinks: ContactLink[] = [
