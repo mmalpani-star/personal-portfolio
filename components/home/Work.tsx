@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '@/components/animation';
+import { Viewfinder } from '@/components/effects';
 import { ArcHeading } from '@/components/ui/ArcHeading';
 import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -16,7 +17,7 @@ function MissionCard({ project, index }: { project: Project; index: number }) {
     <Reveal as="article" className={`${styles.mission} ${lead ? styles.missionLead : ''}`} delay={index * 0.08}>
       <Link
         href={`/projects/${project.slug}`}
-        className={`${styles.card} spotlight`}
+        className={`${styles.card} spotlight vf-host`}
         aria-labelledby={`${project.slug}-title`}
       >
         <div className={styles.media}>
@@ -26,9 +27,10 @@ function MissionCard({ project, index }: { project: Project; index: number }) {
               alt={hero.alt}
               fill
               sizes="(max-width: 960px) 100vw, 50vw"
-              className={styles.image}
+              className={`${styles.image} vf-target`}
             />
           ) : null}
+          <Viewfinder />
           <span className={styles.index}>M.{String(index + 1).padStart(2, '0')}</span>
         </div>
 

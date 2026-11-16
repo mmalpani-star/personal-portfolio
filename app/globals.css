@@ -619,6 +619,116 @@ li::marker { color: var(--faint); }
 }
 
 /* ==========================================================================
+   Viewfinder (components/effects/Viewfinder)
+   ========================================================================== */
+
+.vf {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.vf-brackets {
+  --c: rgba(239, 236, 230, 0.9);
+  --l: 18px;
+  position: absolute;
+  inset: 12px;
+  opacity: 0.55;
+  background:
+    linear-gradient(var(--c), var(--c)) top left / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) top left / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / 1.5px var(--l) no-repeat;
+}
+
+.vf-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46px;
+  height: 34px;
+  margin: -17px 0 0 -23px;
+  border: 1px solid rgba(239, 236, 230, 0.8);
+  opacity: 0;
+}
+
+.vf-rec {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: var(--radius-xs);
+  background: rgba(7, 7, 7, 0.6);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.1em;
+  opacity: 0;
+}
+
+.vf-rec i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff4b3e;
+}
+
+.vf-shutter {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .vf-brackets,
+  .vf-rec {
+    opacity: 0;
+    transition: opacity var(--dur-fast) ease, inset var(--dur) var(--ease-out);
+  }
+
+  .vf-brackets { inset: 4px; }
+
+  .vf-host:hover .vf-brackets { opacity: 1; inset: 12px; }
+  .vf-host:hover .vf-rec { opacity: 1; }
+  .vf-host:hover .vf-rec i { animation: vf-blink 1s steps(2, jump-none) infinite; }
+  .vf-host:hover .vf-reticle { animation: vf-reticle 700ms var(--ease-out) both; }
+  .vf-host:hover .vf-shutter { animation: vf-shutter 260ms ease-out; }
+  .vf-host:hover .vf-target { animation: vf-focus 520ms var(--ease-out); }
+}
+
+@keyframes vf-blink {
+  from { opacity: 1; }
+  to { opacity: 0.15; }
+}
+
+@keyframes vf-reticle {
+  0% { opacity: 0; transform: scale(1.7); }
+  45% { opacity: 1; transform: scale(0.94); }
+  70% { opacity: 1; transform: none; border-color: var(--accent); }
+  100% { opacity: 0; transform: none; border-color: var(--accent); }
+}
+
+@keyframes vf-shutter {
+  0% { opacity: 0; }
+  25% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+@keyframes vf-focus {
+  from { filter: blur(5px) brightness(0.9); }
+  to { filter: blur(0) brightness(1); }
+}
+
+/* ==========================================================================
    Motion utilities
    ========================================================================== */
 
