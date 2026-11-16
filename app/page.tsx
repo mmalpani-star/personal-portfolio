@@ -1,3 +1,4 @@
+import { ShotArc } from '@/components/effects';
 import { Contact } from '@/components/home/Contact';
 import { Experience } from '@/components/home/Experience';
 import { Hero } from '@/components/home/Hero';
@@ -12,6 +13,7 @@ export default function HomePage() {
       <Hero />
       <Work />
       <SideQuests />
+      <ShotArc />
       <Experience />
       <StatsTrophies />
       <OffTheClock />
