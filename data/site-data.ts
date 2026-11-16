@@ -865,6 +865,12 @@ export const education: Education[] = [
 
 export const awards: Award[] = [
   {
+    name: 'cOmpiled-16 UCSD Hackathon',
+    detail: 'Top 7 of 200+ teams',
+    figure: 'Top 7',
+    context: 'of 200+ teams · 441 participants',
+  },
+  {
     name: 'International Computer Science Competition Finalist',
     detail: 'Finalist — top 500 out of 10,000 participants',
     year: '2025',
@@ -945,52 +951,5 @@ export const secondaryWork: SecondaryWork[] = [
       'Created a welcoming environment where players could meet new people and play together',
       'Motto: “We connect, you play.”',
     ],
-  },
-];
-
-/**
- * Player-rating card. These are self-ratings, not measurements: edit the
- * numbers here and the card updates. `overall` is shown as given.
- */
-export const playerCard = {
-  overall: 78,
-  position: 'Robotics builder',
-  note: 'Self-assessed · Season 2026',
-  stats: [
-    { code: 'FAB', name: 'Fabrication', value: 82, basis: '3D printing, soldering, assembly' },
-    { code: 'CAD', name: 'Mechanical design', value: 80, basis: 'Onshape parts and mechanisms' },
-    { code: 'EMB', name: 'Embedded & PCB', value: 75, basis: 'ESP32 firmware, CAN FD board' },
-    { code: 'KIN', name: 'Kinematics & control', value: 72, basis: 'Quadruped FK / IK' },
-    { code: 'SWE', name: 'Software', value: 70, basis: 'Python, TypeScript, web apps' },
-    { code: 'ITR', name: 'Iteration speed', value: 88, basis: 'Build, break, rebuild' },
-  ],
-};
-
-export type OffClockMotif = 'basketball' | 'film' | 'gaming' | 'anime';
-
-/** "Off the clock" tiles. Lines are jokes, not claims; tags are plain facts. */
-export const offTheClock: Array<{ motif: OffClockMotif; title: string; tag?: string; line: string }> = [
-  {
-    motif: 'basketball',
-    title: 'Basketball',
-    tag: 'School team captain, 2026',
-    line: 'Projectile motion, but recreational. The arc is still a parabola.',
-  },
-  {
-    motif: 'film',
-    title: 'Film & Photography',
-    line: 'Always reframing. Same habit as checking a CAD part from one more angle.',
-  },
-  {
-    motif: 'gaming',
-    title: 'Gaming',
-    tag: 'Valorant · FC',
-    line: 'Valorant for the crosshair placement, FC for the tactics. Losses are blamed on ping.',
-  },
-  {
-    motif: 'anime',
-    title: 'Anime',
-    tag: 'Naruto · One Piece',
-    line: 'Long arcs, endless training montages. Basically a build log with better soundtracks.',
   },
 ];

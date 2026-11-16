@@ -14,7 +14,7 @@ export function Contact() {
       <div className={`page-shell ${styles.inner}`}>
         <div className={styles.lead}>
           <Reveal>
-            <div className="arc-tag">Next episode</div>
+            <span className="section-index">04</span>
             <h2 id="contact-title" className={styles.title}>
               Let’s build something useful.
             </h2>

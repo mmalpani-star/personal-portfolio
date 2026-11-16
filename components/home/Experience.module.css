@@ -1,5 +1,16 @@
 .section { overflow: hidden; }
 
+.heading { margin-bottom: clamp(24px, 3.5vw, 40px); }
+.heading h2 { margin: var(--space-3) 0 var(--space-3); }
+
+.heading p {
+  max-width: 44ch;
+  font-size: var(--text-lg);
+  line-height: 1.5;
+}
+
+.toolkit { margin-top: clamp(28px, 4vw, 44px); }
+
 .dates {
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
@@ -23,7 +34,7 @@
 .row { border-bottom: 1px solid var(--border); }
 
 .rowCurrent {
-  background: linear-gradient(90deg, rgba(255, 181, 71, 0.07), transparent 60%);
+  background: linear-gradient(90deg, rgba(255, 107, 91, 0.07), transparent 60%);
   box-shadow: inset 2px 0 0 var(--accent);
 }
 
@@ -75,8 +86,8 @@ button.rowButton:hover { background: var(--surface-1); }
 }
 
 @keyframes live-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 181, 71, 0.5); }
-  100% { box-shadow: 0 0 0 9px rgba(255, 181, 71, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(255, 107, 91, 0.5); }
+  100% { box-shadow: 0 0 0 9px rgba(255, 107, 91, 0); }
 }
 
 .who {
@@ -131,7 +142,7 @@ button.rowButton:hover { background: var(--surface-1); }
 .expandIcon[data-open="true"] {
   transform: rotate(45deg);
   background: var(--text);
-  color: #0a0a0a;
+  color: var(--on-cream);
 }
 
 .panelWrap { overflow: hidden; }
@@ -216,7 +227,7 @@ button.rowButton:hover { background: var(--surface-1); }
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: #000;
+  background: var(--navy-deep);
 }
 
 button.stripMedia { cursor: zoom-in; }
@@ -243,7 +254,7 @@ button.stripMedia { cursor: zoom-in; }
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: rgba(7, 7, 7, 0.75);
+  background: rgba(14, 23, 41, 0.75);
   opacity: 0;
   transition: opacity var(--dur-fast) ease;
 }

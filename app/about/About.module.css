@@ -1,7 +1,7 @@
 .intro {
   padding-bottom: var(--section-pad);
   background:
-    radial-gradient(ellipse 50% 60% at 85% 20%, rgba(255, 181, 71, 0.05), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 85% 20%, rgba(255, 107, 91, 0.05), transparent 70%),
     var(--bg);
 }
 
@@ -186,7 +186,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(7, 7, 7, 0.85), transparent 55%);
+  background: linear-gradient(0deg, rgba(14, 23, 41, 0.85), transparent 55%);
 }
 
 .buildLabel {

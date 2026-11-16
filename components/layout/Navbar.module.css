@@ -7,7 +7,7 @@
 }
 
 .header[data-scrolled="true"] {
-  background: rgba(7, 7, 7, 0.78);
+  background: rgba(14, 23, 41, 0.78);
   border-bottom-color: var(--border);
   backdrop-filter: saturate(150%) blur(16px);
   -webkit-backdrop-filter: saturate(150%) blur(16px);
@@ -61,7 +61,7 @@
   padding: 4px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: rgba(7, 7, 7, 0.4);
+  background: rgba(14, 23, 41, 0.4);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -103,34 +103,6 @@
 
 .resume { min-height: 38px; padding: 0.6rem 0.9rem; }
 
-/* Crosshair cursor switch: only where a mouse cursor exists */
-.cursorToggle {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  min-height: 38px;
-  padding: 0 0.7rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  background: rgba(7, 7, 7, 0.4);
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
-}
-
-.cursorToggle:hover { color: var(--text); }
-
-.cursorToggle[aria-pressed="true"] {
-  border-color: var(--accent-line);
-  color: var(--accent);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .cursorToggle { display: inline-flex; }
-}
 
 .toggle {
   display: none;
@@ -139,13 +111,13 @@
   height: 44px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
-  background: rgba(7, 7, 7, 0.4);
+  background: rgba(14, 23, 41, 0.4);
 }
 
 .sheet {
   position: fixed;
   inset: var(--nav-h) 0 0;
-  background: rgba(7, 7, 7, 0.97);
+  background: rgba(14, 23, 41, 0.97);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   overflow-y: auto;

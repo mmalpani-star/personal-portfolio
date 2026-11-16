@@ -4,7 +4,6 @@ import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScro
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useCrosshair } from '@/components/effects/useCrosshair';
 import { Icon } from '@/components/ui/Icon';
 import styles from './Navbar.module.css';
 
@@ -23,7 +22,6 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const crosshair = useCrosshair();
 
   useMotionValueEvent(scrollY, 'change', (value) => setScrolled(value > 24));
 
@@ -94,17 +92,6 @@ export function Navbar() {
         </nav>
 
         <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.cursorToggle}
-            aria-pressed={crosshair.on}
-            onClick={crosshair.toggle}
-            title={crosshair.on ? 'Switch to the normal cursor' : 'Switch to the crosshair cursor'}
-          >
-            <Icon name="crosshair" size={15} />
-            <span className="visually-hidden">Crosshair cursor</span>
-            <span aria-hidden="true">{crosshair.on ? 'On' : 'Off'}</span>
-          </button>
           <a className={`button button-secondary ${styles.resume}`} href="/documents/resume.pdf" target="_blank" rel="noopener noreferrer">
             Resume
             <Icon name="arrow-up-right" size={14} />

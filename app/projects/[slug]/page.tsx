@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Reveal } from '@/components/animation';
-import { AceTracker } from '@/components/effects/AceTracker';
 import { Parallax } from '@/components/effects/Parallax';
 import { ProjectGallery } from '@/components/project/ProjectGallery';
 import styles from '@/components/project/Project.module.css';
@@ -27,8 +26,6 @@ export function generateMetadata({ params }: Params): Metadata {
 }
 
 const pad = (value: number) => String(value).padStart(2, '0');
-
-const flagshipSlugs = displayProjects.filter((project) => project.tier === 'flagship').map((project) => project.slug);
 
 export default function ProjectPage({ params }: Params) {
   const projectIndex = displayProjects.findIndex((entry) => entry.slug === params.slug);
@@ -58,8 +55,6 @@ export default function ProjectPage({ params }: Params) {
 
   return (
     <main>
-      {project.tier === 'flagship' ? <AceTracker slug={project.slug} all={flagshipSlugs} /> : null}
-
       {/* ---------- Hero ---------- */}
       <section className={`page-top ${styles.hero} ${portrait ? styles.heroSplit : ''}`}>
         <div className={`page-shell ${styles.heroGrid}`}>

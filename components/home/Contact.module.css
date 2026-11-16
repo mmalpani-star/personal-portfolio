@@ -1,7 +1,7 @@
 .section {
   overflow: hidden;
   background:
-    radial-gradient(ellipse 50% 70% at 15% 100%, rgba(255, 181, 71, 0.06), transparent 70%),
+    radial-gradient(ellipse 50% 70% at 15% 100%, rgba(255, 107, 91, 0.06), transparent 70%),
     var(--bg);
 }
 

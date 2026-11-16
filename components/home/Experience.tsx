@@ -5,8 +5,7 @@ import Image from 'next/image';
 import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Reveal } from '@/components/animation';
-import { ApertureReveal } from '@/components/effects/ApertureReveal';
-import { ArcHeading } from '@/components/ui/ArcHeading';
+import { Skills } from './Skills';
 import { Icon } from '@/components/ui/Icon';
 import { education, experience } from '@/data/site-data';
 import type { Experience as ExperienceItem } from '@/data/site-data';
@@ -139,26 +138,28 @@ function ExperienceDetail({ item }: { item: ExperienceItem }) {
   );
 }
 
+// Pickle It Down is community work, not engineering: it lives on the About Me page.
+const aboutMeOnly = new Set(['Pickle It Down']);
+
 export function Experience() {
-  const sorted = [...experience].sort((a, b) => startKey(b) - startKey(a));
+  const sorted = [...experience]
+    .filter((item) => !aboutMeOnly.has(item.organization))
+    .sort((a, b) => startKey(b) - startKey(a));
 
   return (
     <section id="experience" className={`section section--raised ${styles.section}`} aria-labelledby="experience-title">
-      <ApertureReveal className="page-shell">
-        <Reveal>
-          <ArcHeading
-            arc="03"
-            id="experience-title"
-            title="The Build Log"
-            description="A robotics team, two internships and a community I started. Latest scene first."
-          />
+      <div className="page-shell">
+        <Reveal className={styles.heading}>
+          <span className="section-index">01</span>
+          <h2 id="experience-title">Experience</h2>
+          <p>A robotics team, two internships and the training behind them.</p>
         </Reveal>
 
         <ol className={styles.timeline}>
           {sorted.map((item, index) => (
             <Row
               key={`${item.organization}-${item.title}`}
-              tag={`Scene ${String(sorted.length - index).padStart(2, '0')} / Take 1`}
+              tag={String(sorted.length - index).padStart(2, '0')}
               dates={item.dates}
               title={item.title}
               organization={[item.organization, item.location].filter(Boolean).join(' · ')}
@@ -170,6 +171,13 @@ export function Experience() {
             </Row>
           ))}
         </ol>
+
+        <div className={styles.toolkit}>
+          <div className={styles.educationHead}>
+            <span className="label">Toolkit</span>
+          </div>
+          <Skills />
+        </div>
 
         <div className={styles.education}>
           <div className={styles.educationHead}>
@@ -199,7 +207,7 @@ export function Experience() {
             ))}
           </ol>
         </div>
-      </ApertureReveal>
+      </div>
     </section>
   );
 }
