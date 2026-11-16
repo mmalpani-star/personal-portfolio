@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '@/components/animation';
 import { Viewfinder } from '@/components/effects/Viewfinder';
+import { WireframeArmor } from '@/components/effects/WireframeArmor';
 import { ArcHeading } from '@/components/ui/ArcHeading';
 import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -31,7 +32,8 @@ function MissionCard({ project, index }: { project: Project; index: number }) {
               className={`${styles.image} vf-target`}
             />
           ) : null}
-          <Viewfinder />
+          {lead ? <WireframeArmor /> : null}
+          <Viewfinder brackets={!lead} />
           <span className={styles.index}>M.{String(index + 1).padStart(2, '0')}</span>
         </div>
 
