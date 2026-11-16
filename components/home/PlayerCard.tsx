@@ -32,7 +32,7 @@ export function PlayerCard() {
 
       <motion.dl
         className={styles.stats}
-        initial={reduceMotion ? false : 'empty'}
+        initial="empty"
         whileInView="filled"
         viewport={{ once: true, amount: 0.3 }}
       >
@@ -49,7 +49,9 @@ export function PlayerCard() {
                   className={styles.barFill}
                   style={{ width: `${stat.value}%` }}
                   variants={{ empty: { scaleX: 0 }, filled: { scaleX: 1 } }}
-                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 + index * 0.07 }}
+                  transition={
+                    reduceMotion ? { duration: 0 } : { duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 + index * 0.07 }
+                  }
                 />
               </span>
               <span className={styles.statBasis}>{stat.basis}</span>

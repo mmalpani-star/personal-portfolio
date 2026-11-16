@@ -84,10 +84,10 @@ export function OffTheClock() {
               className={`${styles.tile} spotlight`}
               data-motif={item.motif}
               data-play={!reduceMotion && Boolean(seen[item.motif])}
-              initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-              whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.07 }}
+              transition={reduceMotion ? { duration: 0 } : { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.07 }}
               onViewportEnter={() => setSeen((value) => (value[item.motif] ? value : { ...value, [item.motif]: true }))}
             >
               <div className={styles.stage}>{motifs[item.motif]}</div>

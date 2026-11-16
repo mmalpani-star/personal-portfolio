@@ -99,12 +99,12 @@ export function SideQuests() {
             <motion.li
               key={quest.id}
               className={styles.item}
-              initial={reduceMotion ? false : stretched}
+              initial={stretched}
               // The first four snap in once on scroll; the rest snap in when "Show all" is pressed.
               {...(index < initialCount
                 ? { whileInView: settled, viewport: { once: true, amount: 0.4 } }
                 : { animate: settled })}
-              transition={{ ...snap, delay: (index % initialCount) * 0.07 }}
+              transition={reduceMotion ? { duration: 0 } : { ...snap, delay: (index % initialCount) * 0.07 }}
             >
               <motion.button
                 whileTap={reduceMotion ? undefined : { scaleX: 1.03, scaleY: 0.95 }}
