@@ -1,5 +1,6 @@
 'use client';
 
+import { motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { Reveal } from '@/components/animation';
@@ -67,7 +68,13 @@ const exploredQuests: Quest[] = secondaryWork
 const quests = [...projectQuests, ...exploredQuests];
 const initialCount = 4;
 
+/** Rubber stretch: tiles arrive pulled wide and flat, then snap back to shape. */
+const snap = { type: 'spring', stiffness: 380, damping: 13, mass: 0.9 } as const;
+const stretched = { opacity: 0, scaleX: 1.16, scaleY: 0.72 };
+const settled = { opacity: 1, scaleX: 1, scaleY: 1 };
+
 export function SideQuests() {
+  const reduceMotion = useReducedMotion();
   const [expanded, setExpanded] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
   const close = useCallback(() => setOpenId(null), []);
@@ -89,8 +96,18 @@ export function SideQuests() {
 
         <ul className={styles.grid}>
           {visible.map((quest, index) => (
-            <li key={quest.id} className={styles.item}>
-              <button
+            <motion.li
+              key={quest.id}
+              className={styles.item}
+              initial={reduceMotion ? false : stretched}
+              // The first four snap in once on scroll; the rest snap in when "Show all" is pressed.
+              {...(index < initialCount
+                ? { whileInView: settled, viewport: { once: true, amount: 0.4 } }
+                : { animate: settled })}
+              transition={{ ...snap, delay: (index % initialCount) * 0.07 }}
+            >
+              <motion.button
+                whileTap={reduceMotion ? undefined : { scaleX: 1.03, scaleY: 0.95 }}
                 type="button"
                 className={`${styles.tile} spotlight`}
                 onClick={() => setOpenId(quest.id)}
@@ -121,22 +138,24 @@ export function SideQuests() {
                 <span className={styles.more} aria-hidden="true">
                   <Icon name="plus" size={16} />
                 </span>
-              </button>
-            </li>
+              </motion.button>
+            </motion.li>
           ))}
         </ul>
 
         {quests.length > initialCount ? (
           <div className={styles.toggleRow}>
-            <button
+            <motion.button
               type="button"
               className="button button-secondary"
               aria-expanded={expanded}
               onClick={() => setExpanded((value) => !value)}
+              whileTap={reduceMotion ? undefined : { scaleX: 1.14, scaleY: 0.88 }}
+              transition={snap}
             >
               {expanded ? 'Show fewer' : `Show all ${quests.length}`}
               <Icon name="arrow-down" size={14} style={expanded ? { transform: 'rotate(180deg)' } : undefined} />
-            </button>
+            </motion.button>
           </div>
         ) : null}
       </div>

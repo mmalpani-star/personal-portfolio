@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -23,9 +23,12 @@ export function BuildDrawer({ quest, onClose }: BuildDrawerProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const open = quest !== null;
+  // Phones get a bottom sheet, so the stretch runs vertically there.
+  const [sheet, setSheet] = useState(false);
 
   useEffect(() => {
     if (!open) return;
+    setSheet(window.matchMedia('(max-width: 720px)').matches);
     const previousFocus = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -71,10 +74,16 @@ export function BuildDrawer({ quest, onClose }: BuildDrawerProps) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="drawer-title"
-            initial={reduceMotion ? false : { x: 48, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={reduceMotion ? { opacity: 0 } : { x: 48, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformOrigin: sheet ? 'bottom center' : 'right center' }}
+            initial={reduceMotion ? false : sheet ? { scaleY: 0.5, opacity: 0 } : { scaleX: 0.5, opacity: 0 }}
+            animate={{ scaleX: 1, scaleY: 1, opacity: 1 }}
+            exit={reduceMotion ? { opacity: 0 } : sheet ? { scaleY: 0.7, opacity: 0 } : { scaleX: 0.7, opacity: 0 }}
+            transition={{
+              // Elastic on the way in (overshoots, then snaps); quick on the way out.
+              scaleX: { type: 'spring', stiffness: 300, damping: 15 },
+              scaleY: { type: 'spring', stiffness: 300, damping: 15 },
+              opacity: { duration: 0.2 },
+            }}
             onClick={(event) => event.stopPropagation()}
             onKeyDown={onKeyDown}
           >
