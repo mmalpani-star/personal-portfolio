@@ -32,11 +32,15 @@ export function Navbar() {
       return;
     }
     const tracked = new Set(links.map((link) => link.id));
+    // Side Quests belongs to Work as far as the nav is concerned.
+    const alias: Record<string, string> = { quests: 'work' };
     const sections = Array.from(document.querySelectorAll<HTMLElement>('main > section'));
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(tracked.has(entry.target.id) ? entry.target.id : null);
+          if (!entry.isIntersecting) return;
+          const id = alias[entry.target.id] ?? entry.target.id;
+          setActive(tracked.has(id) ? id : null);
         });
       },
       { rootMargin: '-45% 0px -50% 0px' },

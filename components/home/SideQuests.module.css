@@ -1,0 +1,292 @@
+/* ---------- Compact grid ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.4vw, 16px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item { min-width: 0; }
+.grid > li + li { margin-top: 0; }
+
+.tile {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  text-align: left;
+  transition: border-color var(--dur) ease, background var(--dur) ease;
+}
+
+.tile:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-raised);
+}
+
+.thumb {
+  position: relative;
+  width: 76px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: #000;
+}
+
+/* CAD renders sit on a light plate, like a drawing sheet */
+.thumbRender { background: #f4f2ee; }
+
+.thumbEmpty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border: 1px dashed var(--border-strong);
+  border-radius: inherit;
+  background: var(--surface-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--faint);
+}
+
+.text {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.title {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-tight);
+}
+
+.teaser {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.more {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  color: var(--muted-strong);
+  transition: background var(--dur) var(--ease-out), color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .tile:hover .more {
+    background: var(--text);
+    color: #0a0a0a;
+    transform: rotate(90deg);
+  }
+}
+
+.toggleRow {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(16px, 2vw, 24px);
+}
+
+.toggleRow svg { transition: transform var(--dur) var(--ease-out); }
+
+/* ---------- Drawer ---------- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(4, 4, 4, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.drawer {
+  display: flex;
+  flex-direction: column;
+  width: min(520px, 100%);
+  height: 100%;
+  border-left: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  box-shadow: -40px 0 80px -40px rgba(0, 0, 0, 0.9);
+}
+
+.drawerBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px 12px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: transparent;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.close:hover {
+  background: var(--text);
+  color: #0a0a0a;
+}
+
+.drawerScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.drawerMedia {
+  position: relative;
+  width: 100%;
+  max-height: 46svh;
+  background: #000;
+}
+
+.drawerMediaRender { background: #f4f2ee; }
+
+.drawerBody {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+}
+
+.drawerHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px 16px;
+}
+
+.drawerTitle {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  line-height: 1.1;
+  letter-spacing: var(--tracking-display);
+}
+
+.achievement {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+}
+
+.achievement strong {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.achievement span {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.drawerSummary {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--muted-strong);
+}
+
+.points {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.points li {
+  position: relative;
+  margin: 0;
+  padding-left: 22px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 10px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.note {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.drawerActions { margin-top: 4px; }
+
+@media (max-width: 860px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* Phones: the drawer becomes a bottom sheet */
+@media (max-width: 720px) {
+  .backdrop { align-items: flex-end; }
+
+  .drawer {
+    width: 100%;
+    height: auto;
+    max-height: 90svh;
+    border-left: 0;
+    border-top: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .drawerMedia { max-height: 34svh; }
+}
+
+@media (max-width: 420px) {
+  .tile { grid-template-columns: 60px minmax(0, 1fr) auto; gap: 12px; }
+  .thumb { width: 60px; }
+}

@@ -1,5 +1,5 @@
 import { verifiedSkills } from '@/data/site-data';
-import styles from './Capabilities.module.css';
+import styles from './Skills.module.css';
 
 const groups = [
   { key: 'programming', title: 'Programming', items: verifiedSkills.programming },

@@ -114,6 +114,8 @@ export type Education = {
   degree: string;
   expectedGraduation?: string;
   dates?: string;
+  /** One-line version shown in the collapsed row. */
+  summary?: string;
   details?: string[];
 };
 
@@ -850,6 +852,7 @@ export const education: Education[] = [
     institution: 'Delhi Public School, Surat',
     degree: 'Central Board of Secondary Education (CBSE)',
     dates: '2011–2026',
+    summary: 'Student Council House Captain and captain of the school basketball team.',
     details: [
       'Senior secondary subjects: Mathematics, Physics, Chemistry, English, and Computer Science',
       'Scored 93 in Computer Science and 89 in Mathematics',

@@ -270,6 +270,28 @@ li::marker { color: var(--faint); }
 
 .section-heading.centered { text-align: center; justify-items: center; }
 
+/* Arc tag: ARC 01 ——— */
+.arc-tag {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-4);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.arc-tag::after {
+  content: "";
+  width: 48px;
+  height: 1px;
+  background: var(--accent-line);
+}
+
 /* ==========================================================================
    Primitives
    ========================================================================== */

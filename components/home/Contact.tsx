@@ -4,60 +4,52 @@ import { Icon } from '@/components/ui/Icon';
 import { contactLinks } from '@/data/site-data';
 import styles from './Contact.module.css';
 
-const descriptions: Record<string, string> = {
-  GitHub: 'Code for the quadruped, air-quality monitor and more',
-  LinkedIn: 'Background, experience and updates',
-  Handshake: 'UC San Diego student profile',
-  Instagram: '@madhav_malpani105',
-};
-
+/** LinkedIn and the resume lead; the other profiles follow as secondary links. */
 export function Contact() {
+  const linkedIn = contactLinks.find((link) => link.label === 'LinkedIn');
+  const secondary = contactLinks.filter((link) => link.label !== 'LinkedIn');
+
   return (
     <section id="contact" className={`section ${styles.section}`} aria-labelledby="contact-title">
       <div className={`page-shell ${styles.inner}`}>
         <div className={styles.lead}>
           <Reveal>
-            <span className="label">05 — Contact</span>
-          </Reveal>
-          <Reveal delay={0.05}>
+            <div className="arc-tag">Next episode</div>
             <h2 id="contact-title" className={styles.title}>
               Let’s build something useful.
             </h2>
           </Reveal>
-          <Reveal delay={0.1}>
-            <p className={styles.copy}>
-              I’m interested in robotics, AI, embedded systems, and physical engineering work that creates real
-              utility. If you’re working on something in that space, I’d like to hear about it.
-            </p>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <Magnetic>
-              <a href="/documents/resume.pdf" className="button button-primary" target="_blank" rel="noopener noreferrer">
-                <Icon name="document" size={15} />
-                Download resume
-              </a>
-            </Magnetic>
-          </Reveal>
         </div>
 
-        <ul className={styles.links}>
-          {contactLinks.map((link, index) => (
-            <Reveal as="li" key={link.label} delay={0.08 * index}>
-              <a href={link.href} className={`${styles.link} spotlight`} target="_blank" rel="noreferrer">
-                <span className={styles.linkIndex}>{String(index + 1).padStart(2, '0')}</span>
-                <span className={styles.linkText}>
-                  <span className={styles.linkLabel}>{link.label}</span>
-                  {descriptions[link.label] ? (
-                    <span className={styles.linkDescription}>{descriptions[link.label]}</span>
-                  ) : null}
-                </span>
-                <span className={styles.linkArrow} aria-hidden="true">
-                  <Icon name="arrow-up-right" size={20} />
-                </span>
-              </a>
-            </Reveal>
-          ))}
-        </ul>
+        <Reveal className={styles.actions} delay={0.08}>
+          <p className={styles.copy}>
+            Open to robotics research, internships and hardware projects. LinkedIn is the fastest way to reach me.
+          </p>
+          <div className="cta-row">
+            {linkedIn ? (
+              <Magnetic>
+                <a href={linkedIn.href} className="button button-primary" target="_blank" rel="noreferrer">
+                  Message me on LinkedIn
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </Magnetic>
+            ) : null}
+            <a href="/documents/resume.pdf" className="button button-secondary" target="_blank" rel="noopener noreferrer">
+              <Icon name="document" size={15} />
+              Resume (PDF)
+            </a>
+          </div>
+          <ul className={styles.links}>
+            {secondary.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} className={styles.link} target="_blank" rel="noreferrer">
+                  {link.label}
+                  <Icon name="arrow-up-right" size={13} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
     </section>
   );

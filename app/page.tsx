@@ -1,7 +1,9 @@
-import { Capabilities } from '@/components/home/Capabilities';
 import { Contact } from '@/components/home/Contact';
 import { Experience } from '@/components/home/Experience';
 import { Hero } from '@/components/home/Hero';
+import { OffTheClock } from '@/components/home/OffTheClock';
+import { SideQuests } from '@/components/home/SideQuests';
+import { StatsTrophies } from '@/components/home/StatsTrophies';
 import { Work } from '@/components/home/Work';
 
 export default function HomePage() {
@@ -9,8 +11,10 @@ export default function HomePage() {
     <main>
       <Hero />
       <Work />
+      <SideQuests />
       <Experience />
-      <Capabilities />
+      <StatsTrophies />
+      <OffTheClock />
       <Contact />
     </main>
   );
