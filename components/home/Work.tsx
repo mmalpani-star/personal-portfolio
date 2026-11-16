@@ -28,7 +28,8 @@ function MissionCard({ project, index }: { project: Project; index: number }) {
               src={hero.src}
               alt={hero.alt}
               fill
-              sizes="(max-width: 960px) 100vw, 50vw"
+              sizes={lead ? '(max-width: 767px) 88vw, (max-width: 960px) 100vw, 50vw' : '(max-width: 960px) 100vw, 50vw'}
+              quality={lead ? 62 : 75}
               className={`${styles.image} vf-target`}
             />
           ) : null}

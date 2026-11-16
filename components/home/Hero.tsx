@@ -15,7 +15,9 @@ import styles from './Hero.module.css';
 const imageAlt = 'Custom hexapod robot with blue and white 3D-printed legs on a workbench';
 
 // Art direction: landscape hexapod on wide screens, portrait quadruped on phones.
-const common = { alt: imageAlt, sizes: '100vw', quality: 80, priority: true } as const;
+// On phones the hero and the lead mission card request the same file (same sizes and quality),
+// so the quadruped photo downloads once. It sits under a dark grade, so 88vw at q62 is plenty.
+const common = { alt: imageAlt, sizes: '(max-width: 767px) 88vw, 100vw', quality: 62, priority: true } as const;
 const {
   props: { srcSet: desktopSrcSet },
 } = getImageProps({ ...common, src: '/images/projects/hexapod/Hexapod Assembly.jpg', width: 4032, height: 3024 });
