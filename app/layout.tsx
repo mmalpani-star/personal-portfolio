@@ -1,7 +1,9 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google';
-import { EasterEggs, PointerFX, crosshairBootScript } from '@/components/effects';
+import { EasterEggs } from '@/components/effects/EasterEggs';
+import { PointerFX } from '@/components/effects/PointerFX';
+import { crosshairBootScript } from '@/components/effects/useCrosshair';
 import { Footer, Navbar } from '@/components/layout';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });

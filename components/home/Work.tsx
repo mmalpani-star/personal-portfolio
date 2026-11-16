@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '@/components/animation';
-import { Viewfinder } from '@/components/effects';
+import { Viewfinder } from '@/components/effects/Viewfinder';
 import { ArcHeading } from '@/components/ui/ArcHeading';
 import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';

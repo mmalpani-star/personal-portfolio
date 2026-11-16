@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { Reveal } from '@/components/animation';
-import { Viewfinder } from '@/components/effects';
+import { Viewfinder } from '@/components/effects/Viewfinder';
 import { Icon } from '@/components/ui/Icon';
 import { Lightbox } from '@/components/ui/Lightbox';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';

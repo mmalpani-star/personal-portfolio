@@ -1,4 +1,5 @@
-import { EnergyOrb, ShotArc } from '@/components/effects';
+import { EnergyOrb } from '@/components/effects/EnergyOrb';
+import { ShotArc } from '@/components/effects/ShotArc';
 import { Contact } from '@/components/home/Contact';
 import { Experience } from '@/components/home/Experience';
 import { Hero } from '@/components/home/Hero';

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Reveal } from '@/components/animation';
-import { ApertureReveal } from '@/components/effects';
+import { ApertureReveal } from '@/components/effects/ApertureReveal';
 import { ArcHeading } from '@/components/ui/ArcHeading';
 import { Icon } from '@/components/ui/Icon';
 import { education, experience } from '@/data/site-data';

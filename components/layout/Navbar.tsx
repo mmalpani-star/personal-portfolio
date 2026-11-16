@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScro
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useCrosshair } from '@/components/effects';
+import { useCrosshair } from '@/components/effects/useCrosshair';
 import { Icon } from '@/components/ui/Icon';
 import styles from './Navbar.module.css';
 

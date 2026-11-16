@@ -1,5 +1,5 @@
 import { Reveal } from '@/components/animation';
-import { Magnetic } from '@/components/effects';
+import { Magnetic } from '@/components/effects/Magnetic';
 import { Icon } from '@/components/ui/Icon';
 import { contactLinks } from '@/data/site-data';
 import styles from './Contact.module.css';
