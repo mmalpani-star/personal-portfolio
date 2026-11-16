@@ -1,0 +1,45 @@
+.band {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  z-index: 1;
+  padding: clamp(12px, 2vw, 24px) 0 clamp(8px, 1.4vw, 16px);
+  border-bottom: 1px solid var(--border);
+  background: radial-gradient(ellipse 40% 90% at 50% 45%, rgba(255, 181, 71, 0.05), transparent 70%);
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: clamp(96px, 17vw, 230px);
+}
+
+.static {
+  height: 100%;
+  width: auto;
+  transition: opacity 500ms ease;
+}
+
+.rings {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 0.6;
+  opacity: 0.55;
+}
+
+/* The canvas is wider and taller than the band so the burst can spill over its neighbours */
+.canvas {
+  position: absolute;
+  inset: -80% 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.band[data-live="true"] .canvas { opacity: 1; }
+.band[data-live="true"] .static { opacity: 0; }
+
+.label { margin: 0; }

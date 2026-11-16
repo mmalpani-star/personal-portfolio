@@ -1,4 +1,4 @@
-import { ShotArc } from '@/components/effects';
+import { EnergyOrb, ShotArc } from '@/components/effects';
 import { Contact } from '@/components/home/Contact';
 import { Experience } from '@/components/home/Experience';
 import { Hero } from '@/components/home/Hero';
@@ -11,6 +11,7 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
+      <EnergyOrb />
       <Work />
       <SideQuests />
       <ShotArc />

@@ -1,6 +1,7 @@
 export { AceTracker } from './AceTracker';
 export { ApertureReveal } from './ApertureReveal';
 export { EasterEggs } from './EasterEggs';
+export { EnergyOrb } from './EnergyOrb';
 export { Magnetic } from './Magnetic';
 export { Parallax } from './Parallax';
 export { PointerFX } from './PointerFX';
