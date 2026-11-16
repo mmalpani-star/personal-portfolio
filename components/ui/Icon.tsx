@@ -6,6 +6,7 @@ const paths = {
   'arrow-right': <path d="M5 12h14M13 6l6 6-6 6" />,
   'arrow-left': <path d="M19 12H5M11 6l-6 6 6 6" />,
   'arrow-down': <path d="M12 5v14M6 13l6 6 6-6" />,
+  crosshair: <path d="M12 3v6M12 15v6M3 12h6M15 12h6" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
   menu: <path d="M4 8h16M4 16h16" />,
   plus: <path d="M12 5v14M5 12h14" />,

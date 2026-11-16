@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google';
-import { PointerFX } from '@/components/effects';
+import { PointerFX, crosshairBootScript } from '@/components/effects';
 import { Footer, Navbar } from '@/components/layout';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
@@ -24,8 +24,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <body id="top">
+        <script dangerouslySetInnerHTML={{ __html: crosshairBootScript }} />
         <a href="#main" className="skip-link">
           Skip to content
         </a>

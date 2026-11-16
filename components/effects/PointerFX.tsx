@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { crosshairIsOn } from './useCrosshair';
 
 /**
  * One passive, rAF-throttled pointer listener for the whole document:
  * - moves the ambient light (transform only, no React re-renders)
  * - feeds `--mx` / `--my` to the `.spotlight` element under the pointer
+ * - draws a short hit-marker at the click point while the crosshair cursor is on
  * Inactive on touch / coarse pointers. The ambient light is hidden under
  * reduced motion (CSS); spotlights still respond since they don't move content.
  */
@@ -45,12 +47,25 @@ export function PointerFX() {
       if (light) light.dataset.active = 'false';
     };
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onDown = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0 || reduceMotion.matches || !crosshairIsOn()) return;
+      const marker = document.createElement('span');
+      marker.className = 'hit-marker';
+      marker.style.left = `${event.clientX}px`;
+      marker.style.top = `${event.clientY}px`;
+      marker.addEventListener('animationend', () => marker.remove(), { once: true });
+      document.body.appendChild(marker);
+    };
+
     document.addEventListener('pointermove', onMove, { passive: true });
+    document.addEventListener('pointerdown', onDown, { passive: true });
     document.documentElement.addEventListener('pointerleave', onLeave);
 
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerdown', onDown);
       document.documentElement.removeEventListener('pointerleave', onLeave);
     };
   }, []);

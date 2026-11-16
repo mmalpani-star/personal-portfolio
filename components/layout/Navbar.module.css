@@ -103,6 +103,35 @@
 
 .resume { min-height: 38px; padding: 0.6rem 0.9rem; }
 
+/* Crosshair cursor switch: only where a mouse cursor exists */
+.cursorToggle {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 0.7rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: rgba(7, 7, 7, 0.4);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.cursorToggle:hover { color: var(--text); }
+
+.cursorToggle[aria-pressed="true"] {
+  border-color: var(--accent-line);
+  color: var(--accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cursorToggle { display: inline-flex; }
+}
+
 .toggle {
   display: none;
   place-items: center;
