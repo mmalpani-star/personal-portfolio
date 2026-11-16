@@ -130,28 +130,22 @@ export function Hero() {
       <motion.div className={styles.copyLayer} style={still ? undefined : { y: copyY, opacity: copyOpacity }}>
         <div className={`page-shell ${styles.copy}`}>
           <div className={`label ${styles.kicker} reveal-eager`}>
-            Madhav Malpani · AI × Robotics × Hardware
+            Madhav Malpani · B.S. AI, UC San Diego
           </div>
           <h1 id="hero-title" className={`${styles.title} reveal-eager`} style={{ animationDelay: '0.08s' }}>
             Building robots that extend human capability.
           </h1>
-          <p className={`${styles.tagline} reveal-eager`} style={{ animationDelay: '0.18s' }}>
-            One iteration at a time.
-          </p>
-          <p className={`${styles.intro} reveal-eager`} style={{ animationDelay: '0.26s' }}>
-            I’m an undergraduate Artificial Intelligence student at UC San Diego. I build physical systems — legged
-            robots, embedded hardware and prototypes — and learn by taking them apart and improving them.
-          </p>
-          <div className={`cta-row ${styles.actions} reveal-eager`} style={{ animationDelay: '0.34s' }}>
+          <div className={`cta-row ${styles.actions} reveal-eager`} style={{ animationDelay: '0.18s' }}>
             <Magnetic>
               <Link href="/#work" className="button button-primary">
-                Explore the work
+                See the work
                 <Icon name="arrow-down" size={15} />
               </Link>
             </Magnetic>
-            <Link href="/about" className="button button-secondary">
-              About me
-            </Link>
+            <a href="/documents/resume.pdf" className="button button-secondary" target="_blank" rel="noopener noreferrer">
+              Resume
+              <Icon name="arrow-up-right" size={14} />
+            </a>
           </div>
         </div>
       </motion.div>
@@ -175,7 +169,7 @@ export function Hero() {
             <span className="label">San Diego</span>
             <SanDiegoClock />
           </div>
-          <a href="#philosophy" className={`${styles.cell} ${styles.scroll}`}>
+          <a href="#work" className={`${styles.cell} ${styles.scroll}`}>
             <span className="label">Scroll</span>
             <span className={styles.scrollLine} aria-hidden="true" />
           </a>

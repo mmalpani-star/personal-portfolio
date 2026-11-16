@@ -242,6 +242,63 @@
   color: var(--accent);
 }
 
+/* How I work: four-step loop */
+.loop { margin: clamp(28px, 4vw, 48px) 0; }
+
+.loopHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.loopNote {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stages > li + li { margin-top: 0; }
+
+.stage {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 18px 16px 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.stageIndex {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+.stageTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+
+.stageDetail {
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
 /* Interests */
 .interests {
   display: grid;
@@ -278,6 +335,7 @@
   .philosophyBody { padding-top: 0; }
   .builds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .interests { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 640px) {

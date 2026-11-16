@@ -27,7 +27,7 @@ export type ProjectMediaItem =
       height?: number;
     };
 
-/** Controls homepage emphasis: flagship robotics, hardware prototypes, software & hackathons. */
+/** Controls homepage emphasis: `flagship` gets a full card; the rest go to the Side Quests grid. */
 export type ProjectTier = 'flagship' | 'hardware' | 'software';
 
 export type Project = {
@@ -39,6 +39,10 @@ export type Project = {
   status: ProjectStatus;
   statusNote: string;
   summary: string;
+  /** Homepage card copy: at most two lines, written only from the verified text below. */
+  teaser: string;
+  /** Up to three short spec chips for the homepage card. */
+  chips: string[];
   description: string;
   role?: string;
   technologies: string[];
@@ -84,6 +88,8 @@ export type Experience = {
   location?: string;
   dates?: string;
   isCurrent?: boolean;
+  /** One-line version shown in the collapsed timeline row. */
+  summary?: string;
   details?: string[];
   socialLink?: ContactLink;
   images?: Array<{
@@ -127,6 +133,8 @@ export type ContactLink = {
 
 export type SecondaryWork = {
   title: string;
+  /** One-line version for the Side Quests grid. */
+  teaser?: string;
   details: string[];
   image?: { src: string; alt: string; width: number; height: number };
 };
@@ -137,6 +145,9 @@ export const projects: Project[] = [
     tier: 'flagship',
     title: 'Quadruped Leg Kinematics',
     shortTitle: 'Quadruped',
+    teaser:
+      'Four 3-DOF legs, a Python kinematics framework, and a MuJoCo twin that walks, turns and jumps. Hardware locomotion is in progress.',
+    chips: ['4 × 3-DOF legs', 'FK + IK in Python', 'MuJoCo: ~11 cm jump'],
     category: 'Robotics / Kinematics',
     status: 'IN PROGRESS',
     statusNote:
@@ -347,6 +358,9 @@ if __name__ == "__main__":
     tier: 'flagship',
     title: 'Custom Hexapod',
     shortTitle: 'Hexapod',
+    teaser:
+      'A roughly 70 cm wide six-legged robot: 18 servos, an Arduino Mega and 20+ printed parts. Assembled; locomotion is the current job.',
+    chips: ['18 × MG996R servos', '20+ 3D-printed parts', 'Arduino Mega'],
     category: 'Robotics / Mechanical Systems',
     status: 'IN PROGRESS',
     statusNote: 'Mechanical assembly complete / locomotion development ongoing.',
@@ -387,6 +401,9 @@ if __name__ == "__main__":
     tier: 'hardware',
     title: '1U CubeSat Antenna Deployment Mechanism',
     shortTitle: 'CubeSat',
+    teaser:
+      'Antenna deployment and burn-wire mechanism for a 3D-printed 1U CubeSat model, from a startup internship.',
+    chips: ['Burn-wire mechanism', 'CST Studio simulation', 'Onshape'],
     category: 'Space Systems / Mechanical Design',
     status: 'PROTOTYPE',
     statusNote: 'Prototype and simulation work completed; no flight claim made.',
@@ -426,6 +443,9 @@ if __name__ == "__main__":
     tier: 'hardware',
     title: 'ESP32 Multi-Sensor Air Quality Monitor',
     shortTitle: 'Air Quality',
+    teaser:
+      'An ESP32 station that reads CO2, ozone, temperature and humidity and shows them on a TFT display.',
+    chips: ['ESP32', '5 sensor readings', 'TFT display'],
     category: 'Embedded Systems / IoT',
     status: 'COMPLETED',
     statusNote: 'Completed prototype and demonstration project.',
@@ -463,9 +483,12 @@ if __name__ == "__main__":
   },
   {
     slug: 'tritonspend-ai',
-    tier: 'software',
+    tier: 'flagship',
     title: 'TritonSpend AI',
     shortTitle: 'TritonSpend',
+    teaser:
+      'A live web app that helps UC San Diego students make Dining Dollars and Triton Cash last the whole term.',
+    chips: ['Two wallets, to the cent', 'Spending forecasts', 'Next.js + FastAPI'],
     category: 'AI / Web Application',
     status: 'COMPLETED',
     statusNote:
@@ -521,6 +544,9 @@ if __name__ == "__main__":
     tier: 'software',
     title: 'BorderPulse',
     shortTitle: 'BorderPulse',
+    teaser:
+      'Hackathon logistics tool for border-crossing delays and rerouting. Top 7 at cOmpiled-16.',
+    chips: ['Top 7 of 200+ teams', 'Rerouting decisions', 'Driver communication'],
     category: 'Hackathon / Logistics',
     status: 'PROTOTYPE',
     statusNote: 'Hackathon prototype demonstrated at cOmpiled-16; not a deployed commercial logistics system.',
@@ -616,6 +642,9 @@ if __name__ == "__main__":
     tier: 'hardware',
     title: 'HydroSafe',
     shortTitle: 'HydroSafe',
+    teaser:
+      'A flood-drainage prototype with pipes, springs and piezoelectric sensors, presented to 100+ visitors.',
+    chips: ['Physical prototype', 'Piezoelectric sensors', '100+ visitors'],
     category: 'Environmental Engineering / Embedded Systems / Mechanical Systems',
     status: 'PROTOTYPE',
     statusNote: 'Physical prototype and concept exploration completed for demonstration and presentation.',
@@ -691,6 +720,7 @@ export const currentlyBuilding: {
   location: string;
   dates: string;
   status: ProjectStatus;
+  summary: string;
   description: string;
 } = {
   organization: 'Triton Robotics',
@@ -698,6 +728,8 @@ export const currentlyBuilding: {
   location: 'UC San Diego',
   dates: 'Aug 2026 – Present',
   status: 'CURRENTLY BUILDING',
+  summary:
+    'Designing a CAN FD transceiver breakout board as my capstone, after training on the legacy center board and an LM555 timer circuit.',
   description:
     'Working on the legacy center-board design by reviewing power and signal distribution, modifying the PCB during week 2, and building a LM555 timer circuit on a general-purpose board during training. For the capstone, I am designing and building a CAN FD transceiver breakout board, with PCB Version 1 followed by PCB Version 3.',
 };
@@ -707,12 +739,14 @@ export const experience: Experience[] = [
     title: 'Mechanical Design & Fabrication Intern',
     organization: 'Space Technology / Aeronautical Rocketry startup',
     dates: 'Jun 2025 – Jul 2025',
+    summary: '3D-printed CubeSat model, antenna deployment mechanism, assembly and soldering.',
     details: ['3D-printed CubeSat model work', 'Antenna deployment mechanism design and testing support', 'Assembly and soldering support'],
   },
   {
     title: 'Machine Learning Intern',
     organization: 'IIT Kanpur / Techkriti',
     dates: 'Jan 2025 – Feb 2025',
+    summary: 'SVM handwritten-digit classifier in Python, plus the IIT Kanpur Python for AI/ML certification.',
     details: [
       'Fundamental machine learning and linear algebra study',
       'SVM-based handwritten digit classifier using Python and scikit-learn',
@@ -734,6 +768,7 @@ export const experience: Experience[] = [
     location: 'UC San Diego',
     dates: 'Aug 2026 – Present',
     isCurrent: true,
+    summary: 'Designing a CAN FD transceiver breakout board as my capstone: PCB V1, then V3.',
     details: [
       'Reviewed an older center-board design for power and signal distribution',
       'Modified the center-board PCB during week 2 of training',
@@ -780,6 +815,7 @@ export const experience: Experience[] = [
     title: 'Event Organiser',
     organization: 'Pickle It Down',
     dates: 'May 2024 – Jan 2026',
+    summary: 'Co-founded a pickleball community: 50+ players, ~8,000 profile visits a month, ~₹50,000 revenue.',
     details: [
       'Co-founded a pickleball community that brought together 50+ players for tournaments and social events',
       'Managed venue booking, logistics, catering, and match-fixture planning',
@@ -874,10 +910,12 @@ export const contactLinks: ContactLink[] = [
 export const secondaryWork: SecondaryWork[] = [
   {
     title: 'Gesture-Controlled Drone',
+    teaser: 'Soldered ESP32 board, printed parts and CAD. Not completed, and listed anyway.',
     details: ['ESP32 board soldering', '3D-printed components', 'CAD work', 'Project was not successfully completed'],
   },
   {
     title: 'ROV',
+    teaser: 'CAD study of an underwater ROV with a clear front dome and two ducted thrusters.',
     details: ['CAD/modeling project', 'Primarily visual/CAD work'],
     image: {
       src: '/images/projects/rov/rov-cad.jpg',
@@ -904,5 +942,52 @@ export const secondaryWork: SecondaryWork[] = [
       'Created a welcoming environment where players could meet new people and play together',
       'Motto: “We connect, you play.”',
     ],
+  },
+];
+
+/**
+ * Player-rating card. These are self-ratings, not measurements: edit the
+ * numbers here and the card updates. `overall` is shown as given.
+ */
+export const playerCard = {
+  overall: 78,
+  position: 'Robotics builder',
+  note: 'Self-assessed · Season 2026',
+  stats: [
+    { code: 'FAB', name: 'Fabrication', value: 82, basis: '3D printing, soldering, assembly' },
+    { code: 'CAD', name: 'Mechanical design', value: 80, basis: 'Onshape parts and mechanisms' },
+    { code: 'EMB', name: 'Embedded & PCB', value: 75, basis: 'ESP32 firmware, CAN FD board' },
+    { code: 'KIN', name: 'Kinematics & control', value: 72, basis: 'Quadruped FK / IK' },
+    { code: 'SWE', name: 'Software', value: 70, basis: 'Python, TypeScript, web apps' },
+    { code: 'ITR', name: 'Iteration speed', value: 88, basis: 'Build, break, rebuild' },
+  ],
+};
+
+export type OffClockMotif = 'basketball' | 'film' | 'gaming' | 'anime';
+
+/** "Off the clock" tiles. Lines are jokes, not claims; tags are plain facts. */
+export const offTheClock: Array<{ motif: OffClockMotif; title: string; tag?: string; line: string }> = [
+  {
+    motif: 'basketball',
+    title: 'Basketball',
+    tag: 'School team captain, 2026',
+    line: 'Projectile motion, but recreational. The arc is still a parabola.',
+  },
+  {
+    motif: 'film',
+    title: 'Film & Photography',
+    line: 'Always reframing. Same habit as checking a CAD part from one more angle.',
+  },
+  {
+    motif: 'gaming',
+    title: 'Gaming',
+    tag: 'Valorant · FC',
+    line: 'Valorant for the crosshair placement, FC for the tactics. Losses are blamed on ping.',
+  },
+  {
+    motif: 'anime',
+    title: 'Anime',
+    tag: 'Naruto · One Piece',
+    line: 'Long arcs, endless training montages. Basically a build log with better soundtracks.',
   },
 ];

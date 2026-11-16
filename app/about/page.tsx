@@ -16,9 +16,16 @@ export const metadata: Metadata = {
 
 const applications = ['Warehouse automation', 'Search and rescue', 'Ocean exploration', 'Household automation', 'Industrial systems'];
 
+const loop = [
+  { title: 'Understand', detail: 'Take the system apart: mechanics, electronics, control.' },
+  { title: 'Prototype', detail: 'Build a physical version, however rough.' },
+  { title: 'Experiment', detail: 'Run it, measure it, find where it breaks.' },
+  { title: 'Iterate', detail: 'Fix, rebuild, and go around again.' },
+];
+
 export default function AboutPage() {
   const university = education[0];
-  const builds = displayProjects.filter((project) => project.tier !== 'software').slice(0, 4);
+  const builds = displayProjects.slice(0, 4);
 
   return (
     <main>
@@ -112,6 +119,22 @@ export default function AboutPage() {
                 ))}
               </ul>
             </Reveal>
+          </div>
+
+          <div className={styles.loop}>
+            <div className={styles.loopHead}>
+              <span className="label">How I work</span>
+              <span className={styles.loopNote}>↻ repeat</span>
+            </div>
+            <ol className={styles.stages}>
+              {loop.map((stage, index) => (
+                <Reveal as="li" key={stage.title} className={styles.stage} delay={index * 0.08}>
+                  <span className={styles.stageIndex}>{String(index + 1).padStart(2, '0')}</span>
+                  <span className={styles.stageTitle}>{stage.title}</span>
+                  <span className={styles.stageDetail}>{stage.detail}</span>
+                </Reveal>
+              ))}
+            </ol>
           </div>
 
           <div className={styles.builds}>
