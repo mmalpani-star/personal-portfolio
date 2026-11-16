@@ -14,7 +14,7 @@ type Ball = { x: number; y: number; vx: number; vy: number; spin: number; angle:
 
 function serve(width: number): Ball {
   return {
-    x: width * 0.22,
+    x: width * 0.62,
     y: RADIUS + 8,
     vx: 240 + Math.random() * 180,
     vy: 0,

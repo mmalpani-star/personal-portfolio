@@ -71,7 +71,7 @@ export function Navbar() {
   return (
     <header className={styles.header} data-scrolled={scrolled || open}>
       <div className={`page-shell ${styles.inner}`}>
-        <Link href="/" className={styles.brand} aria-label="Madhav Malpani — home">
+        <Link href="/" className={styles.brand}>
           <span className={styles.monogram} aria-hidden="true">
             MM
           </span>
