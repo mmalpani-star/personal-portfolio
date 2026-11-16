@@ -31,10 +31,10 @@
 .monogram {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-xs);
+  border-radius: 10px;
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 600;
@@ -58,18 +58,23 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: rgba(14, 23, 41, 0.4);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  padding: 5px;
+  border: 1px solid rgba(244, 237, 224, 0.16);
+  border-radius: 999px;
+  background: rgba(244, 237, 224, 0.07);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(244, 237, 224, 0.2);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav { background: rgba(28, 44, 79, 0.94); }
 }
 
 .link {
   position: relative;
-  padding: 7px 14px;
-  border-radius: var(--radius-xs);
+  padding: 8px 16px;
+  border-radius: 999px;
   color: var(--muted);
   font-size: var(--text-sm);
   transition: color var(--dur-fast) ease, background var(--dur-fast) ease;
@@ -79,7 +84,7 @@
 
 .link[aria-current="true"] {
   color: var(--text);
-  background: var(--surface-2);
+  background: rgba(244, 237, 224, 0.12);
 }
 
 .link[aria-current="true"]::after {
