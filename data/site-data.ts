@@ -953,3 +953,72 @@ export const secondaryWork: SecondaryWork[] = [
     ],
   },
 ];
+
+export type AboutPanelId = 'anime' | 'gaming' | 'film' | 'basketball' | 'pickleball';
+
+export type AboutPanel = {
+  id: AboutPanelId;
+  title: string;
+  tag?: string;
+  line: string;
+  /** Japanese onomatopoeia used as manga-style sound type on the panel. */
+  sfx: string;
+  sfxRoman: string;
+  stats?: Array<{ figure: string; label: string }>;
+  image?: { src: string; alt: string; width: number; height: number };
+};
+
+/** "About Me" panels. Lines are jokes about myself; every number below is verified. */
+export const aboutPanels: AboutPanel[] = [
+  {
+    id: 'anime',
+    title: 'Anime',
+    tag: 'Naruto · One Piece',
+    line: 'Long arcs, endless training montages. Basically a build log with better soundtracks.',
+    sfx: 'ドドド',
+    sfxRoman: 'do-do-do',
+  },
+  {
+    id: 'basketball',
+    title: 'Basketball',
+    tag: 'School team captain, 2026',
+    line: 'Projectile motion, but recreational. The arc is still a parabola.',
+    sfx: 'ダンッ',
+    sfxRoman: 'dan',
+  },
+  {
+    id: 'gaming',
+    title: 'Gaming',
+    tag: 'Valorant · FC',
+    line: 'Valorant for the crosshair placement, FC for the tactics. Losses are blamed on ping.',
+    sfx: 'バン',
+    sfxRoman: 'ban',
+  },
+  {
+    id: 'film',
+    title: 'Film & Photography',
+    line: 'Always reframing. Same habit as checking a CAD part from one more angle.',
+    sfx: 'カシャ',
+    sfxRoman: 'kasha',
+  },
+  {
+    id: 'pickleball',
+    title: 'Pickle It Down',
+    tag: 'Co-founder · May 2024 – Jan 2026',
+    line: 'I started a pickleball community, then ran the venues, the fixtures and the catering. We connect, you play.',
+    sfx: 'パンッ',
+    sfxRoman: 'pan',
+    stats: [
+      { figure: '50+', label: 'players' },
+      { figure: '51,781+', label: 'reel views' },
+      { figure: '~8,000', label: 'profile visits a month' },
+      { figure: '~₹50,000', label: 'revenue' },
+    ],
+    image: {
+      src: '/images/experience/pickle-it-down-tournament.jpeg',
+      alt: 'Pickle It Down tournament players on court',
+      width: 960,
+      height: 1280,
+    },
+  },
+];

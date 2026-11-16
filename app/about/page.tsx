@@ -1,206 +1,147 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
+import { MangaPanels } from '@/components/about/MangaPanels';
+import { ReactorIntro } from '@/components/about/ReactorIntro';
 import { Reveal } from '@/components/animation';
 import { Magnetic } from '@/components/effects/Magnetic';
-import { Tilt } from '@/components/effects/Tilt';
-import { Skills } from '@/components/home/Skills';
 import { Icon } from '@/components/ui/Icon';
-import { SectionHeading } from '@/components/ui/SectionHeading';
-import { currentlyBuilding, displayProjects, education, technicalInterests } from '@/data/site-data';
+import { currentlyBuilding, education, technicalInterests } from '@/data/site-data';
 import styles from './About.module.css';
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Undergraduate Artificial Intelligence student at UC San Diego focused on robotics, AI and physical systems.',
+  description:
+    'Madhav Malpani — robotics and AI student at UC San Diego. Builder, basketball captain, community organiser, and a long-running anime habit.',
 };
-
-const applications = ['Warehouse automation', 'Search and rescue', 'Ocean exploration', 'Household automation', 'Industrial systems'];
 
 const loop = [
   { title: 'Understand', detail: 'Take the system apart: mechanics, electronics, control.' },
   { title: 'Prototype', detail: 'Build a physical version, however rough.' },
   { title: 'Experiment', detail: 'Run it, measure it, find where it breaks.' },
-  { title: 'Iterate', detail: 'Fix, rebuild, and go around again.' },
+  { title: 'Iterate', detail: 'Fix, rebuild, go around again.' },
 ];
 
 export default function AboutPage() {
   const university = education[0];
-  const builds = displayProjects.slice(0, 4);
 
   return (
     <main>
+      <ReactorIntro />
+
+      {/* ---------- Opening ---------- */}
       <section className={`page-top ${styles.intro}`}>
         <div className={`page-shell ${styles.introGrid}`}>
           <div className={styles.introCopy}>
-            <span className="label reveal-eager">About</span>
+            <span className="label reveal-eager">About me</span>
             <h1 className={`${styles.title} reveal-eager`} style={{ animationDelay: '0.06s' }}>
-              Student engineer building physical systems.
+              I build things, then find out where they break.
             </h1>
             <p className={`${styles.lead} reveal-eager`} style={{ animationDelay: '0.12s' }}>
-              I am an undergraduate student at UC San Diego pursuing a B.S. in Artificial Intelligence, with a strong
-              interest in robotics, artificial intelligence, physical AI, and autonomous systems. I am interested in
-              engineering systems that extend human capability and tackle dangerous, repetitive, difficult, or
-              demanding work.
+              Robots are the part of me that shows up on a résumé. The rest is a basketball captain who started a
+              pickleball community, films everything, argues about anime arcs, and blames every lost round on ping.
             </p>
-            <div className={`cta-row reveal-eager`} style={{ animationDelay: '0.18s' }}>
+            <div className="cta-row reveal-eager" style={{ animationDelay: '0.18s' }}>
               <Magnetic>
-                <Link href="/#work" className="button button-primary">
+                <Link href="/#projects" className="button button-primary">
                   See the work
                   <Icon name="arrow-right" size={15} />
                 </Link>
               </Magnetic>
-              <a href="/documents/resume.pdf" className="button button-secondary" target="_blank" rel="noopener noreferrer">
+              <a
+                href="/documents/resume.pdf"
+                className="button button-secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Resume
                 <Icon name="arrow-up-right" size={14} />
               </a>
             </div>
           </div>
 
-          <div className="reveal-eager" style={{ animationDelay: '0.2s' }}>
-          <Tilt max={3}>
-            <dl className={`${styles.profile} spotlight`}>
-              <div className={styles.profileHead}>
-                <span className={styles.monogram} aria-hidden="true">
-                  MM
-                </span>
-                <span>
-                  <span className={styles.profileName}>Madhav Malpani</span>
-                  <span className={styles.profileRole}>AI × Robotics × Hardware</span>
-                </span>
-              </div>
+          <div className={`${styles.profile} glass reveal-eager`} style={{ animationDelay: '0.2s' }}>
+            <div className={styles.profileHead}>
+              <span className={styles.monogram} aria-hidden="true">
+                MM
+              </span>
+              <span>
+                <span className={styles.profileName}>Madhav Malpani</span>
+                <span className={styles.profileRole}>AI · Robotics · Hardware</span>
+              </span>
+            </div>
+            <dl className={styles.profileRows}>
               <div>
-                <dt>Program</dt>
+                <dt>Studying</dt>
                 <dd>{university.degree}</dd>
               </div>
               <div>
-                <dt>University</dt>
+                <dt>At</dt>
                 <dd>{university.institution}</dd>
               </div>
               <div>
-                <dt>Graduation</dt>
-                <dd>Expected {university.expectedGraduation}</dd>
+                <dt>Graduating</dt>
+                <dd>{university.expectedGraduation}</dd>
               </div>
               <div>
                 <dt>Now</dt>
-                <dd>
-                  <span className={styles.live} aria-hidden="true" />
-                  {currentlyBuilding.organization} — {currentlyBuilding.team}
-                </dd>
+                <dd>{currentlyBuilding.organization}</dd>
               </div>
             </dl>
-          </Tilt>
           </div>
         </div>
       </section>
 
-      <section className="section">
+      {/* ---------- How I work ---------- */}
+      <section className={`section ${styles.method}`} aria-labelledby="method-title">
         <div className="page-shell">
-          <div className={styles.philosophy}>
-            <Reveal>
-              <span className="label">Philosophy</span>
-              <blockquote className={styles.quote}>
-                Building robots that extend human capability.
-                <span> One iteration at a time.</span>
-              </blockquote>
-            </Reveal>
-            <Reveal delay={0.08} className={styles.philosophyBody}>
-              <p>
-                Some tasks are dangerous, repetitive, physically demanding, or simply not worth human time. I am
-                interested in building systems that improve productivity without losing the human element at the
-                center of the work.
-              </p>
-              <p>
-                My work lives at the intersection of mechanical design, electronics, embedded systems, and intelligent
-                control.
-              </p>
-              <ul className={styles.chips} aria-label="Applications I care about">
-                {applications.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-
-          <div className={styles.loop}>
-            <div className={styles.loopHead}>
-              <span className="label">How I work</span>
-              <span className={styles.loopNote}>↻ repeat</span>
-            </div>
-            <ol className={styles.stages}>
-              {loop.map((stage, index) => (
-                <Reveal as="li" key={stage.title} className={styles.stage} delay={index * 0.08}>
-                  <span className={styles.stageIndex}>{String(index + 1).padStart(2, '0')}</span>
-                  <span className={styles.stageTitle}>{stage.title}</span>
-                  <span className={styles.stageDetail}>{stage.detail}</span>
-                </Reveal>
-              ))}
-            </ol>
-          </div>
-
-          <div className={styles.builds}>
-            {builds.map((project, index) => (
-              <Reveal key={project.slug} delay={index * 0.06}>
-                <Link href={`/projects/${project.slug}`} className={styles.build}>
-                  {project.heroMedia?.type === 'image' ? (
-                    <Image src={project.heroMedia.src} alt={project.heroMedia.alt} fill sizes="(max-width: 760px) 50vw, 25vw" />
-                  ) : null}
-                  <span className={styles.buildLabel}>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    {project.shortTitle}
-                  </span>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section section--raised">
-        <div className="page-shell">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Education"
-              title="Where I’m learning."
-              description="Formal study alongside the projects — mathematics, physics, computer science and now AI."
-            />
+          <Reveal className={styles.heading}>
+            <span className="section-index">01</span>
+            <h2 id="method-title">How I work</h2>
+            <p>Four steps, repeated until the thing actually runs.</p>
           </Reveal>
-          <div className={styles.schools}>
-            {education.map((item, index) => (
-              <Reveal key={item.institution} delay={index * 0.08} className={`${styles.school} spotlight`}>
-                <span className={styles.schoolDates}>
-                  {item.expectedGraduation ? `Expected ${item.expectedGraduation}` : item.dates}
-                </span>
-                <h3>{item.institution}</h3>
-                <p className={styles.schoolDegree}>{item.degree}</p>
-                {item.details ? (
-                  <ul>
-                    {item.details.map((detail) => (
-                      <li key={detail}>{detail}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="section">
-        <div className="page-shell">
-          <Reveal>
-            <SectionHeading eyebrow="Focus & tools" title="What I’m exploring, and what I use." />
-          </Reveal>
-          <ol className={styles.interests}>
-            {technicalInterests.map((interest, index) => (
-              <Reveal as="li" key={interest} delay={index * 0.04} className={styles.interest}>
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                {interest}
+          <ol className={styles.stages}>
+            {loop.map((stage, index) => (
+              <Reveal as="li" key={stage.title} className={styles.stage} delay={index * 0.07}>
+                <span className={styles.stageIndex}>{String(index + 1).padStart(2, '0')}</span>
+                <span className={styles.stageTitle}>{stage.title}</span>
+                <span className={styles.stageDetail}>{stage.detail}</span>
               </Reveal>
             ))}
           </ol>
+
+          <Reveal className={styles.interests}>
+            <span className="label">Currently curious about</span>
+            <ul className="tag-list">
+              {technicalInterests.map((interest) => (
+                <li key={interest} className="tag">
+                  {interest}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---------- Off the clock ---------- */}
+      <MangaPanels />
+
+      {/* ---------- Close ---------- */}
+      <section className={`section ${styles.close}`}>
+        <div className={`page-shell ${styles.closeInner}`}>
           <Reveal>
-            <Skills />
+            <h2 className={styles.closeTitle}>That is the whole of it.</h2>
+          </Reveal>
+          <Reveal delay={0.08} className="cta-row">
+            <Magnetic>
+              <Link href="/#contact" className="button button-primary">
+                Get in touch
+                <Icon name="arrow-right" size={15} />
+              </Link>
+            </Magnetic>
+            <Link href="/#projects" className="button button-secondary">
+              Back to the work
+            </Link>
           </Reveal>
         </div>
       </section>

@@ -1,0 +1,112 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: clamp(20px, 4vw, 36px);
+  background: #000;
+}
+
+.reactor {
+  width: min(62vmin, 460px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 26px rgba(255, 107, 91, 0.3));
+}
+
+.housing,
+.race {
+  fill: none;
+  stroke: rgba(244, 237, 224, 0.5);
+  stroke-width: 1;
+}
+
+.housing { stroke: rgba(244, 237, 224, 0.7); stroke-width: 1.4; }
+
+.tick,
+.tickLong {
+  stroke: rgba(244, 237, 224, 0.45);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+
+.tickLong { stroke: var(--coral); stroke-width: 1.6; }
+
+.coil {
+  fill: rgba(255, 107, 91, 0.28);
+  stroke: var(--coral);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+.coreGlow {
+  fill: rgba(255, 107, 91, 0.55);
+  filter: blur(9px);
+}
+
+.core {
+  fill: rgba(255, 150, 125, 0.92);
+}
+
+.coreHot {
+  fill: #fff4ec;
+}
+
+.flash {
+  fill: none;
+  stroke: rgba(255, 180, 150, 0.9);
+  stroke-width: 2;
+}
+
+/* Counter-rotating assemblies. Each plays continuously while the overlay is up. */
+.spinSlow {
+  transform-origin: 100px 100px;
+  animation: reactor-spin 22s linear infinite;
+}
+
+.spinFast {
+  transform-origin: 100px 100px;
+  animation: reactor-spin 9s linear infinite reverse;
+}
+
+@keyframes reactor-spin {
+  to { transform: rotate(360deg); }
+}
+
+.caption {
+  margin: 0;
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+}
+
+.skip {
+  position: absolute;
+  right: clamp(16px, 4vw, 40px);
+  bottom: clamp(16px, 4vw, 40px);
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(244, 237, 224, 0.26);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(244, 237, 224, 0.75);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.skip:hover {
+  color: var(--cream);
+  border-color: rgba(244, 237, 224, 0.6);
+}
+
+/* Belt and braces: if the overlay ever renders with motion disabled, hide it. */
+@media (prefers-reduced-motion: reduce) {
+  .overlay { display: none; }
+}
