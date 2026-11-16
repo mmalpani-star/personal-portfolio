@@ -618,6 +618,56 @@ li::marker { color: var(--faint); }
   .spotlight:hover::after { opacity: 1; }
 }
 
+/* Hover joke on status badges that carry one (fine pointers only) */
+.status-badge[data-joke] { position: relative; }
+
+@media (hover: hover) and (pointer: fine) {
+  .status-badge[data-joke]::after {
+    content: attr(data-joke);
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    z-index: 5;
+    width: max-content;
+    max-width: 260px;
+    padding: 7px 10px;
+    border: 1px solid var(--accent-line);
+    border-radius: var(--radius-xs);
+    background: var(--bg-raised);
+    color: var(--text);
+    letter-spacing: 0.02em;
+    text-transform: none;
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition: opacity var(--dur-fast) ease, transform var(--dur-fast) ease;
+  }
+
+  .status-badge[data-joke]:hover::after {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Blueprint mode (Konami code; components/effects/EasterEggs)
+   ========================================================================== */
+
+html[data-blueprint="on"] {
+  --accent: #6fd3ff;
+  --accent-soft: rgba(111, 211, 255, 0.08);
+  --accent-line: rgba(111, 211, 255, 0.45);
+  --accent-glow: rgba(111, 211, 255, 0.18);
+  --grid-line: rgba(111, 211, 255, 0.11);
+  --bg: #050b14;
+  --bg-elevated: #08111d;
+  --bg-raised: #0c1828;
+}
+
+html[data-blueprint="on"] main img {
+  filter: grayscale(1) sepia(1) hue-rotate(165deg) saturate(1.6) brightness(0.95);
+}
+
 /* ==========================================================================
    Crosshair cursor (toggle in the nav; components/effects/useCrosshair)
    Native CSS cursor, so it never lags. Links, buttons and fields keep theirs.

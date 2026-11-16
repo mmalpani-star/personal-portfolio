@@ -4,6 +4,34 @@
     var(--bg);
 }
 
+/* Inspected 0/3 readout */
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: calc(clamp(28px, 4vw, 48px) * -0.5) 0 clamp(14px, 2vw, 20px);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--muted-strong);
+}
+
+.pips { display: inline-flex; gap: 4px; }
+
+.pips i {
+  width: 14px;
+  height: 4px;
+  border-radius: 1px;
+  background: var(--surface-3);
+  transition: background var(--dur) ease;
+}
+
+.pips i[data-done="true"] { background: var(--accent); }
+
+.progressHint { color: var(--faint); }
+
 /* Lead card (portrait photo) on the left, two landscape cards stacked on the right */
 .missions {
   display: grid;

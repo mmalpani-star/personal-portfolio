@@ -7,6 +7,7 @@ import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { displayProjects } from '@/data/site-data';
 import type { Project } from '@/data/site-data';
+import { MissionProgress } from './MissionProgress';
 import styles from './Work.module.css';
 
 function MissionCard({ project, index }: { project: Project; index: number }) {
@@ -76,6 +77,8 @@ export function Work() {
             description="Two legged robots and one live app. Open any of them for the full case study."
           />
         </Reveal>
+
+        <MissionProgress slugs={flagship.map((project) => project.slug)} />
 
         <div className={styles.missions}>
           {flagship.map((project, index) => (

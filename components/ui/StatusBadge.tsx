@@ -14,9 +14,14 @@ const statusStyles: Record<ProjectStatus, string> = {
   'CURRENTLY BUILDING': 'status-badge status-current',
 };
 
+// A small hover joke for builds that are never quite finished.
+const jokes: Partial<Record<ProjectStatus, string>> = {
+  'IN PROGRESS': 'ETA: one more iteration (said every iteration)',
+};
+
 export function StatusBadge({ status, className = '', style }: StatusBadgeProps) {
   return (
-    <span className={`${statusStyles[status]} ${className}`.trim()} style={style}>
+    <span className={`${statusStyles[status]} ${className}`.trim()} style={style} data-joke={jokes[status]}>
       {status}
     </span>
   );
