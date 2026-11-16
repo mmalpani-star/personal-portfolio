@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Reveal } from '@/components/animation';
+import { ApertureReveal } from '@/components/effects';
 import { ArcHeading } from '@/components/ui/ArcHeading';
 import { Icon } from '@/components/ui/Icon';
 import { education, experience } from '@/data/site-data';
@@ -143,13 +144,13 @@ export function Experience() {
 
   return (
     <section id="experience" className={`section section--raised ${styles.section}`} aria-labelledby="experience-title">
-      <div className="page-shell">
+      <ApertureReveal className="page-shell">
         <Reveal>
           <ArcHeading
             arc="03"
             id="experience-title"
             title="The Build Log"
-            description="A robotics team, two internships and a community I started. Newest first."
+            description="A robotics team, two internships and a community I started. Latest scene first."
           />
         </Reveal>
 
@@ -157,7 +158,7 @@ export function Experience() {
           {sorted.map((item, index) => (
             <Row
               key={`${item.organization}-${item.title}`}
-              tag={String(sorted.length - index).padStart(2, '0')}
+              tag={`Scene ${String(sorted.length - index).padStart(2, '0')} / Take 1`}
               dates={item.dates}
               title={item.title}
               organization={[item.organization, item.location].filter(Boolean).join(' · ')}
@@ -198,7 +199,7 @@ export function Experience() {
             ))}
           </ol>
         </div>
-      </div>
+      </ApertureReveal>
     </section>
   );
 }

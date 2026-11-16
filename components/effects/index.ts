@@ -1,3 +1,4 @@
+export { ApertureReveal } from './ApertureReveal';
 export { Magnetic } from './Magnetic';
 export { Parallax } from './Parallax';
 export { PointerFX } from './PointerFX';
