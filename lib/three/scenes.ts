@@ -305,23 +305,54 @@ export function createHexapodStage(opts: StageOptions & { manifest: WalkerManife
 }
 
 // --------------------------------------------------------------------------
-// Air quality monitor: assembled -> exploded with labelled components.
+// Exploded assemblies: assembled -> exploded, with labelled component groups.
+// Used by the air quality monitor and HydroSafe.
 // --------------------------------------------------------------------------
-export type AqmManifest = {
+export type ExplodeManifest = {
   groups: Record<string, { nodes: string[]; explode: number[] }>;
   labels: Record<string, string>;
 };
+export type AqmManifest = ExplodeManifest;
 
-export type AqmStage = Stage & {
+export type ExplodeStage = Stage & {
   /** Where each labelled group sits on screen, in CSS pixels. */
   labelPositions: () => { id: string; x: number; y: number; visible: boolean }[];
+  /** Screen rectangle (CSS pixels) covered by the whole model right now. */
+  bounds: () => { left: number; right: number; top: number; bottom: number };
   setExplode: (t: number | null) => void;
   setHighlight: (id: string | null) => void;
   pick: (clientX: number, clientY: number) => string | null;
 };
+export type AqmStage = ExplodeStage;
 
-export async function createAqmStage(opts: StageOptions & { manifest: AqmManifest; src: string }): Promise<AqmStage> {
-  const { canvas, reducedMotion, manifest } = opts;
+export type ExplodeOptions = StageOptions & {
+  manifest: ExplodeManifest;
+  src: string;
+  /** Groups that carry no label and cannot be picked (the reference body). */
+  unlabelled?: string[];
+  /**
+   * Dynamic mode: the model slides in from the right as the scroll starts, the
+   * camera follows the model as it opens out, and the ground shadow stays under
+   * the lowest part. Without it the camera is fixed (the air quality monitor).
+   */
+  dynamic?: {
+    /** Scroll fraction at which the entry slide has finished. */
+    entryEnd: number;
+    /** Scroll fractions between which the assembly opens out. */
+    explodeStart: number;
+    explodeEnd: number;
+    /** Camera direction (radians) and a multiplier on the fitted distance (1 fills ~90 % of the frame). */
+    azimuth: number;
+    elevation: number;
+    margin?: number;
+    /** Model yaw at the start of the entry and when fully open. */
+    yaw?: [number, number];
+  };
+};
+
+export async function createExplodedStage(opts: ExplodeOptions): Promise<ExplodeStage> {
+  const { canvas, reducedMotion, manifest, dynamic } = opts;
+  const unlabelled = new Set(opts.unlabelled ?? ['enclosure_body']);
   const { renderer, scene, camera, shadow, dispose: disposeBase, fit, onResize } = base(canvas);
 
   let gltf;
@@ -338,7 +369,9 @@ export async function createAqmStage(opts: StageOptions & { manifest: AqmManifes
   const assembled = new THREE.Box3().setFromObject(model);
   const size = assembled.getSize(new THREE.Vector3());
   model.position.y -= assembled.min.y;
-  shadow.scale.set(size.x * 2.2, size.z * 4.2, 1);
+  const baseY = model.position.y;
+  if (dynamic) shadow.scale.set(Math.hypot(size.x, size.z) * 1.15, Math.hypot(size.x, size.z) * 1.0, 1);
+  else shadow.scale.set(size.x * 2.2, size.z * 4.2, 1);
   shadow.position.y = 0.0005;
 
   const groups = Object.entries(manifest.groups).map(([id, g]) => {
@@ -361,21 +394,90 @@ export async function createAqmStage(opts: StageOptions & { manifest: AqmManifes
     tint.set(id, mats);
   });
 
+  const setGroups = (t: number) => groups.forEach(({ node, explode }) => node?.position.copy(explode).multiplyScalar(t));
+
+  // ---- camera --------------------------------------------------------------
   const span = Math.max(size.x, size.y, size.z);
   const target = new THREE.Vector3(0, size.y * 0.5, 0);
   const baseHome = new THREE.Vector3(-span * 1.9, span * 1.35, span * 2.9);
   const home = new THREE.Vector3();
   camera.position.copy(fit(baseHome, target, home));
   camera.lookAt(target);
+
+  // Dynamic mode: vertical extent and footprint radius of the assembled and of the fully open model
+  const extentOf = () => {
+    model.updateMatrixWorld(true);
+    const b = new THREE.Box3().setFromObject(model);
+    let R = 0;
+    const corner = new THREE.Vector3();
+    model.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh || !m.geometry.boundingBox) return;
+      const bb = m.geometry.boundingBox;
+      for (let i = 0; i < 8; i++) {
+        corner.set(i & 1 ? bb.max.x : bb.min.x, i & 2 ? bb.max.y : bb.min.y, i & 4 ? bb.max.z : bb.min.z).applyMatrix4(m.matrixWorld);
+        R = Math.max(R, Math.hypot(corner.x - model.position.x, corner.z - model.position.z));
+      }
+    });
+    return { c: new THREE.Vector3(model.position.x, (b.min.y + b.max.y) / 2, model.position.z), minY: b.min.y, maxY: b.max.y, R };
+  };
+  setGroups(0);
+  const sphereA = extentOf();
+  setGroups(1);
+  const sphereE = extentOf();
+  setGroups(0);
+  const dir = new THREE.Vector3();
+  if (dynamic) {
+    dir.set(
+      Math.sin(dynamic.azimuth) * Math.cos(dynamic.elevation),
+      Math.sin(dynamic.elevation),
+      Math.cos(dynamic.azimuth) * Math.cos(dynamic.elevation),
+    );
+  }
+  /**
+   * Smallest camera distance that keeps the whole model in frame. The model turns
+   * about its vertical axis, so its footprint is treated as a circle of radius R
+   * at the lowest and highest points, which holds at every yaw.
+   */
+  const fitDistance = (ext: { c: THREE.Vector3; minY: number; maxY: number; R: number }) => {
+    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
+    const tanH = tanV * camera.aspect;
+    const fill = 0.9;
+    const up = new THREE.Vector3(0, 1, 0);
+    const right = new THREE.Vector3().crossVectors(up, dir).normalize();
+    const upv = new THREE.Vector3().crossVectors(dir, right);
+    const q = new THREE.Vector3();
+    let d = 0;
+    for (const y of [ext.minY, ext.maxY]) {
+      for (let i = 0; i < 24; i++) {
+        const a = (i / 24) * Math.PI * 2;
+        q.set(ext.c.x + Math.cos(a) * ext.R, y, ext.c.z + Math.sin(a) * ext.R).sub(ext.c);
+        const toward = q.dot(dir);
+        d = Math.max(d, Math.abs(q.dot(right)) / (tanH * fill) + toward, Math.abs(q.dot(upv)) / (tanV * fill) + toward);
+      }
+    }
+    return d * (dynamic?.margin ?? 1);
+  };
+  const pose = new THREE.Vector3();
+  const look = new THREE.Vector3();
+  let distA = dynamic ? fitDistance(sphereA) : 0;
+  let distE = dynamic ? fitDistance(sphereE) : 0;
+
   const controls = makeControls(camera, canvas, target);
-  controls.minDistance = span * 1.6;
-  controls.maxDistance = span * 10;
+  controls.minDistance = dynamic ? sphereA.R * 0.9 : span * 1.6;
+  controls.maxDistance = dynamic ? distE * 3 : span * 10;
   controls.addEventListener('change', () => run.wake());
   onResize(() => {
-    fit(baseHome, target, home);
-    if (!controls.enabled) {
-      camera.position.copy(home);
-      camera.lookAt(target);
+    if (dynamic) {
+      distA = fitDistance(sphereA);
+      distE = fitDistance(sphereE);
+      controls.maxDistance = distE * 3;
+    } else {
+      fit(baseHome, target, home);
+      if (!controls.enabled) {
+        camera.position.copy(home);
+        camera.lookAt(target);
+      }
     }
     run.wake();
   });
@@ -386,12 +488,41 @@ export async function createAqmStage(opts: StageOptions & { manifest: AqmManifes
   let highlight: string | null = null;
   let spin = 0;
 
-  const explodeAmount = () => (manual ?? smooth(clamp((shown - 0.15) / 0.55)));
+  const entryAmount = () => (dynamic && !reducedMotion ? smooth(clamp(shown / dynamic.entryEnd)) : 1);
+  const explodeAmount = () =>
+    manual ??
+    (dynamic
+      ? smooth(clamp((shown - dynamic.explodeStart) / (dynamic.explodeEnd - dynamic.explodeStart)))
+      : smooth(clamp((shown - 0.15) / 0.55)));
+
+  const right = new THREE.Vector3();
   const apply = () => {
     const t = explodeAmount();
-    groups.forEach(({ node, explode }) => node?.position.copy(explode).multiplyScalar(t));
-    // a slow turn while it opens shows the side grilles, then holds
-    if (!controls.enabled) model.rotation.y = reducedMotion ? 0 : -0.5 + 0.7 * smooth(clamp(shown)) + spin;
+    setGroups(t);
+    if (dynamic) {
+      const e = entryAmount();
+      const [y0, y1] = dynamic.yaw ?? [-0.9, -0.35];
+      if (!controls.enabled) model.rotation.y = reducedMotion ? y1 : y0 + (y1 - y0) * smooth(clamp(shown / dynamic.explodeEnd));
+      // follow the model: camera distance and look-at blend from assembled to open
+      const dist = distA + (distE - distA) * t;
+      look.lerpVectors(sphereA.c, sphereE.c, t);
+      if (!controls.enabled) {
+        pose.copy(look).addScaledVector(dir, dist);
+        camera.position.copy(pose);
+        camera.lookAt(look);
+      }
+      // slide in from the right of the frame, along the camera's own right-hand axis
+      camera.updateMatrixWorld();
+      right.setFromMatrixColumn(camera.matrixWorld, 0).setY(0).normalize();
+      const off = (1 - e) * distA * 1.1;
+      model.position.set(right.x * off, baseY, right.z * off);
+      // ground shadow stays under the lowest part and moves with the model
+      const lowest = sphereA.minY + (sphereE.minY - sphereA.minY) * t;
+      shadow.position.set(right.x * off, Math.min(sphereA.minY, lowest) + 0.0005, right.z * off);
+    } else if (!controls.enabled) {
+      // a slow turn while it opens shows the side grilles, then holds
+      model.rotation.y = reducedMotion ? 0 : -0.5 + 0.7 * smooth(clamp(shown)) + spin;
+    }
     groups.forEach(({ id }) =>
       tint.get(id)?.forEach((m) => m.emissive.setHex(highlight === id ? 0x332b00 : 0x000000)),
     );
@@ -429,7 +560,10 @@ export async function createAqmStage(opts: StageOptions & { manifest: AqmManifes
     setInspect(on) {
       controls.enabled = on;
       controls.enableZoom = on;
-      if (on) spin = 0;
+      if (on) {
+        spin = 0;
+        if (dynamic) controls.target.copy(look);
+      }
       run.wake();
     },
     zoom(f) {
@@ -439,23 +573,55 @@ export async function createAqmStage(opts: StageOptions & { manifest: AqmManifes
       run.wake();
     },
     reset() {
-      camera.position.copy(home);
-      controls.target.copy(target);
-      camera.lookAt(target);
+      if (dynamic) {
+        controls.target.copy(look);
+        camera.position.copy(look).addScaledVector(dir, distA + (distE - distA) * explodeAmount());
+      } else {
+        camera.position.copy(home);
+        controls.target.copy(target);
+      }
+      camera.lookAt(controls.target);
       run.wake();
     },
     labelPositions() {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       const t = explodeAmount();
+      const arrived = entryAmount() > 0.98;
       return groups
-        .filter(({ id }) => manifest.labels[id] && id !== 'enclosure_body')
+        .filter(({ id }) => manifest.labels[id] && !unlabelled.has(id))
         .map(({ id, node }) => {
           const b = new THREE.Box3().setFromObject(node);
           b.getCenter(v);
           v.project(camera);
-          return { id, x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h, visible: t > 0.55 && v.z < 1 };
+          return { id, x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h, visible: arrived && t > 0.55 && v.z < 1 };
         });
+    },
+    bounds() {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      let left = Infinity;
+      let right = -Infinity;
+      let top = Infinity;
+      let bottom = -Infinity;
+      model.updateMatrixWorld(true);
+      model.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (!m.isMesh || !m.geometry.boundingBox) return;
+        const bb = m.geometry.boundingBox;
+        for (let i = 0; i < 8; i++) {
+          v.set(i & 1 ? bb.max.x : bb.min.x, i & 2 ? bb.max.y : bb.min.y, i & 4 ? bb.max.z : bb.min.z)
+            .applyMatrix4(m.matrixWorld)
+            .project(camera);
+          const x = (v.x * 0.5 + 0.5) * w;
+          const y = (-v.y * 0.5 + 0.5) * h;
+          left = Math.min(left, x);
+          right = Math.max(right, x);
+          top = Math.min(top, y);
+          bottom = Math.max(bottom, y);
+        }
+      });
+      return { left, right, top, bottom };
     },
     pick(clientX, clientY) {
       const r = canvas.getBoundingClientRect();
@@ -467,7 +633,7 @@ export async function createAqmStage(opts: StageOptions & { manifest: AqmManifes
       if (!hit) return null;
       let o: THREE.Object3D | null = hit.object;
       while (o && !manifest.groups[o.name]) o = o.parent;
-      return o && o.name !== 'enclosure_body' ? o.name : null;
+      return o && !unlabelled.has(o.name) && manifest.labels[o.name] ? o.name : null;
     },
     setVisible: (vis) => run.setVisible(vis),
     dispose() {
@@ -476,4 +642,9 @@ export async function createAqmStage(opts: StageOptions & { manifest: AqmManifes
       disposeBase();
     },
   };
+}
+
+/** The air quality monitor: fixed camera, opens out as you scroll. */
+export function createAqmStage(opts: StageOptions & { manifest: ExplodeManifest; src: string }) {
+  return createExplodedStage({ ...opts, unlabelled: ['enclosure_body'] });
 }

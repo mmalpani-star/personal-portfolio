@@ -9,4 +9,5 @@ shapely==2.2.0
 networkx==3.5         # trimesh path traversal (cross-sections)
 rtree==1.4.1
 pygltflib==1.16.5      # writes the baked gait animation into the GLB
+fast-simplification==0.2.0   # quadric decimation of the heavy meshes (hydrosafe)
 matplotlib==3.11.2     # optional: quick inspection plots

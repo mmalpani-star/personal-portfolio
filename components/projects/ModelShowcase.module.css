@@ -3,6 +3,8 @@
 .scene { position: relative; }
 .walk { height: 250vh; }
 .explode { height: 210vh; }
+.long { height: 330vh; }
+.photoScene { height: 170vh; }
 .scene[data-static='true'] { height: auto; }
 
 .stage {
@@ -70,7 +72,22 @@
 }
 .caption[data-shown='true'] { opacity: 1; transform: none; pointer-events: auto; }
 
-.captionHead { display: grid; gap: 6px; justify-items: center; }
+.captionHead { display: grid; gap: 8px; justify-items: center; }
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+}
+.index {
+  font: 600 var(--text-sm) / 1 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+.index span { color: var(--faint); }
+.chips { justify-content: center; margin: 0; padding: 0; list-style: none; }
 .title {
   margin: 0;
   font-family: var(--font-display);
@@ -159,12 +176,28 @@
 .tag[data-visible='true'] { opacity: 1; pointer-events: auto; }
 .tag[data-active='true'] { background: var(--accent); z-index: 1; }
 
+.leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.leaders g { opacity: 0; transition: opacity var(--dur) ease; }
+.leaders g[data-visible='true'] { opacity: 1; }
+.leaders line { stroke: var(--ink); stroke-opacity: 0.35; stroke-width: 1; }
+.leaders circle { fill: var(--ink); fill-opacity: 0.5; }
+.leaders g[data-active='true'] line { stroke-opacity: 0.95; }
+.leaders g[data-active='true'] circle { fill-opacity: 1; fill: var(--accent); stroke: var(--ink); stroke-width: 1; }
+
 .hint { display: none; }
 
 @media (max-width: 760px) {
   /* too narrow for every tag at once: name only the part that was tapped */
   .tag[data-visible='true'] { opacity: 0; pointer-events: none; }
   .tag[data-visible='true'][data-active='true'] { opacity: 1; }
+  .leaders { display: none; }
   .hint {
     display: block;
     position: absolute;
@@ -186,4 +219,30 @@
 
 @media (prefers-reduced-motion: reduce) {
   .caption, .tag { transition: none; }
+}
+
+/* ------------------------------------------------------- photo showcases -- */
+.photo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0 clamp(16px, 5vw, 64px);
+}
+.photoFrame {
+  position: relative;
+  width: min(100%, 980px, calc((100svh - 440px) * var(--ratio, 1.5)));
+  aspect-ratio: var(--ratio, 1.5);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-raised);
+  box-shadow: var(--shadow-media);
+  will-change: transform, opacity;
+}
+.photoImage { object-fit: cover; }
+
+@media (max-width: 760px) {
+  .long { height: 260vh; }
+  .photoScene { height: 150vh; }
+  .photoFrame { width: min(100%, calc((100svh - 500px) * var(--ratio, 1.5))); min-width: min(100%, 240px); }
 }

@@ -10,6 +10,8 @@ npm-debug.log*
 /.cadenv/
 cad/hexapod/export/step/hexapod_assembly.step
 cad/quadruped/export/step/quadruped_assembly.step
+cad/hydrosafe/export/step/hydrosafe_assembly.step
+cad/hydrosafe/cache/
 cad/quadruped/export/views/
 cad/**/__pycache__/
 cad/hexapod/export/views/
