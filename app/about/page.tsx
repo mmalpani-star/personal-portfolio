@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MangaPanels } from '@/components/about/MangaPanels';
@@ -5,7 +7,7 @@ import { ReactorIntro } from '@/components/about/ReactorIntro';
 import { Reveal } from '@/components/animation';
 import { Magnetic } from '@/components/effects/Magnetic';
 import { Icon } from '@/components/ui/Icon';
-import { currentlyBuilding, education, technicalInterests } from '@/data/site-data';
+import { aboutPanels, currentlyBuilding, education, technicalInterests } from '@/data/site-data';
 import styles from './About.module.css';
 
 export const metadata: Metadata = {
@@ -21,8 +23,20 @@ const loop = [
   { title: 'Iterate', detail: 'Fix, rebuild, go around again.' },
 ];
 
+/**
+ * Panel media is dropped into `public/` by hand and may not be there yet, so the
+ * page resolves which files actually exist at build time. Anything missing is
+ * never requested, which keeps the console and the network panel clean.
+ */
+function availableMedia() {
+  return aboutPanels
+    .map((panel) => panel.media?.src)
+    .filter((src): src is string => Boolean(src) && existsSync(path.join(process.cwd(), 'public', src!)));
+}
+
 export default function AboutPage() {
   const university = education[0];
+  const media = availableMedia();
 
   return (
     <main>
@@ -124,7 +138,7 @@ export default function AboutPage() {
       </section>
 
       {/* ---------- Off the clock ---------- */}
-      <MangaPanels />
+      <MangaPanels availableMedia={media} />
 
       {/* ---------- Close ---------- */}
       <section className={`section ${styles.close}`}>

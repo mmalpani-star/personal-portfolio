@@ -973,6 +973,20 @@ export type AboutImage = {
   position?: string;
 };
 
+/**
+ * Full-bleed media behind a panel's copy. The file may not exist yet — the
+ * panel renders without it and shows nothing broken until it is dropped in.
+ */
+export type AboutMedia = {
+  kind: 'image' | 'video';
+  src: string;
+  alt: string;
+  /** CSS object-position, for keeping the subject in frame when cropped. */
+  position?: string;
+  /** Still shown for a video before it plays, and under reduced motion. */
+  poster?: string;
+};
+
 export type AboutPanel = {
   id: AboutPanelId;
   title: string;
@@ -982,6 +996,9 @@ export type AboutPanel = {
   sfx: string;
   sfxRoman: string;
   stats?: Array<{ figure: string; label: string }>;
+  /** Fills the frame behind the copy. */
+  media?: AboutMedia;
+  /** Laid out as drawings pinned to the page, rather than filling the frame. */
   images?: AboutImage[];
   /** Optional button out to media hosted elsewhere. */
   link?: { label: string; href: string };
@@ -991,6 +1008,7 @@ export type AboutPanel = {
 export const aboutPanels: AboutPanel[] = [
   {
     id: 'naruto',
+    media: { kind: 'image', src: '/images/about/naruto.jpg', alt: 'My own photo for the Naruto panel' },
     title: 'Naruto',
     tag: 'Anime',
     line: 'A kid everyone wrote off who talked his way into their respect instead. What stuck with me is that people change when somebody refuses to give up on them.',
@@ -999,6 +1017,7 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'basketball',
+    media: { kind: 'video', src: '/videos/about/basketball.mp4', alt: 'A clip of me playing basketball' },
     title: 'Basketball',
     tag: 'School team captain, 2026',
     line: 'Captained the school side. Projectile motion, but recreational — the arc is still a parabola.',
@@ -1011,6 +1030,7 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'onepiece',
+    media: { kind: 'image', src: '/images/about/one-piece.jpg', alt: 'My own photo for the One Piece panel' },
     title: 'One Piece',
     tag: 'Anime',
     line: 'A crew that only works because each person is the best in the world at one thing. Twenty years of build-up and the payoffs still land.',
@@ -1019,6 +1039,7 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'film',
+    media: { kind: 'image', src: '/images/about/film.jpg', alt: 'My own photo for the film panel' },
     title: 'Film',
     line: 'I watch for the storytelling. Every role an actor steps into hands you a perspective you would never have reached on your own.',
     sfx: 'カシャ',
@@ -1052,6 +1073,7 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'gaming',
+    media: { kind: 'image', src: '/images/about/gaming.jpg', alt: 'A screenshot from one of my own Valorant matches' },
     title: 'Gaming',
     tag: 'Valorant',
     line: 'Valorant with my friends, most nights. Reading a round, calling it out and trusting four other people to follow taught me more about leading than any title has — and it is where some of my closest friendships came from.',
@@ -1060,6 +1082,7 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'football',
+    media: { kind: 'video', src: '/videos/about/football.mp4', alt: 'A clip of me playing football' },
     title: 'Football',
     line: 'Messi or Ronaldo, settled nightly and never once resolved. I have watched enough of both to know the argument is the point.',
     sfx: 'ゴール',
@@ -1078,15 +1101,12 @@ export const aboutPanels: AboutPanel[] = [
       { figure: '~8,000', label: 'profile visits a month' },
       { figure: '~₹50,000', label: 'revenue' },
     ],
-    images: [
-      {
-        src: '/images/experience/pickle-it-down-tournament.jpeg',
-        alt: 'Pickle It Down tournament players with the trophy',
-        width: 960,
-        height: 1280,
-        // Bias upward so the players' faces stay in frame on a wide crop.
-        position: '52% 33%',
-      },
-    ],
+    media: {
+      kind: 'image',
+      src: '/images/experience/pickle-it-down-tournament.jpeg',
+      alt: 'Pickle It Down tournament players with the trophy',
+      // Bias upward so the players' faces stay in frame on a wide crop.
+      position: '52% 33%',
+    },
   },
 ];

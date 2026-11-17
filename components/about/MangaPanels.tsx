@@ -6,6 +6,7 @@ import { Icon } from '@/components/ui/Icon';
 import { aboutPanels } from '@/data/site-data';
 import type { AboutPanel } from '@/data/site-data';
 import { Basketball } from './Basketball';
+import { PanelMedia } from './PanelMedia';
 import styles from './MangaPanels.module.css';
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -32,7 +33,7 @@ function Sfx({ panel }: { panel: AboutPanel }) {
   );
 }
 
-function Panel({ panel, index }: { panel: AboutPanel; index: number }) {
+function Panel({ panel, index, hasMedia }: { panel: AboutPanel; index: number; hasMedia: boolean }) {
   const reduceMotion = useReducedMotion();
   const gallery = panel.images ?? [];
   const isSketchbook = panel.id === 'sketchbook';
@@ -49,19 +50,8 @@ function Panel({ panel, index }: { panel: AboutPanel; index: number }) {
       <span className={styles.bg} aria-hidden="true">
         <span className={styles.tone} />
         {withSpeedLines.has(panel.id) ? <span className={styles.speed} /> : null}
-        {/* A single photo fills the frame; the sketchbook lays its drawings out instead. */}
-        {!isSketchbook && gallery[0] ? (
-          <span className={styles.photo}>
-            <Image
-              src={gallery[0].src}
-              alt=""
-              fill
-              sizes="(max-width: 900px) 100vw, 70vw"
-              style={{ objectFit: 'cover', objectPosition: gallery[0].position ?? '50% 50%' }}
-            />
-            <span className={styles.scrim} />
-          </span>
-        ) : null}
+        {/* Media fills the frame; the sketchbook pins its drawings to the page instead. */}
+        {panel.media && hasMedia ? <PanelMedia media={panel.media} /> : null}
       </span>
 
       {panel.id === 'basketball' ? <Basketball /> : null}
@@ -112,7 +102,8 @@ function Panel({ panel, index }: { panel: AboutPanel; index: number }) {
   );
 }
 
-export function MangaPanels() {
+export function MangaPanels({ availableMedia = [] }: { availableMedia?: string[] }) {
+  const present = new Set(availableMedia);
   return (
     <section className={`section ${styles.section}`} aria-labelledby="panels-title">
       <div className="page-shell">
@@ -124,7 +115,7 @@ export function MangaPanels() {
 
         <div className={styles.grid}>
           {aboutPanels.map((panel, index) => (
-            <Panel key={panel.id} panel={panel} index={index} />
+            <Panel key={panel.id} panel={panel} index={index} hasMedia={present.has(panel.media?.src ?? '')} />
           ))}
           {aboutPanels.map((panel) => (
             <Sfx key={`sfx-${panel.id}`} panel={panel} />
