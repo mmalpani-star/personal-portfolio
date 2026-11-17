@@ -131,6 +131,10 @@
   filter: grayscale(1) brightness(0.84) contrast(1.5);
 }
 
+/* Keep the picture's own colours. Must follow the rule above so it wins at equal specificity. */
+.photoColor img,
+.photoColor .video { filter: none; }
+
 .photoInk .halftone {
   background-size: 5px 5px;
   opacity: 0.34;
@@ -171,14 +175,6 @@
   );
 }
 
-/* Basketball court sits behind the copy and fills the panel */
-.court {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
 /* Ink panel: a feathered white patch exactly behind the heading and description.
    It is sized from the copy block, so it follows the text at any width. Two edge
    masks (across and down) intersect so the patch fades out on all four sides and
@@ -198,16 +194,6 @@
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
   pointer-events: none;
-}
-
-/* A soft wash under the copy keeps it readable when the ball passes behind */
-.panel[data-panel='basketball'] .content::before {
-  content: '';
-  position: absolute;
-  inset: -14px -20px;
-  z-index: -1;
-  border-radius: 10px;
-  background: radial-gradient(ellipse at 20% 60%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7) 62%, transparent 100%);
 }
 
 /* ---------- Sketchbook ---------- */
@@ -348,14 +334,6 @@
   background: var(--accent);
   transform: translate(1px, 1px);
   box-shadow: 2px 2px 0 var(--ink);
-}
-
-.hint {
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--faint);
 }
 
 .stats {

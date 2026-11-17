@@ -729,11 +729,11 @@ export const currentlyBuilding: {
   team: 'Electronics Sub-Team Recruit',
   location: 'UC San Diego',
   dates: 'Aug 2026 – Present',
-  status: 'CURRENTLY BUILDING',
+  status: 'COMPLETED',
   summary:
-    'Designing a CAN FD transceiver breakout board as my capstone, after training on the legacy center board and an LM555 timer circuit.',
+    'Designed and built a CAN FD transceiver breakout board as my capstone, after training on the legacy center board and an LM555 timer circuit.',
   description:
-    'Working on the legacy center-board design by reviewing power and signal distribution, modifying the PCB during week 2, and building a LM555 timer circuit on a general-purpose board during training. For the capstone, I am designing and building a CAN FD transceiver breakout board, with PCB Version 1 followed by PCB Version 3.',
+    'Worked on the legacy center-board design by reviewing power and signal distribution, modified the PCB during week 2, and built a LM555 timer circuit on a general-purpose board during training. For the capstone, I designed and built a CAN FD transceiver breakout board, with PCB Version 1 followed by PCB Version 3.',
 };
 
 export const experience: Experience[] = [
@@ -770,12 +770,12 @@ export const experience: Experience[] = [
     location: 'UC San Diego',
     dates: 'Aug 2026 – Present',
     isCurrent: true,
-    summary: 'Designing a CAN FD transceiver breakout board as my capstone: PCB V1, then V3.',
+    summary: 'Designed and built a CAN FD transceiver breakout board as my capstone: PCB V1, then V3.',
     details: [
       'Reviewed an older center-board design for power and signal distribution',
       'Modified the center-board PCB during week 2 of training',
       'Built an LM555 timer circuit on a general-purpose board during week 1 and week 3 training',
-      'Designing and building a CAN FD transceiver breakout board as the capstone project',
+      'Designed and built a CAN FD transceiver breakout board as the capstone project',
       'Developed PCB Version 1 and PCB Version 3 in chronological order',
     ],
     images: [
@@ -1009,6 +1009,8 @@ export type AboutMedia = {
    * over the picture. Copy is kept legible by a gradient local to the text instead.
    */
   ink?: boolean;
+  /** Keeps the picture's own colours instead of the black-and-white print look. */
+  color?: boolean;
 };
 
 export type AboutPanel = {
@@ -1046,6 +1048,7 @@ export const aboutPanels: AboutPanel[] = [
       reserve: true,
       halftone: true,
       ink: true,
+      color: true,
     },
     title: 'Naruto',
     tag: 'Anime',
@@ -1062,6 +1065,7 @@ export const aboutPanels: AboutPanel[] = [
       fit: 'cover',
       halftone: true,
       ink: true,
+      color: true,
     },
     title: 'One Piece',
     tag: 'Anime',
@@ -1104,7 +1108,14 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'basketball',
-    media: { kind: 'video', src: '/videos/about/basketball.mp4', alt: 'A clip of me playing basketball' },
+    media: {
+      kind: 'image',
+      src: '/images/about/steph.jpg',
+      alt: 'Stephen Curry in a Golden State Warriors jersey, mid-game',
+      position: '64% 12%',
+      ink: true,
+      color: true,
+    },
     title: 'Basketball',
     tag: 'School team captain, 2026',
     line: 'Captained the school side. Projectile motion, but recreational — the arc is still a parabola.',
@@ -1117,7 +1128,14 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'football',
-    media: { kind: 'video', src: '/videos/about/football.mp4', alt: 'A clip of me playing football' },
+    media: {
+      kind: 'image',
+      src: '/images/about/messi.webp',
+      alt: 'Lionel Messi in a tuxedo holding the golden ball trophy',
+      position: '52% 30%',
+      ink: true,
+      color: true,
+    },
     title: 'Football',
     line: 'Messi or Ronaldo, settled nightly and never once resolved. I have watched enough of both to know the argument is the point.',
     sfx: 'ゴール',
@@ -1151,7 +1169,14 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'gaming',
-    media: { kind: 'image', src: '/images/about/gaming.jpg', alt: 'A screenshot from one of my own Valorant matches' },
+    media: {
+      kind: 'image',
+      src: '/images/about/reyna.webp',
+      alt: 'Reyna from Valorant holding a rifle, in front of her name on a red background',
+      position: '72% 50%',
+      ink: true,
+      color: true,
+    },
     title: 'Gaming',
     tag: 'Valorant',
     line: 'Valorant with my friends, most nights. Reading a round, calling it out and trusting four other people to follow taught me more about leading than any title has — and it is where some of my closest friendships came from.',

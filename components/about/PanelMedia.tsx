@@ -54,7 +54,7 @@ export function PanelMedia({ media }: { media: AboutMedia }) {
 
   return (
     <span
-      className={`${styles.photo} ${media.fit === 'contain' ? styles.photoContain : ''} ${media.ink ? styles.photoInk : ''}`.trim()}
+      className={`${styles.photo} ${media.fit === 'contain' ? styles.photoContain : ''} ${media.ink ? styles.photoInk : ''} ${media.color ? styles.photoColor : ''}`.trim()}
     >
       {media.kind === 'video' ? (
         <video

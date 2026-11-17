@@ -6,28 +6,56 @@
   place-items: center;
   align-content: center;
   gap: clamp(20px, 4vw, 36px);
-  background: radial-gradient(ellipse 60% 60% at 50% 46%, #0b1218 0%, #000 72%);
+  /* Pure black: the reactor file has a black background, so it must match exactly */
+  background: #000;
 }
 
+/* The blend is on this wrapper, not the image: the wrapper is filtered while it animates, and a filter
+   makes it a stacking context, so a blend on the image inside would only see the wrapper's own
+   transparent backdrop and paint the file's black as an opaque box. On the wrapper, black drops
+   out against both the screen and the glow behind it, leaving only the light. */
 .stage {
+  position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
+  width: min(90vw, 760px);
+  mix-blend-mode: screen;
 }
 
-/* Expanding ring at the moment the core comes online */
+.reactor {
+  width: 100%;
+  height: auto;
+}
+
+.bloom {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(92vmin, 780px);
+  aspect-ratio: 1;
+  margin: calc(min(92vmin, 780px) / -2) 0 0 calc(min(92vmin, 780px) / -2);
+  /* closest-side puts the end of the falloff exactly at the box edge, so there is no visible rim */
+  background: radial-gradient(closest-side, rgba(70, 190, 255, 0.5) 0%, rgba(40, 140, 220, 0.22) 45%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Expanding ring at the moment it reaches full power */
 .shock {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(62vmin, 440px);
+  width: min(40vmin, 320px);
   aspect-ratio: 1;
-  margin: calc(min(62vmin, 440px) / -2) 0 0 calc(min(62vmin, 440px) / -2);
-  border: 2px solid rgba(160, 232, 255, 0.85);
+  margin: calc(min(40vmin, 320px) / -2) 0 0 calc(min(40vmin, 320px) / -2);
+  border: 2px solid rgba(150, 220, 255, 0.9);
   border-radius: 50%;
   pointer-events: none;
 }
 
 .caption {
+  position: relative;
+  z-index: 1;
   margin: 0;
   color: #dff4ff;
   font-family: var(--font-mono);
@@ -40,6 +68,7 @@
   position: absolute;
   right: clamp(16px, 4vw, 40px);
   bottom: clamp(16px, 4vw, 40px);
+  z-index: 2;
   min-height: 44px;
   padding: 0 18px;
   border: 1px solid rgba(223, 244, 255, 0.3);

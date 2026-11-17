@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { Icon } from '@/components/ui/Icon';
 import { aboutPanels } from '@/data/site-data';
 import type { AboutPanel } from '@/data/site-data';
-import { Basketball } from './Basketball';
 import { PanelMedia } from './PanelMedia';
 import styles from './MangaPanels.module.css';
 
@@ -75,8 +74,6 @@ function Panel({
         {panel.media && hasMedia ? <PanelMedia media={panel.media} /> : null}
       </span>
 
-      {panel.id === 'basketball' ? <Basketball /> : null}
-
       {gallery.length ? (
         <div className={isPoster ? styles.posters : styles.sketches}>
           {gallery.map((img) => (
@@ -117,7 +114,6 @@ function Panel({
               <Icon name="arrow-up-right" size={13} />
             </a>
           ) : null}
-          {panel.id === 'basketball' ? <span className={styles.hint}>Click the panel to throw it</span> : null}
         </div>
       </div>
     </motion.article>

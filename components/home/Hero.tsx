@@ -8,8 +8,7 @@ import type { PointerEvent } from 'react';
 import { Magnetic } from '@/components/effects/Magnetic';
 import { useFinePointer } from '@/components/effects/useFinePointer';
 import { Icon } from '@/components/ui/Icon';
-import { StatusBadge } from '@/components/ui/StatusBadge';
-import { currentlyBuilding, displayProjects, education } from '@/data/site-data';
+import { displayProjects, education } from '@/data/site-data';
 import styles from './Hero.module.css';
 
 const imageAlt = 'Custom hexapod robot with blue and white 3D-printed legs on a workbench';
@@ -70,7 +69,7 @@ export function Hero() {
   const facts = [
     { label: 'Hand-built robots', value: 'Four and six legged' },
     { label: university.institution.replace('University of California San Diego', 'UC San Diego'), value: university.degree },
-    { label: 'Now building', value: 'CAN FD transceiver board' },
+    { label: 'Capstone', value: 'CAN FD transceiver board, built' },
     { label: `${displayProjects.length} projects`, value: 'Built and documented' },
     { label: 'San Diego', value: <SanDiegoClock /> },
   ];
@@ -90,27 +89,6 @@ export function Hero() {
         <div className={styles.bloom} aria-hidden="true" />
         <div className={styles.striation} aria-hidden="true" />
       </motion.div>
-
-      {/* ---------- Floating spec card ---------- */}
-      <div className={`${styles.card} glass`}>
-        <span className={styles.cardGrip} aria-hidden="true" />
-        <div className={styles.cardHead}>
-          <span className="label">{currentlyBuilding.organization}</span>
-          <StatusBadge status={currentlyBuilding.status} />
-        </div>
-        <p className={styles.cardTitle}>CAN FD transceiver breakout board</p>
-        <dl className={styles.cardRows}>
-          <div>
-            <dt>Role</dt>
-            <dd>{currentlyBuilding.team}</dd>
-          </div>
-          <div>
-            <dt>Since</dt>
-            <dd>{currentlyBuilding.dates.replace(' – Present', '')}</dd>
-          </div>
-        </dl>
-        <span className={styles.cardChip}>PCB V1 → V3</span>
-      </div>
 
       {/* ---------- Headline ---------- */}
       <motion.div className={styles.copyLayer} style={still ? undefined : { y: copyY, opacity: copyOpacity }}>
