@@ -38,11 +38,17 @@ function Panel({ panel, index, hasMedia }: { panel: AboutPanel; index: number; h
   const gallery = panel.images ?? [];
   const isSketchbook = panel.id === 'sketchbook';
 
+  // Size the frame from its media: reserve the media's own aspect-ratio height at the top.
+  // The percentage is of the panel's width, so it holds at every screen size.
+  const { reserve, width, height } = panel.media ?? {};
+  const reserved = hasMedia && reserve && width && height ? (height / width) * 100 : null;
+
   return (
     <motion.article
       className={styles.panel}
       data-panel={panel.id}
       data-ink={hasMedia && panel.media?.ink ? 'true' : undefined}
+      style={reserved ? { paddingTop: `calc(${reserved.toFixed(3)}% + var(--panel-pad))` } : undefined}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}

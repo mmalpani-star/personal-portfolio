@@ -992,6 +992,15 @@ export type AboutMedia = {
   fit?: 'cover' | 'contain';
   /** Lays a printed halftone screen over the image. */
   halftone?: boolean;
+  /** The media's own pixel size. Needed when `reserve` is set. */
+  width?: number;
+  height?: number;
+  /**
+   * Size the panel from the media: the panel reserves the media's own aspect-ratio
+   * height along its top edge (at the panel's width), with the copy underneath. The
+   * media is never stretched and the frame never holds empty space for it.
+   */
+  reserve?: boolean;
   /**
    * Hard black-and-white manga treatment: deep blacks, crisp whites, no white wash
    * over the picture. Copy is kept legible by a gradient local to the text instead.
@@ -1025,10 +1034,13 @@ export const aboutPanels: AboutPanel[] = [
       src: '/images/about/naruto-sasuke.gif',
       poster: '/images/about/naruto-sasuke-still.jpg',
       alt: 'Animated clip of Naruto and Sasuke facing each other',
-      // The GIF is only 220 x 122 px: shown whole at the top of the frame rather than
-      // blown up to fill a tall one, with the same ink treatment as One Piece.
+      // The GIF is only 220 x 122 px, so the frame is sized to it (`reserve`) rather than
+      // the GIF being stretched to fill a tall frame. Same ink treatment as One Piece.
       fit: 'contain',
       position: '50% 0%',
+      width: 220,
+      height: 122,
+      reserve: true,
       halftone: true,
       ink: true,
     },
