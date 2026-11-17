@@ -1025,7 +1025,7 @@ export const aboutPanels: AboutPanel[] = [
     sfxRoman: 'dan',
     link: {
       label: 'Watch my clips',
-      href: 'https://drive.google.com/file/d/11H6FIy8daI9I_8KEMjKe2uHN4psrYccW/view?usp=drive_link',
+      href: 'https://drive.google.com/drive/u/1/folders/1ISrfXgmy38kSxyzci-PoVIVqRD_ScAoK',
     },
   },
   {
