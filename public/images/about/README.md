@@ -6,7 +6,7 @@ the panel falls back to halftone and type, so nothing breaks while you gather th
 | Panel      | Put the file at                      | Notes                                   |
 | ---------- | ------------------------------------ | --------------------------------------- |
 | Naruto     | `public/images/about/naruto.jpg`     | Your own photo                          |
-| One Piece  | `public/images/about/one-piece.jpg`  | Your own photo                          |
+| One Piece  | `public/images/about/one-piece.webp`  | Your own photo                          |
 | Film       | `public/images/about/film.jpg`       | Your own photo                          |
 | Gaming     | `public/images/about/gaming.jpg`     | Screenshot from your own match          |
 | Basketball | `public/videos/about/basketball.mp4` | Your clip. MP4 is far smaller than GIF  |

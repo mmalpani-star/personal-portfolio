@@ -1044,7 +1044,7 @@ export const aboutPanels: AboutPanel[] = [
     id: 'onepiece',
     media: {
       kind: 'image',
-      src: '/images/about/one-piece.jpg',
+      src: '/images/about/one-piece.webp',
       alt: 'Artwork for the One Piece panel',
       fit: 'cover',
       halftone: true,

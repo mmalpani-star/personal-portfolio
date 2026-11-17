@@ -119,7 +119,9 @@
 
 .photoInk img,
 .photoInk .video {
-  filter: grayscale(1) contrast(1.9) brightness(0.86);
+  /* Brightness first, then contrast: the darkening pulls mid-tones under the pivot so
+     they go black, while the whites are pushed past 1.0 and clip crisp. */
+  filter: grayscale(1) brightness(0.84) contrast(1.5);
 }
 
 .photoInk .halftone {
