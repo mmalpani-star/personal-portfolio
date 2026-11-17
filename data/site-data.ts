@@ -985,6 +985,13 @@ export type AboutMedia = {
   position?: string;
   /** Still shown for a video before it plays, and under reduced motion. */
   poster?: string;
+  /**
+   * `cover` (default) fills the frame and crops the edges; `contain` shows the whole
+   * image at its own aspect ratio on paper. Neither ever stretches or distorts it.
+   */
+  fit?: 'cover' | 'contain';
+  /** Lays a printed halftone screen over the image. */
+  halftone?: boolean;
 };
 
 export type AboutPanel = {
@@ -1030,7 +1037,13 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'onepiece',
-    media: { kind: 'image', src: '/images/about/one-piece.jpg', alt: 'My own photo for the One Piece panel' },
+    media: {
+      kind: 'image',
+      src: '/images/about/one-piece.jpg',
+      alt: 'Artwork for the One Piece panel',
+      fit: 'cover',
+      halftone: true,
+    },
     title: 'One Piece',
     tag: 'Anime',
     line: 'A crew that only works because each person is the best in the world at one thing. Twenty years of build-up and the payoffs still land.',

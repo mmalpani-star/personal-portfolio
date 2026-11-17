@@ -17,3 +17,11 @@ with raised contrast so it sits in the ink-on-paper page.
 
 Clips autoplay muted on loop, pause when scrolled out of view, and do not play
 at all under `prefers-reduced-motion`.
+
+## One Piece panel options
+
+In `aboutPanels` (data/site-data.ts) the One Piece media carries two switches:
+
+- `fit: 'cover'` fills the frame and crops the edges; `'contain'` shows the whole
+  image at its own aspect ratio on paper. Neither ever stretches the picture.
+- `halftone: true` lays a printed dot screen over the image.

@@ -112,6 +112,23 @@
   object-fit: cover;
 }
 
+/* Shown whole at its own ratio, sitting on the page's paper */
+.photoContain { background: var(--white); }
+
+/* A printed halftone screen over the image: ink dots multiply into the picture,
+   densest toward the copy and fading away from it. */
+.halftone {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(13, 13, 13, 0.55) 0.9px, transparent 1.7px);
+  background-size: 6px 6px;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  mask-image: linear-gradient(35deg, #000 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(35deg, #000 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%);
+  pointer-events: none;
+}
+
 /* Keeps the copy readable over a photograph */
 .scrim {
   position: absolute;

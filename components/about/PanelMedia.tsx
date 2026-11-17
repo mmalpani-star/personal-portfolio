@@ -37,12 +37,12 @@ export function PanelMedia({ media }: { media: AboutMedia }) {
   if (failed) return null;
 
   return (
-    <span className={styles.photo}>
+    <span className={`${styles.photo} ${media.fit === 'contain' ? styles.photoContain : ''}`}>
       {media.kind === 'video' ? (
         <video
           ref={videoRef}
           className={styles.video}
-          style={{ objectPosition: media.position ?? '50% 50%' }}
+          style={{ objectFit: media.fit ?? 'cover', objectPosition: media.position ?? '50% 50%' }}
           src={media.src}
           poster={media.poster}
           muted
@@ -58,10 +58,11 @@ export function PanelMedia({ media }: { media: AboutMedia }) {
           alt=""
           fill
           sizes="(max-width: 900px) 100vw, 70vw"
-          style={{ objectFit: 'cover', objectPosition: media.position ?? '50% 50%' }}
+          style={{ objectFit: media.fit ?? 'cover', objectPosition: media.position ?? '50% 50%' }}
           onError={() => setFailed(true)}
         />
       )}
+      {media.halftone ? <span className={styles.halftone} /> : null}
       <span className={styles.scrim} />
     </span>
   );
