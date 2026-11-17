@@ -356,7 +356,8 @@
 
 /* Placed per panel so no label lands on its own copy or on a neighbour.
    Copy sits bottom-left in every frame, so the type stays high or far right. */
-.sfxSlot[data-panel='naruto'] .sfx { top: -28px; right: 8px; font-size: clamp(2rem, 4vw, 3.25rem); }
+/* Naruto's frame carries the GIF along its top edge, so the type sits in the open halftone below it */
+.sfxSlot[data-panel='naruto'] .sfx { top: 40%; right: 12px; font-size: clamp(2rem, 4vw, 3.25rem); }
 .sfxSlot[data-panel='basketball'] .sfx { top: -26px; right: 14px; }
 .sfxSlot[data-panel='onepiece'] .sfx { top: auto; bottom: -26px; right: 12px; }
 .sfxSlot[data-panel='film'] .sfx { top: -26px; right: 14px; }
@@ -419,6 +420,9 @@
 
   /* More picture above the copy when an ink image is present */
   .grid .panel[data-ink='true'] { min-height: clamp(360px, 92vw, 460px); }
+
+  /* The Naruto GIF keeps its own ratio at the top, so the frame needs room for it and the copy */
+  .grid .panel[data-panel='naruto'][data-ink='true'] { min-height: clamp(440px, 120vw, 540px); }
 
   .sketches {
     position: static;

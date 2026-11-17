@@ -1020,7 +1020,18 @@ export type AboutPanel = {
 export const aboutPanels: AboutPanel[] = [
   {
     id: 'naruto',
-    media: { kind: 'image', src: '/images/about/naruto.jpg', alt: 'My own photo for the Naruto panel' },
+    media: {
+      kind: 'image',
+      src: '/images/about/naruto-sasuke.gif',
+      poster: '/images/about/naruto-sasuke-still.jpg',
+      alt: 'Animated clip of Naruto and Sasuke facing each other',
+      // The GIF is only 220 x 122 px: shown whole at the top of the frame rather than
+      // blown up to fill a tall one, with the same ink treatment as One Piece.
+      fit: 'contain',
+      position: '50% 0%',
+      halftone: true,
+      ink: true,
+    },
     title: 'Naruto',
     tag: 'Anime',
     line: 'A kid everyone wrote off who talked his way into their respect instead. What stuck with me is that people change when somebody refuses to give up on them.',
