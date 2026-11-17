@@ -1,0 +1,45 @@
+{
+  "units": "metres, Y up (CAD: mm, Z up, +X forward)",
+  "forward": "+X in CAD = +X in the GLB",
+  "animation": {
+    "name": "crawl",
+    "period_s": 3.6,
+    "body_advance_per_cycle_m": 0.04,
+    "note": "Move the root by body_advance_per_cycle_m per clip loop and planted feet do not slip. The clip moves the trunk sideways (sway) itself."
+  },
+  "gait": {
+    "foot_radius": 125.0,
+    "ground_z": -72.0,
+    "step": 40.0,
+    "lift": 20.0,
+    "swing": 0.16,
+    "sway": 26.0,
+    "frames": 144,
+    "period": 3.6,
+    "order": [
+      "rear_left",
+      "front_left",
+      "rear_right",
+      "front_right"
+    ]
+  },
+  "handedness": "names",
+  "legs": [
+    {
+      "name": "front_left",
+      "mirrored": false
+    },
+    {
+      "name": "rear_left",
+      "mirrored": false
+    },
+    {
+      "name": "front_right",
+      "mirrored": true
+    },
+    {
+      "name": "rear_right",
+      "mirrored": true
+    }
+  ]
+}

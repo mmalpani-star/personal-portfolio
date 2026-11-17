@@ -161,11 +161,28 @@ function loop(tick: (dt: number) => boolean | void) {
 // --------------------------------------------------------------------------
 // Hexapod: walks in from the right on its own baked tripod gait, then settles.
 // --------------------------------------------------------------------------
-export type HexapodManifest = {
+export type WalkerManifest = {
   animation: { name: string; period_s: number; body_advance_per_cycle_m: number };
 };
+/** @deprecated kept for existing imports */
+export type HexapodManifest = WalkerManifest;
 
-export async function createHexapodStage(opts: StageOptions & { manifest: HexapodManifest; src: string }): Promise<Stage> {
+/**
+ * A legged robot that walks in from the right on its own baked gait clip.
+ * `facing` turns the model so its forward direction points screen-left
+ * (hexapod GLB forward is -Z: PI / 2; quadruped GLB forward is +X: PI).
+ */
+export async function createWalkerStage(
+  opts: StageOptions & {
+    manifest: WalkerManifest;
+    src: string;
+    facing: number;
+    /** Camera distance multiplier and look-at height (fraction of model height). */
+    framing?: { distance?: number; target?: number };
+  },
+): Promise<Stage> {
+  const facing = opts.facing;
+  const framing = { distance: 1, target: 0.32, ...opts.framing };
   const { canvas, reducedMotion, manifest } = opts;
   const { renderer, scene, camera, shadow, dispose: disposeBase, fit, onResize } = base(canvas);
 
@@ -182,7 +199,7 @@ export async function createHexapodStage(opts: StageOptions & { manifest: Hexapo
   robot.add(gltf.scene);
   scene.add(robot);
   // GLB forward is -Z; face -X so it walks right-to-left across the screen
-  gltf.scene.rotation.y = Math.PI / 2;
+  gltf.scene.rotation.y = facing;
 
   const box = new THREE.Box3().setFromObject(gltf.scene);
   const size = box.getSize(new THREE.Vector3());
@@ -195,8 +212,8 @@ export async function createHexapodStage(opts: StageOptions & { manifest: Hexapo
   action?.play();
 
   const span = Math.max(size.x, size.z);
-  const target = new THREE.Vector3(0, size.y * 0.32, 0);
-  const baseHome = new THREE.Vector3(span * 0.55, span * 0.4, span * 1.2);
+  const target = new THREE.Vector3(0, size.y * framing.target, 0);
+  const baseHome = new THREE.Vector3(span * 0.55, span * 0.4, span * 1.2).multiplyScalar(framing.distance);
   const home = new THREE.Vector3();
   camera.position.copy(fit(baseHome, target, home));
   camera.lookAt(target);
@@ -235,7 +252,7 @@ export async function createHexapodStage(opts: StageOptions & { manifest: Hexapo
       mixer.update(0);
     }
     // a slow quarter-turn as it settles shows the leg mechanism side-on
-    gltf.scene.rotation.y = Math.PI / 2 - 0.55 * smooth(clamp((shown - 0.62) / 0.3));
+    gltf.scene.rotation.y = facing - 0.55 * smooth(clamp((shown - 0.62) / 0.3));
   };
   apply();
 
@@ -281,6 +298,10 @@ export async function createHexapodStage(opts: StageOptions & { manifest: Hexapo
       disposeBase();
     },
   };
+}
+
+export function createHexapodStage(opts: StageOptions & { manifest: WalkerManifest; src: string }) {
+  return createWalkerStage({ ...opts, facing: Math.PI / 2 });
 }
 
 // --------------------------------------------------------------------------

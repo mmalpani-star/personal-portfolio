@@ -6,6 +6,7 @@ manifold3d==3.5.5      # robust mesh booleans for the collision checks
 numpy==2.5.5
 scipy==1.18.1          # least-squares inverse kinematics
 shapely==2.2.0
+networkx==3.5         # trimesh path traversal (cross-sections)
 rtree==1.4.1
 pygltflib==1.16.5      # writes the baked gait animation into the GLB
 matplotlib==3.11.2     # optional: quick inspection plots

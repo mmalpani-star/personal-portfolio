@@ -8,8 +8,7 @@ import type { RefObject } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import type { Project } from '@/data/site-data';
 import aqmManifest from '@/data/models/aqm.manifest.json';
-import hexapodManifest from '@/data/models/hexapod.manifest.json';
-import type { AqmStage, Stage } from '@/lib/three/scenes';
+import type { AqmStage, Stage, WalkerManifest } from '@/lib/three/scenes';
 import styles from './ModelShowcase.module.css';
 
 type Status = 'idle' | 'loading' | 'ready' | 'failed';
@@ -152,16 +151,29 @@ function Caption({ project, note, shown }: { project: Project; note: string; sho
   );
 }
 
-// ----------------------------------------------------------------- hexapod --
-export function HexapodShowcase({ project }: { project: Project }) {
+// ------------------------------------------------------------------ walkers --
+type WalkerProps = {
+  project: Project;
+  src: string;
+  /** Loaded with the scene, so the gait data stays out of the page's initial JavaScript. */
+  loadManifest: () => Promise<WalkerManifest>;
+  /** Model yaw that makes the robot face screen-left. */
+  facing: number;
+  framing?: { distance?: number; target?: number };
+  label: string;
+  note: string;
+};
+
+/** A legged robot walking in from the right on its baked, IK-solved gait. */
+function WalkerShowcase({ project, src, loadManifest, facing, framing, label, note }: WalkerProps) {
   const hostRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [arrived, setArrived] = useState(false);
   const [inspecting, setInspecting] = useState(false);
 
   const { status, stageRef, reduceMotion } = useLazyStage<Stage>(hostRef, canvasRef, async (canvas, reduced) => {
-    const { createHexapodStage } = await import('@/lib/three/scenes');
-    return createHexapodStage({ canvas, reducedMotion: reduced, manifest: hexapodManifest, src: '/models/hexapod.glb' });
+    const [{ createWalkerStage }, manifest] = await Promise.all([import('@/lib/three/scenes'), loadManifest()]);
+    return createWalkerStage({ canvas, reducedMotion: reduced, manifest, src, facing, framing });
   });
 
   const { scrollYProgress } = useScroll({ target: hostRef, offset: ['start start', 'end end'] });
@@ -184,24 +196,41 @@ export function HexapodShowcase({ project }: { project: Project }) {
     <section ref={hostRef} className={`${styles.scene} ${styles.walk}`} data-static={reduceMotion} aria-label={`${project.title}, 3D model`}>
       <div className={styles.stage}>
         <div className={styles.view}>
-          <canvas
-            ref={canvasRef}
-            className={styles.canvas}
-            data-inspecting={inspecting}
-            aria-label="3D model of the hexapod. Turn on Rotate & zoom to inspect it."
-            role="img"
-          />
+          <canvas ref={canvasRef} className={styles.canvas} data-inspecting={inspecting} aria-label={label} role="img" />
           {status === 'failed' ? <Fallback project={project} /> : null}
           {status === 'loading' ? <span className={styles.loading}>Loading model…</span> : null}
           {status === 'ready' && settled ? <InspectControls stage={stageRef} inspecting={inspecting} onToggle={toggle} /> : null}
         </div>
-        <Caption
-          project={project}
-          shown={settled}
-          note="CAD reconstruction from the printed parts. The tripod gait is solved with inverse kinematics; the robot itself is still learning to walk."
-        />
+        <Caption project={project} shown={settled} note={note} />
       </div>
     </section>
+  );
+}
+
+export function HexapodShowcase({ project }: { project: Project }) {
+  return (
+    <WalkerShowcase
+      project={project}
+      src="/models/hexapod.glb"
+      loadManifest={() => import('@/data/models/hexapod.manifest.json').then((m) => m.default)}
+      facing={Math.PI / 2}
+      label="3D model of the hexapod. Turn on Rotate & zoom to inspect it."
+      note="CAD reconstruction from the printed parts. The tripod gait is solved with inverse kinematics; the robot itself is still learning to walk."
+    />
+  );
+}
+
+export function QuadrupedShowcase({ project }: { project: Project }) {
+  return (
+    <WalkerShowcase
+      project={project}
+      src="/models/quadruped.glb"
+      loadManifest={() => import('@/data/models/quadruped.manifest.json').then((m) => m.default)}
+      facing={Math.PI}
+      framing={{ distance: 1.6, target: 0.38 }}
+      label="3D model of the quadruped. Turn on Rotate & zoom to inspect it."
+      note="Assembled in CAD from the original printed-part files, joint by joint from their holes. The crawl gait is solved with inverse kinematics and checked for static stability; the physical robot is still being brought up."
+    />
   );
 }
 

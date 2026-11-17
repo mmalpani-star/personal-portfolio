@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '@/components/animation';
-import { AqmShowcase, HexapodShowcase } from '@/components/projects/ModelShowcase';
+import { AqmShowcase, HexapodShowcase, QuadrupedShowcase } from '@/components/projects/ModelShowcase';
 import { Viewfinder } from '@/components/effects/Viewfinder';
 import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -61,6 +61,7 @@ function ProjectCard({ project, index, feature }: { project: Project; index: num
 }
 
 export function Projects() {
+  const quadruped = displayProjects.find((p) => p.slug === 'quadruped-leg-kinematics');
   const hexapod = displayProjects.find((p) => p.slug === 'hexapod');
   const airQuality = displayProjects.find((p) => p.slug === 'air-quality-monitor');
   return (
@@ -73,7 +74,8 @@ export function Projects() {
         </Reveal>
       </div>
 
-      {/* Interactive CAD scenes for the two projects that have full 3D models */}
+      {/* Interactive CAD scenes for the projects that have full 3D models */}
+      {quadruped ? <QuadrupedShowcase project={quadruped} /> : null}
       {hexapod ? <HexapodShowcase project={hexapod} /> : null}
       {airQuality ? <AqmShowcase project={airQuality} /> : null}
 
