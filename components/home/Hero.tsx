@@ -63,7 +63,10 @@ export function Hero() {
     pointerY.set(((event.clientY - r.top) / r.height - 0.5) * -10);
   };
 
-  const still = Boolean(reduceMotion);
+  // Read the preference after mount: the server cannot know it, and using it
+  // during the first render makes the hydrated style differ from the HTML.
+  const [still, setStill] = useState(false);
+  useEffect(() => setStill(Boolean(reduceMotion)), [reduceMotion]);
   const university = education[0];
 
   const facts = [

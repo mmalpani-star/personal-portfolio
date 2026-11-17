@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '@/components/animation';
+import { AqmShowcase, HexapodShowcase } from '@/components/projects/ModelShowcase';
 import { Viewfinder } from '@/components/effects/Viewfinder';
 import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -60,6 +61,8 @@ function ProjectCard({ project, index, feature }: { project: Project; index: num
 }
 
 export function Projects() {
+  const hexapod = displayProjects.find((p) => p.slug === 'hexapod');
+  const airQuality = displayProjects.find((p) => p.slug === 'air-quality-monitor');
   return (
     <section id="projects" className={`section ${styles.section}`} aria-labelledby="projects-title">
       <div className="page-shell">
@@ -68,7 +71,16 @@ export function Projects() {
           <h2 id="projects-title">Projects</h2>
           <p>Robots, boards and apps I designed, built and broke.</p>
         </Reveal>
+      </div>
 
+      {/* Interactive CAD scenes for the two projects that have full 3D models */}
+      {hexapod ? <HexapodShowcase project={hexapod} /> : null}
+      {airQuality ? <AqmShowcase project={airQuality} /> : null}
+
+      <div className="page-shell">
+        <Reveal className={styles.gridHeading}>
+          <span className="label">All projects</span>
+        </Reveal>
         <div className={styles.grid}>
           {displayProjects.map((project, index) => (
             <ProjectCard key={project.slug} project={project} index={index} feature={index === 0} />

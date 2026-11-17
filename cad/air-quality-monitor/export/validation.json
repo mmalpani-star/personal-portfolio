@@ -1,0 +1,23 @@
+{
+  "interference_assembled": [],
+  "interference_exploded": [],
+  "sensor_open_area_fraction": {
+    "dht22 grid (right wall)": 0.645,
+    "mp503 sensor (right wall)": 0.64,
+    "mq131 cap (right wall)": 0.657,
+    "mh-z19e (front wall)": 0.617,
+    "display active area (window)": 1.0
+  },
+  "thermal_layout": {
+    "dht22_top_to_mq131_bottom_mm": 26.6,
+    "dht22_top_to_mp503_bottom_mm": 4.5,
+    "dht22_pocket_closed_by_baffle": true,
+    "heaters_vent_upward": true,
+    "esp32_to_dht22_horizontal_mm": 58.8
+  },
+  "overall_size_mm": {
+    "W": 126.0,
+    "D": 50.4,
+    "H": 75.0
+  }
+}

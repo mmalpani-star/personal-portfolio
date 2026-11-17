@@ -19,6 +19,8 @@
   gap: clamp(16px, 2.2vw, 28px);
 }
 
+.gridHeading { margin: clamp(24px, 4vw, 48px) 0 var(--space-5); }
+
 .card { min-width: 0; }
 .cardFeature { grid-column: 1 / -1; }
 

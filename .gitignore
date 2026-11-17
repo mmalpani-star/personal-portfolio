@@ -3,3 +3,11 @@ node_modules
 out
 npm-debug.log*
 .DS_Store
+
+# Raw CAD source files (445 MB). Never deployed; the site uses cad/*/export/glb
+/3d models/
+# CAD toolchain venv and the 38 MB full-robot STEP (rebuild with cad/hexapod/build.py)
+/.cadenv/
+cad/hexapod/export/step/hexapod_assembly.step
+cad/**/__pycache__/
+cad/hexapod/export/views/
