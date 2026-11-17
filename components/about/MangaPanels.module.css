@@ -112,6 +112,27 @@
   object-fit: cover;
 }
 
+/* ---------- Ink treatment (opt-in, One Piece) ----------
+   A hard black-and-white print: deep blacks, crisp whites, nothing laid over the
+   picture. The shared 100deg white scrim is dropped; only a patch behind the copy
+   remains (see [data-ink] below). */
+
+.photoInk img,
+.photoInk .video {
+  filter: grayscale(1) contrast(1.9) brightness(0.86);
+}
+
+.photoInk .halftone {
+  background-size: 5px 5px;
+  opacity: 0.34;
+  mask-image: linear-gradient(35deg, #000 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.12) 100%);
+  -webkit-mask-image: linear-gradient(35deg, #000 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.12) 100%);
+}
+
+/* No scrim: the picture is left alone. Legibility comes from a feathered patch
+   behind the copy block (see `[data-ink]` below), which follows the text. */
+.photoInk .scrim { display: none; }
+
 /* Shown whole at its own ratio, sitting on the page's paper */
 .photoContain { background: var(--white); }
 
@@ -146,6 +167,27 @@
   position: absolute;
   inset: 0;
   z-index: 0;
+  pointer-events: none;
+}
+
+/* Ink panel: a feathered white patch exactly behind the heading and description.
+   It is sized from the copy block, so it follows the text at any width. Two edge
+   masks (across and down) intersect so the patch fades out on all four sides and
+   never shows a hard box edge; the picture beyond it stays at full strength. */
+.panel[data-ink='true'] .content::before {
+  content: '';
+  position: absolute;
+  inset: -36px -56px -30px -44px;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0.93);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 88%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 26%, #000 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 9%, #000 88%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 26%, #000 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
   pointer-events: none;
 }
 
@@ -372,6 +414,9 @@
 
   .grid .panel[data-panel='sketchbook'],
   .grid .panel[data-panel='pickleball'] { min-height: clamp(280px, 62vw, 400px); }
+
+  /* More picture above the copy when an ink image is present */
+  .grid .panel[data-ink='true'] { min-height: clamp(360px, 92vw, 460px); }
 
   .sketches {
     position: static;

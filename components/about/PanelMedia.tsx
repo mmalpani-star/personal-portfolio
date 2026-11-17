@@ -37,7 +37,9 @@ export function PanelMedia({ media }: { media: AboutMedia }) {
   if (failed) return null;
 
   return (
-    <span className={`${styles.photo} ${media.fit === 'contain' ? styles.photoContain : ''}`}>
+    <span
+      className={`${styles.photo} ${media.fit === 'contain' ? styles.photoContain : ''} ${media.ink ? styles.photoInk : ''}`.trim()}
+    >
       {media.kind === 'video' ? (
         <video
           ref={videoRef}

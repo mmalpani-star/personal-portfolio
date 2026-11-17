@@ -992,6 +992,11 @@ export type AboutMedia = {
   fit?: 'cover' | 'contain';
   /** Lays a printed halftone screen over the image. */
   halftone?: boolean;
+  /**
+   * Hard black-and-white manga treatment: deep blacks, crisp whites, no white wash
+   * over the picture. Copy is kept legible by a gradient local to the text instead.
+   */
+  ink?: boolean;
 };
 
 export type AboutPanel = {
@@ -1043,6 +1048,7 @@ export const aboutPanels: AboutPanel[] = [
       alt: 'Artwork for the One Piece panel',
       fit: 'cover',
       halftone: true,
+      ink: true,
     },
     title: 'One Piece',
     tag: 'Anime',
