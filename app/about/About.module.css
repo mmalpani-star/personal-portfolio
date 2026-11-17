@@ -5,7 +5,7 @@
   padding-bottom: clamp(40px, 6vw, 80px);
   overflow: hidden;
   background:
-    radial-gradient(ellipse 50% 46% at 72% 18%, rgba(255, 107, 91, 0.2), transparent 70%),
+    radial-gradient(ellipse 50% 46% at 72% 18%, rgba(255, 212, 0, 0.2), transparent 70%),
     var(--bg);
 }
 
@@ -48,7 +48,7 @@
   align-items: center;
   gap: 14px;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(244, 237, 224, 0.14);
+  border-bottom: 1px solid rgba(13, 13, 13, 0.14);
 }
 
 .monogram {
@@ -58,7 +58,7 @@
   width: 46px;
   height: 46px;
   border-radius: 14px;
-  background: var(--coral);
+  background: var(--accent);
   color: var(--on-accent);
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -82,7 +82,7 @@
   font-size: var(--text-2xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--coral);
+  color: var(--text);
 }
 
 .profileRows {
@@ -144,7 +144,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   letter-spacing: 0.08em;
-  color: var(--coral);
+  color: var(--text);
 }
 
 .stageTitle {
@@ -174,7 +174,7 @@
 
 .close {
   background:
-    radial-gradient(ellipse 50% 70% at 20% 100%, rgba(255, 107, 91, 0.12), transparent 70%),
+    radial-gradient(ellipse 50% 70% at 20% 100%, rgba(255, 212, 0, 0.12), transparent 70%),
     var(--bg);
 }
 

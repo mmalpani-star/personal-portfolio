@@ -28,7 +28,7 @@ function drawBall(ctx: CanvasRenderingContext2D, ball: Ball) {
   ctx.translate(ball.x, ball.y);
   ctx.rotate(ball.angle);
 
-  ctx.fillStyle = '#ff6b5b';
+  ctx.fillStyle = '#ffd400';
   ctx.beginPath();
   ctx.arc(0, 0, RADIUS, 0, Math.PI * 2);
   ctx.fill();

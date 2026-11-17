@@ -954,7 +954,24 @@ export const secondaryWork: SecondaryWork[] = [
   },
 ];
 
-export type AboutPanelId = 'anime' | 'gaming' | 'film' | 'basketball' | 'pickleball';
+export type AboutPanelId =
+  | 'naruto'
+  | 'onepiece'
+  | 'sketchbook'
+  | 'basketball'
+  | 'football'
+  | 'gaming'
+  | 'film'
+  | 'pickleball';
+
+export type AboutImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** CSS object-position, for keeping faces in frame when a photo is cropped. */
+  position?: string;
+};
 
 export type AboutPanel = {
   id: AboutPanelId;
@@ -965,16 +982,18 @@ export type AboutPanel = {
   sfx: string;
   sfxRoman: string;
   stats?: Array<{ figure: string; label: string }>;
-  image?: { src: string; alt: string; width: number; height: number };
+  images?: AboutImage[];
+  /** Optional button out to media hosted elsewhere. */
+  link?: { label: string; href: string };
 };
 
-/** "About Me" panels. Lines are jokes about myself; every number below is verified. */
+/** "About Me" panels. The lines are mine; every number below is verified. */
 export const aboutPanels: AboutPanel[] = [
   {
-    id: 'anime',
-    title: 'Anime',
-    tag: 'Naruto · One Piece',
-    line: 'Long arcs, endless training montages. Basically a build log with better soundtracks.',
+    id: 'naruto',
+    title: 'Naruto',
+    tag: 'Anime',
+    line: 'A kid everyone wrote off who talked his way into their respect instead. What stuck with me is that people change when somebody refuses to give up on them.',
     sfx: 'ドドド',
     sfxRoman: 'do-do-do',
   },
@@ -982,24 +1001,69 @@ export const aboutPanels: AboutPanel[] = [
     id: 'basketball',
     title: 'Basketball',
     tag: 'School team captain, 2026',
-    line: 'Projectile motion, but recreational. The arc is still a parabola.',
+    line: 'Captained the school side. Projectile motion, but recreational — the arc is still a parabola.',
     sfx: 'ダンッ',
     sfxRoman: 'dan',
+    link: {
+      label: 'Watch my clips',
+      href: 'https://drive.google.com/file/d/11H6FIy8daI9I_8KEMjKe2uHN4psrYccW/view?usp=drive_link',
+    },
+  },
+  {
+    id: 'onepiece',
+    title: 'One Piece',
+    tag: 'Anime',
+    line: 'A crew that only works because each person is the best in the world at one thing. Twenty years of build-up and the payoffs still land.',
+    sfx: 'ゴゴゴ',
+    sfxRoman: 'go-go-go',
+  },
+  {
+    id: 'film',
+    title: 'Film',
+    line: 'I watch for the storytelling. Every role an actor steps into hands you a perspective you would never have reached on your own.',
+    sfx: 'カシャ',
+    sfxRoman: 'kasha',
+  },
+  {
+    id: 'sketchbook',
+    title: 'Sketchbook',
+    tag: 'Pencil on paper',
+    line: 'I draw the characters I grew up watching. Mostly graphite, mostly erasing.',
+    sfx: 'サラサラ',
+    sfxRoman: 'sara-sara',
+    images: [
+      {
+        src: '/images/about/sketch-madara.jpg',
+        alt: 'My pencil sketch of an anime character in close-up, drawn in graphite',
+        width: 1600,
+        height: 1127,
+      },
+      {
+        src: '/images/about/sketch-luffy.jpg',
+        alt: 'My pencil sketch of an anime character mid-stride, drawn in graphite',
+        width: 1230,
+        height: 1600,
+      },
+    ],
+    link: {
+      label: 'More sketches',
+      href: 'https://drive.google.com/file/d/10oRPXTAAyJoOJO5X2qSbGZPMYnK11K17/view?usp=drive_link',
+    },
   },
   {
     id: 'gaming',
     title: 'Gaming',
-    tag: 'Valorant · FC',
-    line: 'Valorant for the crosshair placement, FC for the tactics. Losses are blamed on ping.',
+    tag: 'Valorant',
+    line: 'Valorant with my friends, most nights. Reading a round, calling it out and trusting four other people to follow taught me more about leading than any title has — and it is where some of my closest friendships came from.',
     sfx: 'バン',
     sfxRoman: 'ban',
   },
   {
-    id: 'film',
-    title: 'Film & Photography',
-    line: 'Always reframing. Same habit as checking a CAD part from one more angle.',
-    sfx: 'カシャ',
-    sfxRoman: 'kasha',
+    id: 'football',
+    title: 'Football',
+    line: 'Messi or Ronaldo, settled nightly and never once resolved. I have watched enough of both to know the argument is the point.',
+    sfx: 'ゴール',
+    sfxRoman: 'goal',
   },
   {
     id: 'pickleball',
@@ -1014,11 +1078,15 @@ export const aboutPanels: AboutPanel[] = [
       { figure: '~8,000', label: 'profile visits a month' },
       { figure: '~₹50,000', label: 'revenue' },
     ],
-    image: {
-      src: '/images/experience/pickle-it-down-tournament.jpeg',
-      alt: 'Pickle It Down tournament players on court',
-      width: 960,
-      height: 1280,
-    },
+    images: [
+      {
+        src: '/images/experience/pickle-it-down-tournament.jpeg',
+        alt: 'Pickle It Down tournament players with the trophy',
+        width: 960,
+        height: 1280,
+        // Bias upward so the players' faces stay in frame on a wide crop.
+        position: '52% 33%',
+      },
+    ],
   },
 ];

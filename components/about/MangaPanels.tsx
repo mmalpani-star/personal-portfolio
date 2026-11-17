@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
+import { Icon } from '@/components/ui/Icon';
 import { aboutPanels } from '@/data/site-data';
 import type { AboutPanel } from '@/data/site-data';
 import { Basketball } from './Basketball';
@@ -9,10 +10,8 @@ import styles from './MangaPanels.module.css';
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-/** Radiating impact lines, as used behind a manga reaction shot. */
-function SpeedLines() {
-  return <span className={styles.speed} aria-hidden="true" />;
-}
+/** Panels that get radiating impact lines behind their copy. */
+const withSpeedLines = new Set(['naruto', 'basketball', 'onepiece']);
 
 /** Manga sound type. Shares its panel's grid area but is never clipped, so it breaks the border. */
 function Sfx({ panel }: { panel: AboutPanel }) {
@@ -35,6 +34,8 @@ function Sfx({ panel }: { panel: AboutPanel }) {
 
 function Panel({ panel, index }: { panel: AboutPanel; index: number }) {
   const reduceMotion = useReducedMotion();
+  const gallery = panel.images ?? [];
+  const isSketchbook = panel.id === 'sketchbook';
 
   return (
     <motion.article
@@ -42,20 +43,21 @@ function Panel({ panel, index }: { panel: AboutPanel; index: number }) {
       data-panel={panel.id}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.35 }}
-      transition={reduceMotion ? { duration: 0 } : { duration: 0.65, ease, delay: (index % 3) * 0.08 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={reduceMotion ? { duration: 0 } : { duration: 0.65, ease, delay: (index % 3) * 0.07 }}
     >
       <span className={styles.bg} aria-hidden="true">
         <span className={styles.tone} />
-        {panel.id === 'anime' || panel.id === 'basketball' ? <SpeedLines /> : null}
-        {panel.image ? (
+        {withSpeedLines.has(panel.id) ? <span className={styles.speed} /> : null}
+        {/* A single photo fills the frame; the sketchbook lays its drawings out instead. */}
+        {!isSketchbook && gallery[0] ? (
           <span className={styles.photo}>
             <Image
-              src={panel.image.src}
+              src={gallery[0].src}
               alt=""
               fill
-              sizes="(max-width: 900px) 100vw, 100vw"
-              style={{ objectFit: 'cover' }}
+              sizes="(max-width: 900px) 100vw, 70vw"
+              style={{ objectFit: 'cover', objectPosition: gallery[0].position ?? '50% 50%' }}
             />
             <span className={styles.scrim} />
           </span>
@@ -63,6 +65,22 @@ function Panel({ panel, index }: { panel: AboutPanel; index: number }) {
       </span>
 
       {panel.id === 'basketball' ? <Basketball /> : null}
+
+      {isSketchbook && gallery.length ? (
+        <div className={styles.sketches}>
+          {gallery.map((img) => (
+            <figure key={img.src} className={styles.sketch}>
+              <Image
+                src={img.src}
+                alt={img.alt}
+                width={img.width}
+                height={img.height}
+                sizes="(max-width: 900px) 42vw, 22vw"
+              />
+            </figure>
+          ))}
+        </div>
+      ) : null}
 
       <div className={styles.content}>
         <h3 className={styles.title}>{panel.title}</h3>
@@ -80,7 +98,15 @@ function Panel({ panel, index }: { panel: AboutPanel; index: number }) {
           </dl>
         ) : null}
 
-        {panel.id === 'basketball' ? <span className={styles.hint}>Click the panel to throw it again</span> : null}
+        <div className={styles.actions}>
+          {panel.link ? (
+            <a className={styles.linkButton} href={panel.link.href} target="_blank" rel="noreferrer">
+              {panel.link.label}
+              <Icon name="arrow-up-right" size={13} />
+            </a>
+          ) : null}
+          {panel.id === 'basketball' ? <span className={styles.hint}>Click the panel to throw it</span> : null}
+        </div>
       </div>
     </motion.article>
   );

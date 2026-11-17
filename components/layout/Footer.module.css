@@ -37,7 +37,7 @@
 }
 
 .column a { transition: color var(--dur-fast) ease; }
-.column a:hover { color: var(--accent); }
+.column a:hover { color: var(--text); }
 
 .heading {
   margin-bottom: 4px;

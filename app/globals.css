@@ -3,45 +3,46 @@
    ========================================================================== */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* ---- 60%: navy ground ---- */
-  --navy-deep: #0e1729;
-  --navy: #14213d;
-  --navy-raised: #1c2c4f;
-  --bg: var(--navy);
-  --bg-elevated: #182742;
-  --bg-raised: var(--navy-raised);
+  /* ---- 60%: white ground ---- */
+  --white: #ffffff;
+  --paper: #f7f6f3;
+  --bg: var(--white);
+  --bg-elevated: var(--paper);
+  --bg-raised: #efede8;
 
-  /* ---- 30%: cream type and light panels ---- */
-  --cream: #f4ede0;
-  --text: var(--cream);
-  --muted-strong: rgba(244, 237, 224, 0.78);
-  --muted: rgba(244, 237, 224, 0.62);
-  --faint: rgba(244, 237, 224, 0.36);
+  /* ---- 30%: black type and structure ---- */
+  --ink: #0d0d0d;
+  --text: var(--ink);
+  --muted-strong: rgba(13, 13, 13, 0.76);
+  --muted: rgba(13, 13, 13, 0.6);
+  --faint: rgba(13, 13, 13, 0.44);
 
-  --surface-1: rgba(244, 237, 224, 0.04);
-  --surface-2: rgba(244, 237, 224, 0.07);
-  --surface-3: rgba(244, 237, 224, 0.11);
+  --surface-1: rgba(13, 13, 13, 0.035);
+  --surface-2: rgba(13, 13, 13, 0.06);
+  --surface-3: rgba(13, 13, 13, 0.1);
 
   /* Lines */
-  --border: rgba(244, 237, 224, 0.12);
-  --border-strong: rgba(244, 237, 224, 0.26);
-  --grid-line: rgba(244, 237, 224, 0.035);
+  --border: rgba(13, 13, 13, 0.14);
+  --border-strong: rgba(13, 13, 13, 0.3);
+  --grid-line: rgba(13, 13, 13, 0.05);
 
-  /* ---- 10%: coral accent. CTA, active state, one figure per section ---- */
-  --coral: #ff6b5b;
-  --accent: var(--coral);
-  --accent-soft: rgba(255, 107, 91, 0.1);
-  --accent-line: rgba(255, 107, 91, 0.5);
-  --accent-glow: rgba(255, 107, 91, 0.25);
+  /* ---- 10%: yellow accent. Fills and markers only ----
+     Yellow on white is ~1.4:1, so it is never used for text on the ground;
+     it carries black text instead. */
+  --yellow: #ffd400;
+  --accent: var(--yellow);
+  --accent-soft: rgba(255, 212, 0, 0.16);
+  --accent-line: rgba(255, 212, 0, 0.75);
+  --accent-glow: rgba(255, 212, 0, 0.35);
 
-  /* Foreground colours for use ON a filled coral or cream surface */
-  --on-accent: #0e1729;
-  --on-cream: #14213d;
+  /* Foreground colours for use ON a filled accent or dark surface */
+  --on-accent: #0d0d0d;
+  --on-dark: #ffffff;
 
-  --shadow-media: 0 40px 80px -40px rgba(5, 10, 20, 0.85);
-  --shadow-raised: 0 24px 60px -30px rgba(5, 10, 20, 0.9), 0 0 0 1px var(--border);
+  --shadow-media: 0 30px 60px -32px rgba(13, 13, 13, 0.3);
+  --shadow-raised: 0 18px 46px -26px rgba(13, 13, 13, 0.26), 0 0 0 1px var(--border);
 
   /* Type */
   --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
@@ -128,8 +129,8 @@ body::before {
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(rgba(244, 237, 224, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(244, 237, 224, 0.015) 1px, transparent 1px);
+    linear-gradient(rgba(13, 13, 13, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 13, 13, 0.02) 1px, transparent 1px);
   background-size: 64px 64px, 64px 64px, 16px 16px, 16px 16px;
   background-position: center top;
   mask-image: radial-gradient(ellipse 100% 80% at 50% 20%, #000 20%, transparent 80%);
@@ -219,8 +220,8 @@ li::marker { color: var(--faint); }
   z-index: 100;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
-  background: var(--cream);
-  color: var(--on-cream);
+  background: var(--ink);
+  color: var(--on-dark);
   font-size: var(--text-sm);
   transform: translateY(-200%);
 }
@@ -280,6 +281,12 @@ li::marker { color: var(--faint); }
 
 .section-heading.centered { text-align: center; justify-items: center; }
 
+/* Highlighter: yellow sits behind the words, never in them */
+.mark {
+  background-image: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 94%, transparent 94%);
+  background-repeat: no-repeat;
+}
+
 /* Numbered section index above a heading */
 .section-index {
   display: inline-flex;
@@ -289,7 +296,7 @@ li::marker { color: var(--faint); }
   font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  color: var(--coral);
+  color: var(--text);
 }
 
 .section-index::after {
@@ -299,6 +306,12 @@ li::marker { color: var(--faint); }
   background: var(--accent-line);
 }
 
+/* Highlighter: yellow sits behind the words, never in them */
+.mark {
+  background-image: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 94%, transparent 94%);
+  background-repeat: no-repeat;
+}
+
 /* Numbered section index above a heading */
 .section-index {
   display: inline-flex;
@@ -308,7 +321,7 @@ li::marker { color: var(--faint); }
   font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  color: var(--coral);
+  color: var(--text);
 }
 
 .section-index::after {
@@ -324,7 +337,7 @@ li::marker { color: var(--faint); }
   align-items: center;
   gap: 12px;
   margin-bottom: var(--space-4);
-  color: var(--accent);
+  color: var(--text);
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   font-weight: 500;
@@ -377,17 +390,17 @@ li::marker { color: var(--faint); }
    -------------------------------------------------------------------------- */
 
 .glass {
-  background: rgba(244, 237, 224, 0.07);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(244, 237, 224, 0.16);
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(13, 13, 13, 0.1);
   box-shadow:
-    inset 0 1px 0 rgba(244, 237, 224, 0.22),
-    0 18px 40px -24px rgba(5, 10, 20, 0.9);
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 44px -26px rgba(13, 13, 13, 0.3);
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass { background: rgba(28, 44, 79, 0.94); }
+  .glass { background: rgba(255, 255, 255, 0.95); }
 }
 
 .button {
@@ -417,27 +430,27 @@ li::marker { color: var(--faint); }
 
 /* Primary: filled coral, the single loudest element on a screen */
 .button-primary {
-  background: var(--coral);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: var(--yellow);
+  border-color: rgba(13, 13, 13, 0.16);
   color: var(--on-accent);
   font-weight: 600;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 10px 26px -12px rgba(255, 107, 91, 0.75);
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 10px 26px -14px rgba(13, 13, 13, 0.4);
 }
 
 /* Secondary: the glass recipe above */
 .button-secondary {
-  background: rgba(244, 237, 224, 0.07);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border-color: rgba(244, 237, 224, 0.18);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border-color: rgba(13, 13, 13, 0.18);
   color: var(--text);
-  box-shadow: inset 0 1px 0 rgba(244, 237, 224, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .button-secondary { background: rgba(28, 44, 79, 0.94); }
+  .button-secondary { background: rgba(255, 255, 255, 0.95); }
 }
 
 .button-text {
@@ -449,10 +462,10 @@ li::marker { color: var(--faint); }
 }
 
 @media (hover: hover) {
-  .button-primary:hover { background: #ff7f71; }
+  .button-primary:hover { background: #ffdd33; }
   .button-secondary:hover {
-    border-color: rgba(244, 237, 224, 0.34);
-    background: rgba(244, 237, 224, 0.12);
+    border-color: rgba(13, 13, 13, 0.32);
+    background: rgba(255, 255, 255, 0.85);
   }
   .button-text:hover { color: var(--text); }
   .button:hover svg { transform: translate(2px, -2px); }
@@ -496,7 +509,7 @@ li::marker { color: var(--faint); }
   padding: 0.38rem 0.6rem 0.38rem 0.5rem;
   border-radius: var(--radius-xs);
   border: 1px solid var(--border);
-  background: rgba(14, 23, 41, 0.55);
+  background: rgba(255, 255, 255, 0.7);
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   font-weight: 500;
@@ -515,11 +528,11 @@ li::marker { color: var(--faint); }
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--led, var(--muted)) 18%, transparent);
 }
 
-.status-completed { --led: #7ddc9a; }
+.status-completed { --led: #17a35a; }
 .status-progress { --led: var(--accent); }
-.status-prototype { --led: #8fb8ff; }
+.status-prototype { --led: #2f6fd0; }
 .status-concept { --led: var(--muted); }
-.status-current { --led: var(--accent); border-color: var(--accent-line); color: var(--accent); }
+.status-current { --led: var(--accent); border-color: var(--accent-line); color: var(--text); }
 
 .status-current::before { animation: led-pulse 2.4s ease-in-out infinite; }
 
@@ -539,7 +552,7 @@ li::marker { color: var(--faint); }
 .corners { position: relative; }
 
 .corners::after {
-  --c: rgba(244, 237, 224, 0.5);
+  --c: rgba(13, 13, 13, 0.45);
   --l: 14px;
   content: "";
   position: absolute;
@@ -613,7 +626,7 @@ li::marker { color: var(--faint); }
   display: block;
   width: 100%;
   height: auto;
-  background: var(--navy-deep);
+  background: var(--bg-raised);
 }
 
 .video-preview-badge {
@@ -626,7 +639,7 @@ li::marker { color: var(--faint); }
   gap: 6px;
   padding: 5px 8px;
   border-radius: var(--radius-xs);
-  background: rgba(14, 23, 41, 0.72);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   color: var(--muted-strong);
@@ -660,7 +673,7 @@ li::marker { color: var(--faint); }
   margin: -450px 0 0 -450px;
   border-radius: 50%;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(255, 107, 91, 0.07), rgba(255, 150, 120, 0.025) 35%, transparent 65%);
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.14), rgba(255, 212, 0, 0.05) 35%, transparent 65%);
   opacity: 0;
   transition: opacity 600ms ease;
   will-change: transform;
@@ -684,13 +697,13 @@ li::marker { color: var(--faint); }
 
 .spotlight::before {
   z-index: -1;
-  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(244, 237, 224, 0.08), transparent 60%);
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(13, 13, 13, 0.05), transparent 60%);
 }
 
 .spotlight::after {
   z-index: 3;
   padding: 1px;
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(244, 237, 224, 0.5), transparent 65%);
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(13, 13, 13, 0.22), transparent 65%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -714,7 +727,7 @@ li::marker { color: var(--faint); }
 }
 
 .vf-brackets {
-  --c: rgba(244, 237, 224, 0.92);
+  --c: rgba(13, 13, 13, 0.8);
   --l: 18px;
   position: absolute;
   inset: 12px;
@@ -737,7 +750,7 @@ li::marker { color: var(--faint); }
   width: 46px;
   height: 34px;
   margin: -17px 0 0 -23px;
-  border: 1px solid rgba(244, 237, 224, 0.85);
+  border: 1px solid rgba(13, 13, 13, 0.8);
   opacity: 0;
 }
 
@@ -750,7 +763,7 @@ li::marker { color: var(--faint); }
   gap: 6px;
   padding: 3px 6px;
   border-radius: var(--radius-xs);
-  background: rgba(14, 23, 41, 0.62);
+  background: rgba(255, 255, 255, 0.78);
   color: var(--text);
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
@@ -768,7 +781,7 @@ li::marker { color: var(--faint); }
 .vf-shutter {
   position: absolute;
   inset: 0;
-  background: var(--navy-deep);
+  background: var(--bg-raised);
   opacity: 0;
 }
 
@@ -797,8 +810,8 @@ li::marker { color: var(--faint); }
 @keyframes vf-reticle {
   0% { opacity: 0; transform: scale(1.7); }
   45% { opacity: 1; transform: scale(0.94); }
-  70% { opacity: 1; transform: none; border-color: var(--accent); }
-  100% { opacity: 0; transform: none; border-color: var(--accent); }
+  70% { opacity: 1; transform: none; border-color: var(--text); }
+  100% { opacity: 0; transform: none; border-color: var(--text); }
 }
 
 @keyframes vf-shutter {
