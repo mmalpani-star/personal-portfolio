@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Reveal } from '@/components/animation';
+import { ApertureReveal } from '@/components/effects/ApertureReveal';
 import { Skills } from './Skills';
 import { Icon } from '@/components/ui/Icon';
 import { education, experience } from '@/data/site-data';
@@ -148,7 +149,7 @@ export function Experience() {
 
   return (
     <section id="experience" className={`section section--raised ${styles.section}`} aria-labelledby="experience-title">
-      <div className="page-shell">
+      <ApertureReveal className="page-shell">
         <Reveal className={styles.heading}>
           <span className="section-index">01</span>
           <h2 id="experience-title">Experience</h2>
@@ -207,7 +208,7 @@ export function Experience() {
             ))}
           </ol>
         </div>
-      </div>
+      </ApertureReveal>
     </section>
   );
 }

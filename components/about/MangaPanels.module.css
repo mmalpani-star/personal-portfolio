@@ -333,16 +333,18 @@
     grid-auto-rows: auto;
   }
 
-  /* Every panel becomes a full-width frame, stacked in reading order */
-  .panel {
+  /* Every panel becomes a full-width frame, stacked in reading order.
+     The [data-panel] qualifier is needed to outrank the per-panel grid areas
+     above, since a media query adds no specificity of its own. */
+  .grid .panel[data-panel] {
     grid-column: 1 / -1;
     grid-row: auto;
     min-height: clamp(210px, 48vw, 290px);
     clip-path: none;
   }
 
-  .panel[data-panel='sketchbook'],
-  .panel[data-panel='pickleball'] { min-height: clamp(280px, 62vw, 400px); }
+  .grid .panel[data-panel='sketchbook'],
+  .grid .panel[data-panel='pickleball'] { min-height: clamp(280px, 62vw, 400px); }
 
   .sketches {
     position: static;
@@ -350,10 +352,20 @@
     order: -1;
   }
 
-  .panel[data-panel='sketchbook'] { flex-direction: column; align-items: flex-start; }
+  .grid .panel[data-panel='sketchbook'] { flex-direction: column; align-items: flex-start; }
+
+  /* Copy runs the full width here, so the photo wash has to come from below */
+  .scrim {
+    background: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.97) 0%,
+      rgba(255, 255, 255, 0.9) 52%,
+      rgba(255, 255, 255, 0.42) 100%
+    );
+  }
 
   /* Stacked frames leave no gutter for type that breaks the border */
-  .sfxSlot,
+  .grid .sfxSlot[data-panel],
   .wedgeA,
   .wedgeB { display: none; }
 }

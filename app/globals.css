@@ -16,8 +16,8 @@
   --ink: #0d0d0d;
   --text: var(--ink);
   --muted-strong: rgba(13, 13, 13, 0.76);
-  --muted: rgba(13, 13, 13, 0.6);
-  --faint: rgba(13, 13, 13, 0.44);
+  --muted: rgba(13, 13, 13, 0.64);
+  --faint: rgba(13, 13, 13, 0.56);
 
   --surface-1: rgba(13, 13, 13, 0.035);
   --surface-2: rgba(13, 13, 13, 0.06);
