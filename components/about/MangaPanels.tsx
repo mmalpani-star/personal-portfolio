@@ -11,6 +11,9 @@ import styles from './MangaPanels.module.css';
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
+/** Panels whose single image is a large pinned poster rather than a full-bleed picture. */
+const posterPanels = new Set(['dhurandhar', 'yjhd']);
+
 /** Panels that get radiating impact lines behind their copy. */
 const withSpeedLines = new Set(['naruto', 'basketball', 'onepiece']);
 
@@ -47,7 +50,7 @@ function Panel({
   const reduceMotion = useReducedMotion();
   // Pinned images, limited to the files that exist so a missing one is never requested.
   const gallery = (panel.images ?? []).filter((image) => present.has(image.src));
-  const isPosterWall = panel.id === 'film';
+  const isPoster = posterPanels.has(panel.id);
 
   // Size the frame from its media: reserve the media's own aspect-ratio height at the top.
   // The percentage is of the panel's width, so it holds at every screen size.
@@ -68,14 +71,14 @@ function Panel({
       <span className={styles.bg} aria-hidden="true">
         <span className={styles.tone} />
         {withSpeedLines.has(panel.id) ? <span className={styles.speed} /> : null}
-        {/* Media fills the frame; the sketchbook and the film frame pin their images to the page instead. */}
+        {/* Media fills the frame; the sketchbook and the film posters pin their images to the page instead. */}
         {panel.media && hasMedia ? <PanelMedia media={panel.media} /> : null}
       </span>
 
       {panel.id === 'basketball' ? <Basketball /> : null}
 
       {gallery.length ? (
-        <div className={isPosterWall ? styles.posters : styles.sketches}>
+        <div className={isPoster ? styles.posters : styles.sketches}>
           {gallery.map((img) => (
             <figure key={img.src} className={styles.sketch}>
               <Image
@@ -83,7 +86,7 @@ function Panel({
                 alt={img.alt}
                 width={img.width}
                 height={img.height}
-                sizes={isPosterWall ? '(max-width: 900px) 42vw, 14vw' : '(max-width: 900px) 42vw, 22vw'}
+                sizes={isPoster ? '(max-width: 900px) 70vw, 24vw' : '(max-width: 900px) 42vw, 22vw'}
               />
               {img.caption ? <figcaption className={styles.pinCaption}>{img.caption}</figcaption> : null}
             </figure>

@@ -47,12 +47,21 @@
   clip-path: polygon(0 3%, 100% 0, 100% 100%, 0 100%);
 }
 
-.panel[data-panel='film'],
-.sfxSlot[data-panel='film'] { grid-column: 10 / 13; grid-row: 1 / 2; }
-.panel[data-panel='film'] { clip-path: polygon(0 0, 100% 3%, 100% 100%, 0 100%); }
+/* Row 1: the two anime frames and football. Row 2: the two film posters, then basketball. */
+.panel[data-panel='football'],
+.sfxSlot[data-panel='football'] { grid-column: 10 / 13; grid-row: 1 / 2; }
+.panel[data-panel='football'] { clip-path: polygon(0 0, 100% 3%, 100% 100%, 0 100%); }
+
+.panel[data-panel='dhurandhar'],
+.sfxSlot[data-panel='dhurandhar'] { grid-column: 1 / 4; grid-row: 2 / 3; }
+.panel[data-panel='dhurandhar'] { clip-path: polygon(0 0, 100% 2%, 100% 100%, 0 100%); }
+
+.panel[data-panel='yjhd'],
+.sfxSlot[data-panel='yjhd'] { grid-column: 4 / 7; grid-row: 2 / 3; }
+.panel[data-panel='yjhd'] { clip-path: polygon(0 2%, 100% 0, 100% 100%, 0 100%); }
 
 .panel[data-panel='basketball'],
-.sfxSlot[data-panel='basketball'] { grid-column: 1 / 13; grid-row: 2 / 3; }
+.sfxSlot[data-panel='basketball'] { grid-column: 7 / 13; grid-row: 2 / 3; }
 
 .panel[data-panel='sketchbook'],
 .sfxSlot[data-panel='sketchbook'] { grid-column: 1 / 8; grid-row: 3 / 4; }
@@ -62,13 +71,10 @@
 .sfxSlot[data-panel='gaming'] { grid-column: 8 / 13; grid-row: 3 / 4; }
 .panel[data-panel='gaming'] { clip-path: polygon(0 2%, 100% 0, 100% 100%, 0 98%); }
 
-.panel[data-panel='football'],
-.sfxSlot[data-panel='football'] { grid-column: 1 / 5; grid-row: 4 / 5; }
-
 .panel[data-panel='pickleball'],
-.sfxSlot[data-panel='pickleball'] { grid-column: 5 / 13; grid-row: 4 / 5; }
+.sfxSlot[data-panel='pickleball'] { grid-column: 1 / 13; grid-row: 4 / 5; }
 .panel[data-panel='pickleball'] {
-  min-height: clamp(300px, 32vw, 420px);
+  min-height: clamp(300px, 30vw, 400px);
   clip-path: polygon(0 3%, 100% 0, 100% 100%, 0 97%);
 }
 
@@ -208,7 +214,7 @@
 
 .sketches {
   position: absolute;
-  top: clamp(12px, 1.6vw, 20px);
+  top: clamp(34px, 3vw, 44px);
   right: clamp(12px, 1.6vw, 20px);
   z-index: 1;
   display: flex;
@@ -239,43 +245,39 @@
   color: var(--ink);
 }
 
-/* ---------- Film: two posters pinned along the top ----------
-   The frame becomes a column, so the posters sit in the flow above the copy. The frame grows to
-   fit them at any width and the copy can never run underneath. */
-.panel[data-panel='film'] {
+/* ---------- Film: one large poster pinned in each of two frames ----------
+   The frame is a column, so the poster sits in the flow above the copy. The frame grows to fit it at
+   any width and the copy can never run underneath. */
+.panel[data-panel='dhurandhar'],
+.panel[data-panel='yjhd'] {
   flex-direction: column;
   align-items: stretch;
   justify-content: space-between;
-  gap: 14px;
+  gap: 18px;
 }
 
 .posters {
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: flex-start;
   justify-content: center;
-  gap: 10px;
-  /* Clears the sound type that sits on the frame's top edge */
-  margin-top: 14px;
+  /* Clears the sound type that hangs on the frame's top edge */
+  margin-top: 6px;
 }
 
 .posters .sketch {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 160px;
-  width: auto;
-  padding: 5px;
-  box-shadow: 3px 3px 0 var(--ink);
+  flex: 0 1 auto;
+  width: min(100%, 320px);
+  padding: 7px;
+  box-shadow: 5px 5px 0 var(--ink);
 }
 
-/* Long titles stay on two lines instead of stacking word by word in a narrow frame */
-.posters .pinCaption {
-  margin-top: 5px;
-  font-size: 0.58rem;
-  letter-spacing: 0;
-  overflow-wrap: anywhere;
-}
+/* The posters are shown in full colour; only the pencil sketches are put through the ink filter */
+.posters .sketch img { filter: none; }
+
+/* Opposite tilts, like two prints taped up by hand */
+.panel[data-panel='dhurandhar'] .posters .sketch { transform: rotate(-2deg); }
+.panel[data-panel='yjhd'] .posters .sketch { transform: rotate(2deg); }
 
 .sketch img {
   width: 100%;
@@ -411,10 +413,11 @@
 /* Hangs off the bottom edge into the gutter, over the empty right side of the Basketball frame below.
    The description wraps differently at every width, so nothing inside the frame is a safe place for it. */
 .sfxSlot[data-panel='naruto'] .sfx { top: auto; bottom: -26px; right: 14px; font-size: clamp(1.75rem, 3.2vw, 2.75rem); }
-.sfxSlot[data-panel='basketball'] .sfx { top: -26px; right: 18px; }
+.sfxSlot[data-panel='basketball'] .sfx { top: auto; bottom: -26px; right: 18px; }
 .sfxSlot[data-panel='onepiece'] .sfx { top: -26px; right: 16px; }
-.sfxSlot[data-panel='film'] .sfx { top: -26px; right: 14px; }
-.sfxSlot[data-panel='sketchbook'] .sfx { top: -24px; left: 14px; right: auto; }
+.sfxSlot[data-panel='dhurandhar'] .sfx,
+.sfxSlot[data-panel='yjhd'] .sfx { top: auto; bottom: -26px; right: 24px; }
+.sfxSlot[data-panel='sketchbook'] .sfx { top: auto; bottom: -24px; left: 14px; right: auto; }
 .sfxSlot[data-panel='gaming'] .sfx { top: auto; bottom: -24px; right: 14px; }
 .sfxSlot[data-panel='football'] .sfx { top: -24px; left: 10px; right: auto; }
 .sfxSlot[data-panel='pickleball'] .sfx { top: auto; bottom: -26px; right: 16px; }

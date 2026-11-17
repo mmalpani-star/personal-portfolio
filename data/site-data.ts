@@ -961,7 +961,8 @@ export type AboutPanelId =
   | 'basketball'
   | 'football'
   | 'gaming'
-  | 'film'
+  | 'dhurandhar'
+  | 'yjhd'
   | 'pickleball';
 
 export type AboutImage = {
@@ -1053,19 +1054,6 @@ export const aboutPanels: AboutPanel[] = [
     sfxRoman: 'do-do-do',
   },
   {
-    id: 'basketball',
-    media: { kind: 'video', src: '/videos/about/basketball.mp4', alt: 'A clip of me playing basketball' },
-    title: 'Basketball',
-    tag: 'School team captain, 2026',
-    line: 'Captained the school side. Projectile motion, but recreational — the arc is still a parabola.',
-    sfx: 'ダンッ',
-    sfxRoman: 'dan',
-    link: {
-      label: 'Watch my clips',
-      href: 'https://drive.google.com/drive/u/1/folders/1ISrfXgmy38kSxyzci-PoVIVqRD_ScAoK',
-    },
-  },
-  {
     id: 'onepiece',
     media: {
       kind: 'image',
@@ -1082,29 +1070,58 @@ export const aboutPanels: AboutPanel[] = [
     sfxRoman: 'go-go-go',
   },
   {
-    id: 'film',
-    // Two posters pinned along the top of the frame, titles underneath. Each is shown only if its
-    // file exists in public/images/about/.
+    id: 'dhurandhar',
+    // The poster is pinned in the frame; it shows only if the file exists in public/images/about/.
     images: [
       {
         src: '/images/about/dhurandhar.webp',
         alt: 'Poster for Dhurandhar',
-        caption: 'Dhurandhar',
         width: 860,
         height: 1075,
       },
+    ],
+    title: 'Dhurandhar',
+    tag: 'Ranveer Singh',
+    line: 'Ranveer on screen is a lesson in commitment. He disappears into a role so completely that you stop watching an actor and start following the story.',
+    sfx: 'ドン',
+    sfxRoman: 'don',
+  },
+  {
+    id: 'yjhd',
+    images: [
       {
         src: '/images/about/yjhd.webp',
         alt: 'Poster for Yeh Jawaani Hai Deewani',
-        caption: 'Yeh Jawaani Hai Deewani',
         width: 663,
         height: 960,
       },
     ],
-    title: 'Film',
-    line: 'I watch for the storytelling. Every role an actor steps into hands you a perspective you would never have reached on your own.',
-    sfx: 'カシャ',
-    sfxRoman: 'kasha',
+    title: 'Yeh Jawaani Hai Deewani',
+    tag: 'Ranbir Kapoor',
+    line: 'The one I can rewatch forever. Ranbir plays a guy working out what he actually wants, and that is a story I never get tired of.',
+    sfx: 'キラキラ',
+    sfxRoman: 'kira-kira',
+  },
+  {
+    id: 'basketball',
+    media: { kind: 'video', src: '/videos/about/basketball.mp4', alt: 'A clip of me playing basketball' },
+    title: 'Basketball',
+    tag: 'School team captain, 2026',
+    line: 'Captained the school side. Projectile motion, but recreational — the arc is still a parabola.',
+    sfx: 'ダンッ',
+    sfxRoman: 'dan',
+    link: {
+      label: 'Watch my clips',
+      href: 'https://drive.google.com/drive/u/1/folders/1ISrfXgmy38kSxyzci-PoVIVqRD_ScAoK',
+    },
+  },
+  {
+    id: 'football',
+    media: { kind: 'video', src: '/videos/about/football.mp4', alt: 'A clip of me playing football' },
+    title: 'Football',
+    line: 'Messi or Ronaldo, settled nightly and never once resolved. I have watched enough of both to know the argument is the point.',
+    sfx: 'ゴール',
+    sfxRoman: 'goal',
   },
   {
     id: 'sketchbook',
@@ -1140,14 +1157,6 @@ export const aboutPanels: AboutPanel[] = [
     line: 'Valorant with my friends, most nights. Reading a round, calling it out and trusting four other people to follow taught me more about leading than any title has — and it is where some of my closest friendships came from.',
     sfx: 'バン',
     sfxRoman: 'ban',
-  },
-  {
-    id: 'football',
-    media: { kind: 'video', src: '/videos/about/football.mp4', alt: 'A clip of me playing football' },
-    title: 'Football',
-    line: 'Messi or Ronaldo, settled nightly and never once resolved. I have watched enough of both to know the argument is the point.',
-    sfx: 'ゴール',
-    sfxRoman: 'goal',
   },
   {
     id: 'pickleball',
