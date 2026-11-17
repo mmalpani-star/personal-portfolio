@@ -30,7 +30,7 @@ const loop = [
  */
 function availableMedia() {
   return aboutPanels
-    .map((panel) => panel.media?.src)
+    .flatMap((panel) => [panel.media?.src, ...(panel.images ?? []).map((image) => image.src)])
     .filter((src): src is string => Boolean(src) && existsSync(path.join(process.cwd(), 'public', src!)));
 }
 

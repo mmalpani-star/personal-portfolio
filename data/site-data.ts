@@ -971,6 +971,8 @@ export type AboutImage = {
   height: number;
   /** CSS object-position, for keeping faces in frame when a photo is cropped. */
   position?: string;
+  /** Printed under the image when the panel pins its images as a gallery. */
+  caption?: string;
 };
 
 /**
@@ -1081,7 +1083,24 @@ export const aboutPanels: AboutPanel[] = [
   },
   {
     id: 'film',
-    media: { kind: 'image', src: '/images/about/film.jpg', alt: 'My own photo for the film panel' },
+    // Two posters pinned along the top of the frame, titles underneath. Each is shown only if its
+    // file exists in public/images/about/.
+    images: [
+      {
+        src: '/images/about/dhurandhar.webp',
+        alt: 'Poster for Dhurandhar',
+        caption: 'Dhurandhar',
+        width: 860,
+        height: 1075,
+      },
+      {
+        src: '/images/about/yjhd.webp',
+        alt: 'Poster for Yeh Jawaani Hai Deewani',
+        caption: 'Yeh Jawaani Hai Deewani',
+        width: 663,
+        height: 960,
+      },
+    ],
     title: 'Film',
     line: 'I watch for the storytelling. Every role an actor steps into hands you a perspective you would never have reached on your own.',
     sfx: 'カシャ',

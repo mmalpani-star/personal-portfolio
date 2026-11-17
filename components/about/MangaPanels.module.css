@@ -228,6 +228,55 @@
 .sketch:first-child { transform: rotate(-3deg); }
 .sketch:last-child { transform: rotate(2.5deg); }
 
+/* Titles printed under a pinned image, like a caption under a photo on a page */
+.pinCaption {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ---------- Film: two posters pinned along the top ----------
+   The frame becomes a column, so the posters sit in the flow above the copy. The frame grows to
+   fit them at any width and the copy can never run underneath. */
+.panel[data-panel='film'] {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.posters {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  /* Clears the sound type that sits on the frame's top edge */
+  margin-top: 14px;
+}
+
+.posters .sketch {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 160px;
+  width: auto;
+  padding: 5px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* Long titles stay on two lines instead of stacking word by word in a narrow frame */
+.posters .pinCaption {
+  margin-top: 5px;
+  font-size: 0.58rem;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
 .sketch img {
   width: 100%;
   height: auto;
