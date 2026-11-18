@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '@/components/animation';
+import { HardwareViewer } from '@/components/experience/HardwareViewer';
 import { PcbViewer } from '@/components/experience/PcbViewer';
 import { CollabSection } from '@/components/shared/CollabSection';
 import { Icon } from '@/components/ui/Icon';
@@ -67,9 +68,25 @@ function Media({ entry }: { entry: StoryEntry }) {
       );
     case 'sandhacks':
       return (
-        <Reveal>
-          <Figure src="/images/experience/sand-hacks-team.jpg" alt="The Sitwise team at SanD Hacks in front of the winners' slide" w={2524} h={1684} caption="The Sitwise team at SanD Hacks" sizes="(max-width: 900px) 92vw, 760px" />
-        </Reveal>
+        <div className={styles.sand}>
+          <Reveal className={styles.block}>
+            <span className={styles.stepNo}>The team</span>
+            <Figure src="/images/experience/sand-hacks-team.jpg" alt="The Sitwise team at SanD Hacks in front of the winners' slide" w={2524} h={1684} caption="The Sitwise team at SanD Hacks" sizes="(max-width: 900px) 92vw, 720px" />
+          </Reveal>
+
+          <Reveal className={styles.block} delay={0.05}>
+            <span className={styles.stepNo}>The chair-attachment hardware</span>
+            <div className={styles.hardware}>
+              <Figure src="/images/experience/sand-hacks-hardware.jpg" alt="Two people at a table, one holding the black printed arm of the chair attachment with a red and a green part at its end" w={1200} h={1600} caption="The hardware I worked on" sizes="(max-width: 900px) 40vw, 300px" className={styles.hwPhoto} />
+              <figure className={styles.figure}>
+                <HardwareViewer label="3D model of the four printed parts of the chair attachment, laid out side by side. Drag to rotate." />
+                <figcaption className={styles.caption}>
+                  The four printed parts, from the CAD files: arm root, arm tip, upper jaw and phone cradle. Laid out, not assembled. Drag to turn them.
+                </figcaption>
+              </figure>
+            </div>
+          </Reveal>
+        </div>
       );
     case 'borderpulse':
       return (

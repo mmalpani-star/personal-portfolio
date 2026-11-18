@@ -483,3 +483,21 @@ steel tape of these dimensions would deploy as shown; the physical prototype.
 
 Earth in the scene: Solar System Scope maps (CC BY 4.0), resized by `earth_textures.py` into `public/textures/earth/`.
 
+
+---
+
+## SanD Hacks hardware (laid out, not assembled)
+
+`3d models/san d hacks /` holds four printed parts (arm root, arm tip, upper jaw, phone cradle) as Parasolid
+**mesh** exports from Onshape (`*.xmm_txt`). They are triangle meshes, not B-reps, and are read by
+`cad/sandhacks/psm_mesh.py` (the format notes are in its docstring; every part reads back as a closed manifold).
+`cad/sandhacks/build.py` writes `public/models/sandhacks/hardware.glb` (standard library only).
+
+* **ORIGINAL** every triangle, the part colours (the files' own colour attribute), the dimensions (arm root 195 x 16 x 20 mm,
+  arm tip 190 x 16 x 20, upper jaw 190.5 x 68.8 x 22, phone cradle 156 x 89.4 x 35; the OBJ-style unit is metres in the file).
+* **LAID OUT** side by side, long axes along X, resting flat. This is **not** an assembly: the files carry no mates.
+  What the geometry does show: the arm root has two 12 mm holes 142 mm apart; the arm tip has three 12 mm holes at 25 mm
+  pitch; the upper jaw has a block with two 5.6 mm holes (10 mm counterbore) also at 25 mm pitch and two 6.8 mm holes
+  170 mm apart. The matching 25 mm pitch suggests the jaw block bolts to the arm tip, but nothing else is determined, so
+  nothing was assembled.
+* **NOT MODELLED** servos, bearings, screws, the phone: none were supplied.

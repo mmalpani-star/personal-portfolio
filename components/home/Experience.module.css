@@ -188,6 +188,13 @@
   .layout { max-width: 220px; }
 }
 
+/* SanD Hacks: the team, then the hardware photo and its printed parts at one height */
+.sand { display: grid; gap: clamp(28px, 4vw, 40px); max-width: 720px; }
+.hardware { display: grid; grid-template-columns: 0.75fr 1fr; gap: 16px; align-items: start; }
+.hardware > figure { min-width: 0; }
+.hwPhoto .img { aspect-ratio: 3 / 4; object-fit: cover; }
+@media (max-width: 560px) { .hardware { grid-template-columns: 1fr; } .hwPhoto { max-width: 280px; } }
+
 /* StarLabs: the team large, the full group set against it */
 .starlabs { position: relative; max-width: 720px; padding-bottom: 12%; }
 .starTeam { width: 82%; }

@@ -1,0 +1,62 @@
+{
+  "arm_root_print": {
+    "vertices": 544,
+    "triangles": 1092,
+    "index_range": [
+      0,
+      543
+    ],
+    "open_edges": 0,
+    "volume_mm3": -54932.109745226226,
+    "size_mm": [
+      195.0,
+      16.0,
+      20.0
+    ]
+  },
+  "arm_tip_print": {
+    "vertices": 598,
+    "triangles": 1204,
+    "index_range": [
+      0,
+      597
+    ],
+    "open_edges": 0,
+    "volume_mm3": -52890.55699031702,
+    "size_mm": [
+      190.0,
+      16.0,
+      20.0
+    ]
+  },
+  "upper_jaw_print": {
+    "vertices": 4817,
+    "triangles": 9646,
+    "index_range": [
+      0,
+      4816
+    ],
+    "open_edges": 0,
+    "volume_mm3": 147911.88254368608,
+    "size_mm": [
+      190.5,
+      68.8,
+      22.0
+    ]
+  },
+  "phone_cradle_print": {
+    "vertices": 7842,
+    "triangles": 15704,
+    "index_range": [
+      0,
+      7841
+    ],
+    "open_edges": 0,
+    "volume_mm3": 60737.258481284975,
+    "size_mm": [
+      156.0,
+      89.4,
+      35.0
+    ]
+  }
+}
