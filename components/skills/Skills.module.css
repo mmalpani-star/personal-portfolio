@@ -1,0 +1,344 @@
+/* Registered so the greyscale-to-brand-colour change on hover can be animated. */
+@property --c1 { syntax: '<color>'; inherits: true; initial-value: #c9ccd2; }
+@property --c2 { syntax: '<color>'; inherits: true; initial-value: #c9ccd2; }
+@property --ko { syntax: '<color>'; inherits: true; initial-value: #090b0f; }
+@property --r { syntax: '<length>'; inherits: true; initial-value: 540px; }
+
+.stage {
+  --stage: #090b0f;
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--nav-h);
+  min-height: calc(100svh - var(--nav-h));
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 85% 65% at 50% 42%, #151c27 0%, var(--stage) 72%);
+  color: #fff;
+  /* dragging the zipper must never select the page's text */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* the site's engineering grid, on the dark stage */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 10%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 10%, transparent 75%);
+}
+
+/* light that spills from the opening: the page itself is lit, not just the model */
+.glow {
+  --r: 540px;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--open, 0);
+  background: radial-gradient(
+    circle var(--r) at var(--mx, 50%) var(--my, 45%),
+    rgba(255, 236, 170, 0.5) 0%,
+    rgba(255, 205, 90, 0.2) 24%,
+    rgba(255, 190, 70, 0.07) 52%,
+    transparent 100%
+  );
+  transition: --r 1.2s var(--ease-out);
+}
+.stage[data-state='open'] .glow { --r: 230px; }
+
+/* ---------------------------------------------------------------- heading */
+
+.heading {
+  position: absolute;
+  top: 26px;
+  left: var(--gutter);
+  z-index: 4;
+  max-width: 36ch;
+  pointer-events: none;
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.title {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: var(--tracking-display);
+  color: #fff;
+}
+
+.lead {
+  margin: 12px 0 0;
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* ---------------------------------------------------------------- backpack */
+
+.packWrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: min(86vw, 560px);
+  aspect-ratio: 1 / 1.08;
+  transform-origin: 50% 50%;
+  transition: transform 1.15s var(--ease-out);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  touch-action: none; /* closed: a finger drags the zipper, it never scrolls the page */
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.8s ease;
+  /* feather the edges so spilled light fades out instead of ending at the canvas boundary */
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 70%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 70%, transparent 100%);
+}
+.stage[data-ready='true'] .canvas { opacity: 1; }
+.stage[data-state='open'] .canvas,
+.stage[data-state='opening'] .canvas { touch-action: pan-y; }
+.stage[data-gl='off'] .packWrap { display: none; }
+
+/* ---------------------------------------------------------------- prompts */
+
+.cta {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  z-index: 4;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.cta[data-visible='true'] { opacity: 1; pointer-events: auto; }
+
+.hint {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.unzip,
+.repack {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+.unzip:hover:not(:disabled),
+.repack:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.unzip:focus-visible,
+.repack:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.repack {
+  position: absolute;
+  left: 208px;
+  bottom: 38px;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease 0.9s, background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.repack[data-visible='true'] { opacity: 1; pointer-events: auto; }
+
+/* ---------------------------------------------------------------- the groups */
+
+.groups {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: 25%;
+  bottom: 200px;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: center;
+  gap: clamp(24px, 4vw, 64px);
+  pointer-events: none;
+}
+.groups[data-state='open'],
+.groups[data-state='opening'] { pointer-events: auto; }
+
+.group { min-width: 0; }
+
+.groupHead {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.groups[data-state='open'] .groupHead,
+.groups[data-state='opening'] .groupHead { opacity: 1; transition-delay: 0.7s; }
+
+.groupCode,
+.groupCount {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.groupCount { color: rgba(255, 255, 255, 0.4); }
+
+.groupTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: #fff;
+}
+
+.logos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px 8px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Logos are not boxed or carded: a mark and a name. Hidden until they are poured out of the pack. */
+.item {
+  display: grid;
+  justify-items: center;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.groups[data-state='opening'] .item,
+.groups[data-state='open'] .item,
+.groups[data-state='repacking'] .item { opacity: 1; }
+
+.bob {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  animation: bob 6.5s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes bob {
+  50% { transform: translateY(-5px); }
+}
+
+.logoBox {
+  width: 64px;
+  height: 64px;
+  overflow: visible;
+  --c1: #c9ccd2; /* greyscale at rest ... */
+  --c2: #c9ccd2;
+  --ko: #090b0f;
+  transition: --c1 0.35s ease, --c2 0.35s ease, --ko 0.35s ease, transform 0.35s var(--ease-out), filter 0.35s ease;
+}
+
+.item:hover .logoBox {
+  --c1: var(--b1); /* ... and the brand's own colours on hover */
+  --c2: var(--b2);
+  --ko: #fff;
+  transform: translateY(-4px) scale(1.12);
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--b1) 60%, transparent));
+}
+
+.label {
+  max-width: 11ch;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+  transition: color 0.3s ease;
+}
+.item:hover .label { color: #fff; }
+
+.trails {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- narrow screens */
+
+@media (max-width: 900px) {
+  /* stack the groups under the heading; they take no room until the pack is opened */
+  .groups {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-top: 168px;
+    padding: 0 var(--gutter) 40px;
+    max-height: 0;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+  .groups[data-state='opening'],
+  .groups[data-state='open'],
+  .groups[data-state='repacking'] { max-height: none; overflow: visible; padding-bottom: 96px; }
+
+  .logos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  .repack {
+    left: auto;
+    right: 16px;
+    bottom: auto;
+    top: 148px;
+  }
+  .cta { width: calc(100% - 2 * var(--gutter)); }
+}
+
+/* ---------------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .bob { animation: none; }
+  .packWrap,
+  .glow { transition: none; }
+}

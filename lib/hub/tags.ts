@@ -25,7 +25,7 @@ export type HubMedia =
     };
 
 export type HubTag = {
-  id: 'projects' | 'experience' | 'about' | 'contact';
+  id: 'projects' | 'experience' | 'about' | 'contact' | 'skills';
   label: string;
   blurb: string;
   /** Existing route or in-page anchor. */
@@ -35,6 +35,7 @@ export type HubTag = {
   media: HubMedia;
 };
 
+/** The five tags, in the order they hang on the rack. The hanger builds exactly one hanger per entry. */
 export const HUB_TAGS: HubTag[] = [
   {
     id: 'projects',
@@ -91,6 +92,20 @@ export const HUB_TAGS: HubTag[] = [
       src: '/images/about/tony-stark.gif',
       alt: 'Tony Stark in his workshop',
       focus: [0.5, 0.25],
+    },
+  },
+  {
+    id: 'skills',
+    label: 'Skills',
+    blurb: 'Languages, hardware and tools I work with.',
+    href: '/skills',
+    focusSelector: 'main h1',
+    media: {
+      kind: 'animated',
+      // The skills animation in the project is saved as `skils.webp` (sic): an animated WebP, 20 frames.
+      src: '/images/about/skils.webp',
+      alt: 'Animated skills graphic',
+      focus: [0.5, 0.5],
     },
   },
 ];

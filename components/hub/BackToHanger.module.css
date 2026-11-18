@@ -1,8 +1,4 @@
 .back {
-  position: fixed;
-  left: max(16px, env(safe-area-inset-left, 0px));
-  bottom: max(16px, env(safe-area-inset-bottom, 0px));
-  z-index: 125; /* above the page, nav, lightbox (80) and the About reactor intro (120), so a way back is always there */
   display: none;
   align-items: center;
   gap: 8px;
@@ -20,7 +16,6 @@
   letter-spacing: 0.09em;
   text-transform: uppercase;
   white-space: nowrap;
-  box-shadow: 0 10px 30px -18px rgba(13, 13, 13, 0.4);
   transition: background var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out);
 }
 
@@ -29,18 +24,6 @@
 .back:hover { background: var(--ink); color: var(--on-dark); }
 .back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .glyph { flex: none; }
-
-@media (max-width: 520px) {
-  /* keep it a quiet corner mark on a phone: the arrow and hanger glyph, with the label for assistive tech */
-  .back { padding: 0 12px; }
-  .back span:last-child {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-  }
-}
 
 @media print { .back { display: none !important; } }
 

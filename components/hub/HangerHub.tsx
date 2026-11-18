@@ -2,13 +2,17 @@
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { HUB_TAGS } from '@/lib/hub/tags';
-import { rackMemory, useHubUrl } from '@/lib/hub/store';
+import { HUB_TAGS, type HubTag } from '@/lib/hub/tags';
+import { createTransitionMedia, preloadMedia, type TransitionMedia } from '@/lib/hub/media-cache';
+import { rackMemory, sectionForHash, useHubUrl, useLocationKey } from '@/lib/hub/store';
 import type { RackHandle } from '@/lib/three/hanger-rack';
+import { TransitionOverlay } from './TransitionOverlay';
 import styles from './HangerHub.module.css';
 
 type Phase = 'closed' | 'open' | 'selecting' | 'leaving';
 type Tip = { index: number; x: number; y: number } | null;
+/** The clip that is currently covering the screen. `key` makes every showing a brand-new element. */
+type Showing = { tag: HubTag; media: TransitionMedia; key: number };
 
 const LEAVE_MS = 520;
 const NAVIGATION_TIMEOUT_MS = 8000;
@@ -43,6 +47,7 @@ function readFonts() {
 export function HangerHub() {
   const router = useRouter();
   const hubUrl = useHubUrl();
+  const locationKey = useLocationKey();
 
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -62,6 +67,10 @@ export function HangerHub() {
   const [paused, setPaused] = useState(rackMemory.paused);
   const [reduced, setReduced] = useState(false);
   const [touched, setTouched] = useState(false);
+  const [showing, setShowing] = useState<Showing | null>(null);
+  const showingRef = useRef<Showing | null>(null);
+  const showingSeq = useRef(0);
+  const pendingFocus = useRef<string | null>(null);
 
   const setPhase = useCallback((next: Phase) => {
     phaseRef.current = next;
@@ -81,20 +90,74 @@ export function HangerHub() {
     return () => query.removeEventListener('change', apply);
   }, []);
 
+  /* ----- go to the chosen section ----- */
+  const navigate = useCallback(
+    (tag: HubTag) => {
+      if (tag.href.startsWith('/#')) router.push(tag.href, { scroll: false });
+      else router.push(tag.href);
+    },
+    [router],
+  );
+
+  /** Remove the full-screen clip and hand focus to the section underneath. */
+  const finishShowing = useCallback(() => {
+    const current = showingRef.current;
+    showingRef.current = null;
+    setShowing(null);
+    current?.media.release();
+    const selector = pendingFocus.current;
+    pendingFocus.current = null;
+    if (!selector) return;
+    window.requestAnimationFrame(() => {
+      const target = document.querySelector<HTMLElement>(selector);
+      if (!target) return;
+      // Move assistive-tech focus to the section's heading without drawing a ring on it.
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.setAttribute('data-hub-focus', '');
+      target.focus({ preventScroll: true });
+    });
+  }, []);
+
   /* ----- choose a tag ----- */
   const pick = useCallback(
     (index: number) => {
       const handle = handleRef.current;
-      if (!handle || phaseRef.current !== 'open') return;
+      // One selection at a time: while a tag is being brought forward or its clip is playing, ignore clicks.
+      if (!handle || phaseRef.current !== 'open' || showingRef.current) return;
       const tag = HUB_TAGS[index];
       setPhase('selecting');
       setTip(null);
       setTouched(true);
       rackMemory.selected = index;
-      handle.select(index).then(() => {
+      pendingFocus.current = tag.focusSelector;
+      // The hanger's own intro stands in for the About page's reactor intro when arriving this way.
+      if (tag.id === 'about') {
+        try {
+          sessionStorage.setItem('reactor-seen', '1');
+        } catch {
+          // storage blocked: the About intro simply plays as it always did
+        }
+      }
+      // Under reduced motion there is no full-screen clip; otherwise start preparing a fresh copy of it now,
+      // while the rack turns, so it is ready the instant it is needed.
+      const prepared = reducedRef.current ? null : createTransitionMedia(tag.media.src);
+      handle.select(index).then(async () => {
         rackMemory.phi = handle.getState().phi;
-        if (tag.href.startsWith('/#')) router.push(tag.href, { scroll: false });
-        else router.push(tag.href);
+        if (!prepared) {
+          navigate(tag);
+          return;
+        }
+        let media: TransitionMedia;
+        try {
+          media = await prepared;
+        } catch {
+          navigate(tag); // the clip could not be loaded: go straight to the section
+          return;
+        }
+        showingSeq.current += 1;
+        const next = { tag, media, key: showingSeq.current };
+        showingRef.current = next;
+        setShowing(next);
       });
       // If the route never lands, put the rack back rather than leave it stuck mid-air.
       window.clearTimeout(safetyTimer.current);
@@ -102,10 +165,12 @@ export function HangerHub() {
         if (phaseRef.current !== 'selecting') return;
         handle.cancelSelect();
         rackMemory.selected = -1;
+        pendingFocus.current = null;
+        if (showingRef.current) finishShowing();
         setPhase('open');
       }, NAVIGATION_TIMEOUT_MS);
     },
-    [router, setPhase],
+    [navigate, finishShowing, setPhase],
   );
   const pickRef = useRef(pick);
   pickRef.current = pick;
@@ -136,6 +201,8 @@ export function HangerHub() {
         });
         handleRef.current = handle;
         setGl((current) => (current === 'off' ? current : 'ok'));
+        // Fetch all five clips in the background (the tag textures use the same downloads).
+        if (!reducedRef.current) preloadMedia(HUB_TAGS.map((tag) => tag.media.src));
         const shown = phaseRef.current === 'open' || phaseRef.current === 'selecting';
         if (!shown) handle.setActive(false);
         if (rackMemory.selected >= 0 && shown) {
@@ -154,6 +221,23 @@ export function HangerHub() {
     };
   }, [everOpened]);
 
+  /* ----- one section at a time: the home page shows only the section the URL names ----- */
+  useEffect(() => {
+    if (locationKey === null) return;
+    const html = document.documentElement;
+    if (window.location.pathname !== '/') {
+      delete html.dataset.section;
+      return;
+    }
+    const hash = window.location.hash;
+    if (hash === '' || hash === '#') {
+      delete html.dataset.section; // the hanger itself: nothing to isolate
+      return;
+    }
+    const section = sectionForHash(hash);
+    if (section) html.dataset.section = section; // any other hash (e.g. #top) leaves the current section as it is
+  }, [locationKey]);
+
   /* ----- the URL decides whether the hanger is showing ----- */
   useEffect(() => {
     if (hubUrl === null) return;
@@ -162,6 +246,8 @@ export function HangerHub() {
 
     if (hubUrl) {
       window.clearTimeout(safetyTimer.current);
+      if (showingRef.current) finishShowing(); // e.g. the browser's Back button during the clip
+      pendingFocus.current = null;
       setEverOpened(true);
       if (phaseRef.current === 'open') return;
       const wasClosed = phaseRef.current === 'closed' || phaseRef.current === 'leaving';
@@ -200,34 +286,36 @@ export function HangerHub() {
           rackMemory.phi = handle.getState().phi;
           handle.setActive(false);
         }
-        if (tag) {
+        // With a clip covering the screen, focus moves when the clip finishes instead.
+        if (tag && !showingRef.current) {
           const target = document.querySelector<HTMLElement>(tag.focusSelector);
           if (target) {
-            // Move assistive-tech focus to the section's heading without drawing a ring on it.
             if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
             target.setAttribute('data-hub-focus', '');
             target.focus({ preventScroll: true });
           }
+          pendingFocus.current = null;
         }
       },
       reducedRef.current ? 160 : LEAVE_MS,
     );
-  }, [hubUrl, setPhase]);
+  }, [hubUrl, setPhase, finishShowing]);
 
   /* ----- while the hanger is up, nothing behind it can be reached ----- */
+  const clipUp = showing !== null;
   useEffect(() => {
-    if (phase !== 'open' && phase !== 'selecting') return;
+    if (phase !== 'open' && phase !== 'selecting' && !clipUp) return;
     const blocked: HTMLElement[] = [];
     Array.from(document.body.children).forEach((child) => {
       const el = child as HTMLElement;
-      if (el === rootRef.current || el.tagName === 'SCRIPT' || el.tagName.toLowerCase() === 'next-route-announcer') return;
+      if (el.hasAttribute('data-hub-keep') || el.tagName === 'SCRIPT' || el.tagName.toLowerCase() === 'next-route-announcer') return;
       if (!el.hasAttribute('inert')) {
         el.setAttribute('inert', '');
         blocked.push(el);
       }
     });
     return () => blocked.forEach((el) => el.removeAttribute('inert'));
-  }, [phase]);
+  }, [phase, clipUp]);
 
   useEffect(
     () => () => {
@@ -264,8 +352,10 @@ export function HangerHub() {
   const fine = typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches;
 
   return (
+    <>
     <div
       ref={rootRef}
+      data-hub-keep=""
       className={styles.hub}
       data-state={phase}
       data-gl={gl}
@@ -388,5 +478,17 @@ export function HangerHub() {
         </span>
       ) : null}
     </div>
+
+    {showing ? (
+      <TransitionOverlay
+        key={showing.key}
+        tag={showing.tag}
+        media={showing.media}
+        navigated={hubUrl === false}
+        onCovered={() => navigate(showing.tag)}
+        onFinish={finishShowing}
+      />
+    ) : null}
+    </>
   );
 }

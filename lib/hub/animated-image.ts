@@ -11,6 +11,8 @@
  *   decodes natively, then composited with the frame's blend / dispose flags.
  */
 
+import { getMediaBlob } from '@/lib/hub/media-cache';
+
 export type DecodedFrames = {
   /** One canvas per frame, already cropped to `outW x outH`. */
   frames: HTMLCanvasElement[];
@@ -293,9 +295,9 @@ async function parseWebp(
 /* ------------------------------------------------------------ composite */
 
 export async function decodeAnimated(url: string, options: DecodeOptions): Promise<DecodedFrames> {
-  const res = await fetch(url, { signal: options.signal });
-  if (!res.ok) throw new Error(`${url} returned ${res.status}`);
-  const buf = new Uint8Array(await res.arrayBuffer());
+  const blob = await getMediaBlob(url); // shared with the full-screen transition: one download per file
+  if (options.signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+  const buf = new Uint8Array(await blob.arrayBuffer());
   const firstOnly = !!options.firstFrameOnly;
 
   const isGif = ascii(buf, 0, 3) === 'GIF';

@@ -870,3 +870,15 @@ html[data-hub='leaving'] {
 [data-hub-focus]:focus-visible {
   outline: none;
 }
+
+/* ==========================================================================
+   One section at a time
+   The hanger is the only way to choose a section. Opening one shows just that section of the home page;
+   the others stay in the document (and for visitors without JavaScript) but are not displayed.
+   ========================================================================== */
+
+html[data-section='experience'] main > section:not(#experience),
+html[data-section='projects'] main > section:not(#projects):not(#awards),
+html[data-section='contact'] main > section:not(#contact) {
+  display: none;
+}

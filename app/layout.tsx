@@ -26,10 +26,11 @@ export const viewport: Viewport = {
 
 /**
  * Runs while the HTML is parsed, before first paint: the landing hanger shows on `/` with no hash.
- * Every other URL (a section anchor, /about, a project page) opens straight into its content.
+ * Every other URL (a section anchor, /about, a project page) opens straight into its content, and a home-page
+ * section anchor shows only that section (`data-section`), so each section is read on its own.
  * HangerHub takes over from here once React is running.
  */
-const hubBootScript = `(function(){try{var d=document.documentElement,h=location.hash;d.dataset.hub=location.pathname==='/'&&(!h||h==='#')?'open':'closed'}catch(e){}})();`;
+const hubBootScript = `(function(){try{var d=document.documentElement,h=location.hash,p=location.pathname==='/';d.dataset.hub=p&&(!h||h==='#')?'open':'closed';var m={'#projects':'projects','#awards':'projects','#experience':'experience','#contact':'contact'}[h];if(p&&m)d.dataset.section=m}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

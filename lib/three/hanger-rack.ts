@@ -66,7 +66,9 @@ export type RackHandle = {
 /* ------------------------------------------------------------------ geometry constants */
 
 const TAU = Math.PI * 2;
-const RING_R = 0.95;
+// Sized for five hangers: 72 degrees apart is 1.5 m of chord, against a 0.6 m tag, so neighbours clear each other
+// even when one swivels to face the viewer, and near tags hide as little of the far ones as possible.
+const RING_R = 1.3;
 const CHROME_R = 0.022;
 const BLACK_R = 0.02;
 const BLACK_Y = -0.043;
@@ -610,7 +612,7 @@ export function createHangerRack(options: RackOptions): RackHandle {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     const portrait = smoothstep(0, 0.75, 1.25 - camera.aspect);
-    tagScale = lerp(1, 1.32, portrait);
+    tagScale = lerp(1, 1.42, portrait);
     const tanH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const ringTop = 0.03;
     const tagBottom = PIVOT_Y + BAG_BOTTOM * tagScale;
@@ -619,7 +621,7 @@ export function createHangerRack(options: RackOptions): RackHandle {
     let k = (ringTop - tagBottom) / (ringNdc - bottomNdc); // world units per NDC at the front plane
     let dist = k / tanH + RING_R;
     // the whole ring, with a margin, must fit across the screen
-    const fitWidth = RING_R / (tanH * camera.aspect * lerp(0.84, 0.86, portrait));
+    const fitWidth = RING_R / (tanH * camera.aspect * lerp(0.84, 0.95, portrait));
     let topNdc = ringNdc;
     if (fitWidth > dist) {
       dist = fitWidth;

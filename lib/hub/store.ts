@@ -47,6 +47,26 @@ function subscribe(listener: () => void) {
   };
 }
 
+/** Which home-page section a URL hash opens (Awards belongs with Work), or `null` for any other hash. */
+export function sectionForHash(hash: string): 'projects' | 'experience' | 'contact' | null {
+  switch (hash.replace('#', '')) {
+    case 'projects':
+    case 'awards':
+      return 'projects';
+    case 'experience':
+      return 'experience';
+    case 'contact':
+      return 'contact';
+    default:
+      return null;
+  }
+}
+
+/** The current path and hash, as one string: it changes whenever the visitor goes anywhere. */
+export function useLocationKey(): string | null {
+  return useSyncExternalStore<string | null>(subscribe, () => window.location.pathname + window.location.hash, () => null);
+}
+
 /** `null` until the client knows (server render and the first hydration pass). */
 export function useHubUrl(): boolean | null {
   return useSyncExternalStore<boolean | null>(subscribe, isHubUrl, () => null);

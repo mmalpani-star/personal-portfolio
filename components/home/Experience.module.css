@@ -9,8 +9,6 @@
   line-height: 1.5;
 }
 
-.toolkit { margin-top: clamp(28px, 4vw, 44px); }
-
 .dates {
   font-family: var(--font-mono);
   font-size: var(--text-2xs);

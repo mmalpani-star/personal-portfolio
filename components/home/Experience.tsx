@@ -6,7 +6,6 @@ import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Reveal } from '@/components/animation';
 import { ApertureReveal } from '@/components/effects/ApertureReveal';
-import { Skills } from './Skills';
 import { Icon } from '@/components/ui/Icon';
 import { education, experience } from '@/data/site-data';
 import type { Experience as ExperienceItem } from '@/data/site-data';
@@ -172,13 +171,6 @@ export function Experience() {
             </Row>
           ))}
         </ol>
-
-        <div className={styles.toolkit}>
-          <div className={styles.educationHead}>
-            <span className="label">Toolkit</span>
-          </div>
-          <Skills />
-        </div>
 
         <div className={styles.education}>
           <div className={styles.educationHead}>
