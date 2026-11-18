@@ -1,0 +1,2 @@
+Earth textures: Solar System Scope (https://www.solarsystemscope.com/textures/), CC BY 4.0,
+as distributed with the three.js examples (r170), resized and channel-split by cad/cubesat/earth_textures.py.

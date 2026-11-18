@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { contactLinks } from '@/data/site-data';
 import styles from './Footer.module.css';
 
@@ -12,13 +11,6 @@ export function Footer() {
         </div>
 
         <nav className={styles.columns} aria-label="Footer">
-          <div className={styles.column}>
-            <span className={styles.heading}>Site</span>
-            <Link href="/#work">Work</Link>
-            <Link href="/#experience">Experience</Link>
-            <Link href="/about">About</Link>
-            <Link href="/#contact">Contact</Link>
-          </div>
           <div className={styles.column}>
             <span className={styles.heading}>Elsewhere</span>
             {contactLinks.map((link) => (

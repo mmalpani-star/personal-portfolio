@@ -56,13 +56,13 @@
   height: 44px;
   border: 1px solid var(--border-strong);
   border-radius: 50%;
-  background: rgba(7, 7, 7, 0.6);
+  background: rgba(255, 255, 255, 0.6);
   transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
 }
 
 .control:hover {
   background: var(--text);
-  color: #0a0a0a;
+  color: var(--on-dark);
 }
 
 .prev,

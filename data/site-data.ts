@@ -27,7 +27,7 @@ export type ProjectMediaItem =
       height?: number;
     };
 
-/** Controls homepage emphasis: flagship robotics, hardware prototypes, software & hackathons. */
+/** Controls homepage emphasis: `flagship` gets a full card; the rest go to the Side Quests grid. */
 export type ProjectTier = 'flagship' | 'hardware' | 'software';
 
 export type Project = {
@@ -39,6 +39,10 @@ export type Project = {
   status: ProjectStatus;
   statusNote: string;
   summary: string;
+  /** Homepage card copy: at most two lines, written only from the verified text below. */
+  teaser: string;
+  /** Up to three short spec chips for the homepage card. */
+  chips: string[];
   description: string;
   role?: string;
   technologies: string[];
@@ -84,6 +88,8 @@ export type Experience = {
   location?: string;
   dates?: string;
   isCurrent?: boolean;
+  /** One-line version shown in the collapsed timeline row. */
+  summary?: string;
   details?: string[];
   socialLink?: ContactLink;
   images?: Array<{
@@ -108,6 +114,8 @@ export type Education = {
   degree: string;
   expectedGraduation?: string;
   dates?: string;
+  /** One-line version shown in the collapsed row. */
+  summary?: string;
   details?: string[];
 };
 
@@ -127,6 +135,8 @@ export type ContactLink = {
 
 export type SecondaryWork = {
   title: string;
+  /** One-line version for the Side Quests grid. */
+  teaser?: string;
   details: string[];
   image?: { src: string; alt: string; width: number; height: number };
 };
@@ -137,6 +147,9 @@ export const projects: Project[] = [
     tier: 'flagship',
     title: 'Quadruped Leg Kinematics',
     shortTitle: 'Quadruped',
+    teaser:
+      'Four 3-DOF legs, a Python kinematics framework, and a MuJoCo twin that walks, turns and jumps. Hardware locomotion is in progress.',
+    chips: ['4 × 3-DOF legs', 'FK + IK in Python', 'MuJoCo: ~11 cm jump'],
     category: 'Robotics / Kinematics',
     status: 'IN PROGRESS',
     statusNote:
@@ -347,6 +360,9 @@ if __name__ == "__main__":
     tier: 'flagship',
     title: 'Custom Hexapod',
     shortTitle: 'Hexapod',
+    teaser:
+      'A roughly 70 cm wide six-legged robot: 18 servos, an Arduino Mega and 20+ printed parts. Assembled; locomotion is the current job.',
+    chips: ['18 × MG996R servos', '20+ 3D-printed parts', 'Arduino Mega'],
     category: 'Robotics / Mechanical Systems',
     status: 'IN PROGRESS',
     statusNote: 'Mechanical assembly complete / locomotion development ongoing.',
@@ -387,6 +403,9 @@ if __name__ == "__main__":
     tier: 'hardware',
     title: '1U CubeSat Antenna Deployment Mechanism',
     shortTitle: 'CubeSat',
+    teaser:
+      'Antenna deployment and burn-wire mechanism for a 3D-printed 1U CubeSat model, from a startup internship.',
+    chips: ['Burn-wire mechanism', 'CST Studio simulation', 'Onshape'],
     category: 'Space Systems / Mechanical Design',
     status: 'PROTOTYPE',
     statusNote: 'Prototype and simulation work completed; no flight claim made.',
@@ -426,6 +445,9 @@ if __name__ == "__main__":
     tier: 'hardware',
     title: 'ESP32 Multi-Sensor Air Quality Monitor',
     shortTitle: 'Air Quality',
+    teaser:
+      'An ESP32 station that reads CO2, ozone, temperature and humidity and shows them on a TFT display.',
+    chips: ['ESP32', '5 sensor readings', 'TFT display'],
     category: 'Embedded Systems / IoT',
     status: 'COMPLETED',
     statusNote: 'Completed prototype and demonstration project.',
@@ -463,9 +485,12 @@ if __name__ == "__main__":
   },
   {
     slug: 'tritonspend-ai',
-    tier: 'software',
+    tier: 'flagship',
     title: 'TritonSpend AI',
     shortTitle: 'TritonSpend',
+    teaser:
+      'A live web app that helps UC San Diego students make Dining Dollars and Triton Cash last the whole term.',
+    chips: ['Two wallets, to the cent', 'Spending forecasts', 'Next.js + FastAPI'],
     category: 'AI / Web Application',
     status: 'COMPLETED',
     statusNote:
@@ -521,6 +546,9 @@ if __name__ == "__main__":
     tier: 'software',
     title: 'BorderPulse',
     shortTitle: 'BorderPulse',
+    teaser:
+      'Hackathon logistics tool for border-crossing delays and rerouting. Top 7 at cOmpiled-16.',
+    chips: ['Top 7 of 200+ teams', 'Rerouting decisions', 'Driver communication'],
     category: 'Hackathon / Logistics',
     status: 'PROTOTYPE',
     statusNote: 'Hackathon prototype demonstrated at cOmpiled-16; not a deployed commercial logistics system.',
@@ -616,6 +644,9 @@ if __name__ == "__main__":
     tier: 'hardware',
     title: 'HydroSafe',
     shortTitle: 'HydroSafe',
+    teaser:
+      'A flood-drainage prototype with pipes, springs and piezoelectric sensors, presented to 100+ visitors.',
+    chips: ['Physical prototype', 'Piezoelectric sensors', '100+ visitors'],
     category: 'Environmental Engineering / Embedded Systems / Mechanical Systems',
     status: 'PROTOTYPE',
     statusNote: 'Physical prototype and concept exploration completed for demonstration and presentation.',
@@ -691,15 +722,18 @@ export const currentlyBuilding: {
   location: string;
   dates: string;
   status: ProjectStatus;
+  summary: string;
   description: string;
 } = {
   organization: 'Triton Robotics',
-  team: 'Electronics Sub-Team Recruit',
+  team: 'Electronics Member',
   location: 'UC San Diego',
   dates: 'Aug 2026 – Present',
-  status: 'CURRENTLY BUILDING',
+  status: 'COMPLETED',
+  summary:
+    'Designed and built a CAN FD transceiver breakout board as my capstone, after training on the legacy center board and an LM555 timer circuit.',
   description:
-    'Working on the legacy center-board design by reviewing power and signal distribution, modifying the PCB during week 2, and building a LM555 timer circuit on a general-purpose board during training. For the capstone, I am designing and building a CAN FD transceiver breakout board, with PCB Version 1 followed by PCB Version 3.',
+    'Worked on the legacy center-board design by reviewing power and signal distribution, modified the PCB during week 2, and built a LM555 timer circuit on a general-purpose board during training. For the capstone, I designed and built a CAN FD transceiver breakout board, with PCB Version 1 followed by PCB Version 3.',
 };
 
 export const experience: Experience[] = [
@@ -707,12 +741,14 @@ export const experience: Experience[] = [
     title: 'Mechanical Design & Fabrication Intern',
     organization: 'Space Technology / Aeronautical Rocketry startup',
     dates: 'Jun 2025 – Jul 2025',
+    summary: '3D-printed CubeSat model, antenna deployment mechanism, assembly and soldering.',
     details: ['3D-printed CubeSat model work', 'Antenna deployment mechanism design and testing support', 'Assembly and soldering support'],
   },
   {
     title: 'Machine Learning Intern',
     organization: 'IIT Kanpur / Techkriti',
     dates: 'Jan 2025 – Feb 2025',
+    summary: 'SVM handwritten-digit classifier in Python, plus the IIT Kanpur Python for AI/ML certification.',
     details: [
       'Fundamental machine learning and linear algebra study',
       'SVM-based handwritten digit classifier using Python and scikit-learn',
@@ -729,17 +765,18 @@ export const experience: Experience[] = [
     ],
   },
   {
-    title: 'Electronics Sub-Team Recruit',
+    title: 'Electronics Member',
     organization: 'Triton Robotics',
     location: 'UC San Diego',
     dates: 'Aug 2026 – Present',
     isCurrent: true,
+    summary: 'Designed and built a CAN FD transceiver breakout board as my capstone: PCB V1, then V3.',
     details: [
       'Reviewed an older center-board design for power and signal distribution',
       'Modified the center-board PCB during week 2 of training',
       'Built an LM555 timer circuit on a general-purpose board during week 1 and week 3 training',
-      'Designing and building a CAN FD transceiver breakout board as the capstone project',
-      'Developed PCB Version 1 and PCB Version 3 in chronological order',
+      'Designed and built a CAN FD transceiver breakout board as the capstone project',
+      'Soldered through-hole and SMD components onto boards, assembled PCBs and reviewed datasheets',
     ],
     images: [
       {
@@ -780,6 +817,7 @@ export const experience: Experience[] = [
     title: 'Event Organiser',
     organization: 'Pickle It Down',
     dates: 'May 2024 – Jan 2026',
+    summary: 'Co-founded a pickleball community: 50+ players, ~8,000 profile visits a month, ~₹50,000 revenue.',
     details: [
       'Co-founded a pickleball community that brought together 50+ players for tournaments and social events',
       'Managed venue booking, logistics, catering, and match-fixture planning',
@@ -810,21 +848,22 @@ export const education: Education[] = [
     degree: 'B.S. Artificial Intelligence',
     expectedGraduation: 'June 2030',
   },
-  {
-    institution: 'Delhi Public School, Surat',
-    degree: 'Central Board of Secondary Education (CBSE)',
-    dates: '2011–2026',
-    details: [
-      'Senior secondary subjects: Mathematics, Physics, Chemistry, English, and Computer Science',
-      'Scored 93 in Computer Science and 89 in Mathematics',
-      'Captain of the school basketball team (2026)',
-      'Student Council House Captain — one of only 4 selected out of 200',
-      'Represented Dragon House (1,000+ students)',
-    ],
-  },
 ];
 
 export const awards: Award[] = [
+  {
+    name: 'SanD Hacks 2026',
+    detail: 'Winner — MLH Best Use of Tiger Data',
+    year: '2026',
+    figure: 'Winner',
+    context: '— MLH Best Use of Tiger Data',
+  },
+  {
+    name: 'cOmpiled-16 UCSD Hackathon',
+    detail: 'Top 7 of 200+ teams',
+    figure: 'Top 7',
+    context: 'of 200+ teams · 441 participants',
+  },
   {
     name: 'International Computer Science Competition Finalist',
     detail: 'Finalist — top 500 out of 10,000 participants',
@@ -874,10 +913,12 @@ export const contactLinks: ContactLink[] = [
 export const secondaryWork: SecondaryWork[] = [
   {
     title: 'Gesture-Controlled Drone',
+    teaser: 'Soldered ESP32 board, printed parts and CAD. Not completed, and listed anyway.',
     details: ['ESP32 board soldering', '3D-printed components', 'CAD work', 'Project was not successfully completed'],
   },
   {
     title: 'ROV',
+    teaser: 'CAD study of an underwater ROV with a clear front dome and two ducted thrusters.',
     details: ['CAD/modeling project', 'Primarily visual/CAD work'],
     image: {
       src: '/images/projects/rov/rov-cad.jpg',
@@ -904,5 +945,274 @@ export const secondaryWork: SecondaryWork[] = [
       'Created a welcoming environment where players could meet new people and play together',
       'Motto: “We connect, you play.”',
     ],
+  },
+];
+
+export type AboutPanelId =
+  | 'naruto'
+  | 'onepiece'
+  | 'sketchbook'
+  | 'basketball'
+  | 'football'
+  | 'gaming'
+  | 'dhurandhar'
+  | 'yjhd'
+  | 'pickleball';
+
+export type AboutImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** CSS object-position, for keeping faces in frame when a photo is cropped. */
+  position?: string;
+  /** Printed under the image when the panel pins its images as a gallery. */
+  caption?: string;
+};
+
+/**
+ * Full-bleed media behind a panel's copy. The file may not exist yet — the
+ * panel renders without it and shows nothing broken until it is dropped in.
+ */
+export type AboutMedia = {
+  kind: 'image' | 'video';
+  src: string;
+  alt: string;
+  /** CSS object-position, for keeping the subject in frame when cropped. */
+  position?: string;
+  /** Still shown for a video before it plays, and under reduced motion. */
+  poster?: string;
+  /**
+   * `cover` (default) fills the frame and crops the edges; `contain` shows the whole
+   * image at its own aspect ratio on paper. Neither ever stretches or distorts it.
+   */
+  fit?: 'cover' | 'contain';
+  /** Lays a printed halftone screen over the image. */
+  halftone?: boolean;
+  /** The media's own pixel size. Needed when `reserve` is set. */
+  width?: number;
+  height?: number;
+  /**
+   * Size the panel from the media: the panel reserves the media's own aspect-ratio
+   * height along its top edge (at the panel's width), with the copy underneath. The
+   * media is never stretched and the frame never holds empty space for it.
+   */
+  reserve?: boolean;
+  /**
+   * Hard black-and-white manga treatment: deep blacks, crisp whites, no white wash
+   * over the picture. Copy is kept legible by a gradient local to the text instead.
+   */
+  ink?: boolean;
+  /** Keeps the picture's own colours instead of the black-and-white print look. */
+  color?: boolean;
+};
+
+export type AboutPanel = {
+  id: AboutPanelId;
+  title: string;
+  tag?: string;
+  line: string;
+  /** Japanese onomatopoeia used as manga-style sound type on the panel. */
+  sfx: string;
+  sfxRoman: string;
+  stats?: Array<{ figure: string; label: string }>;
+  /** Fills the frame behind the copy. */
+  media?: AboutMedia;
+  /** Laid out as drawings pinned to the page, rather than filling the frame. */
+  images?: AboutImage[];
+  /** Optional button out to media hosted elsewhere. */
+  link?: { label: string; href: string; icon?: 'play' };
+  /** Further buttons of the same kind, shown after `link`. */
+  moreLinks?: Array<{ label: string; href: string; icon?: 'play' }>;
+};
+
+/** "About Me" panels. The lines are mine; every number below is verified. */
+export const aboutPanels: AboutPanel[] = [
+  {
+    id: 'naruto',
+    media: {
+      kind: 'image',
+      src: '/images/about/naruto-sasuke.gif',
+      poster: '/images/about/naruto-sasuke-still.jpg',
+      alt: 'Animated clip of Naruto and Sasuke facing each other',
+      // The GIF is only 220 x 122 px, so the frame is sized to it (`reserve`) rather than
+      // the GIF being stretched to fill a tall frame. Same ink treatment as One Piece.
+      fit: 'contain',
+      position: '50% 0%',
+      width: 220,
+      height: 122,
+      reserve: true,
+      halftone: true,
+      ink: true,
+      color: true,
+    },
+    title: 'Naruto',
+    tag: 'Anime',
+    line: 'A kid everyone wrote off who talked his way into their respect instead. What stuck with me is that people change when somebody refuses to give up on them.',
+    sfx: 'ドドド',
+    sfxRoman: 'do-do-do',
+  },
+  {
+    id: 'onepiece',
+    media: {
+      kind: 'image',
+      src: '/images/about/one-piece.webp',
+      alt: 'Artwork for the One Piece panel',
+      fit: 'cover',
+      halftone: true,
+      ink: true,
+      color: true,
+    },
+    title: 'One Piece',
+    tag: 'Anime',
+    line: 'A crew that only works because each person is the best in the world at one thing. Twenty years of build-up and the payoffs still land.',
+    sfx: 'ゴゴゴ',
+    sfxRoman: 'go-go-go',
+  },
+  {
+    id: 'dhurandhar',
+    // The poster is pinned in the frame; it shows only if the file exists in public/images/about/.
+    images: [
+      {
+        src: '/images/about/dhurandhar.webp',
+        alt: 'Poster for Dhurandhar',
+        width: 860,
+        height: 1075,
+      },
+    ],
+    title: 'Dhurandhar',
+    tag: 'Ranveer Singh',
+    line: 'Ranveer on screen is a lesson in commitment. He disappears into a role so completely that you stop watching an actor and start following the story.',
+    sfx: 'ドン',
+    sfxRoman: 'don',
+  },
+  {
+    id: 'yjhd',
+    images: [
+      {
+        src: '/images/about/yjhd.webp',
+        alt: 'Poster for Yeh Jawaani Hai Deewani',
+        width: 663,
+        height: 960,
+      },
+    ],
+    title: 'Yeh Jawaani Hai Deewani',
+    tag: 'Ranbir Kapoor',
+    line: 'The one I can rewatch forever. Ranbir plays a guy working out what he actually wants, and that is a story I never get tired of.',
+    sfx: 'キラキラ',
+    sfxRoman: 'kira-kira',
+  },
+  {
+    id: 'basketball',
+    media: {
+      kind: 'image',
+      src: '/images/about/steph.jpg',
+      alt: 'Stephen Curry in a Golden State Warriors jersey, mid-game',
+      position: '64% 12%',
+      ink: true,
+      color: true,
+    },
+    title: 'Basketball',
+    tag: 'School team captain, 2026',
+    line: 'Captained the school side. Projectile motion, but recreational — the arc is still a parabola.',
+    sfx: 'ダンッ',
+    sfxRoman: 'dan',
+    link: {
+      label: 'Watch my clips',
+      href: 'https://drive.google.com/drive/u/1/folders/1ISrfXgmy38kSxyzci-PoVIVqRD_ScAoK',
+    },
+  },
+  {
+    id: 'football',
+    media: {
+      kind: 'image',
+      src: '/images/about/messi.webp',
+      alt: 'Lionel Messi in a tuxedo holding the golden ball trophy',
+      position: '52% 30%',
+      ink: true,
+      color: true,
+    },
+    title: 'Football',
+    line: 'Messi or Ronaldo, settled nightly and never once resolved. I have watched enough of both to know the argument is the point.',
+    sfx: 'ゴール',
+    sfxRoman: 'goal',
+  },
+  {
+    id: 'sketchbook',
+    title: 'Sketchbook',
+    tag: 'Pencil on paper',
+    line: 'I draw the characters I grew up watching. Mostly graphite, mostly erasing.',
+    sfx: 'サラサラ',
+    sfxRoman: 'sara-sara',
+    images: [
+      {
+        src: '/images/about/sketch-madara.jpg',
+        alt: 'My pencil sketch of an anime character in close-up, drawn in graphite',
+        width: 1600,
+        height: 1127,
+      },
+      {
+        src: '/images/about/sketch-luffy.jpg',
+        alt: 'My pencil sketch of an anime character mid-stride, drawn in graphite',
+        width: 1230,
+        height: 1600,
+      },
+      {
+        src: '/images/about/sketch-3.jpg',
+        alt: 'My pencil sketch of an anime character resting their chin on one hand and smiling, drawn in graphite',
+        width: 1598,
+        height: 1484,
+      },
+    ],
+    link: {
+      label: 'More sketches',
+      href: 'https://drive.google.com/file/d/10oRPXTAAyJoOJO5X2qSbGZPMYnK11K17/view?usp=drive_link',
+    },
+  },
+  {
+    id: 'gaming',
+    media: {
+      kind: 'image',
+      src: '/images/about/reyna.webp',
+      alt: 'Reyna from Valorant holding a rifle, in front of her name on a red background',
+      position: '72% 50%',
+      ink: true,
+      color: true,
+    },
+    title: 'Gaming',
+    tag: 'Valorant',
+    line: 'Valorant with my friends, most nights. Reading a round, calling it out and trusting four other people to follow taught me more about leading than any title has — and it is where some of my closest friendships came from.',
+    sfx: 'バン',
+    sfxRoman: 'ban',
+    link: {
+      label: 'Watch My Streams',
+      href: 'https://www.youtube.com/@gamer-d5l6o/streams',
+      icon: 'play',
+    },
+  },
+  {
+    id: 'pickleball',
+    title: 'Pickle It Down',
+    tag: 'Co-founder · May 2024 – Jan 2026',
+    line: 'I started a pickleball community, then ran the venues, the fixtures and the catering. We connect, you play.',
+    sfx: 'パンッ',
+    sfxRoman: 'pan',
+    stats: [
+      { figure: '50+', label: 'players' },
+      { figure: '51,781+', label: 'reel views' },
+      { figure: '~8,000', label: 'profile visits a month' },
+      { figure: '~₹50,000', label: 'revenue' },
+    ],
+    media: {
+      kind: 'image',
+      src: '/images/experience/pickle-it-down-tournament.jpeg',
+      alt: 'Pickle It Down tournament players with the trophy',
+      // Bias upward so the players' faces stay in frame on a wide crop.
+      position: '52% 33%',
+    },
+    link: {
+      label: 'Visit our Instagram',
+      href: 'https://www.instagram.com/_pickleitdown_',
+    },
   },
 ];

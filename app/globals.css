@@ -3,35 +3,46 @@
    ========================================================================== */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* Surfaces: layered near-blacks, separated by hairlines */
-  --bg: #070707;
-  --bg-elevated: #0d0d0e;
-  --bg-raised: #131315;
-  --surface-1: rgba(255, 255, 255, 0.022);
-  --surface-2: rgba(255, 255, 255, 0.045);
-  --surface-3: rgba(255, 255, 255, 0.07);
+  /* ---- 60%: white ground ---- */
+  --white: #ffffff;
+  --paper: #f7f6f3;
+  --bg: var(--white);
+  --bg-elevated: var(--paper);
+  --bg-raised: #efede8;
 
-  /* Text: warm ivory, not pure white */
-  --text: #efece6;
-  --muted-strong: #cdc9c1;
-  --muted: #95918a;
-  --faint: #5f5c57;
+  /* ---- 30%: black type and structure ---- */
+  --ink: #0d0d0d;
+  --text: var(--ink);
+  --muted-strong: rgba(13, 13, 13, 0.76);
+  --muted: rgba(13, 13, 13, 0.64);
+  --faint: rgba(13, 13, 13, 0.56);
+
+  --surface-1: rgba(13, 13, 13, 0.035);
+  --surface-2: rgba(13, 13, 13, 0.06);
+  --surface-3: rgba(13, 13, 13, 0.1);
 
   /* Lines */
-  --border: rgba(239, 236, 230, 0.09);
-  --border-strong: rgba(239, 236, 230, 0.18);
-  --grid-line: rgba(239, 236, 230, 0.03);
+  --border: rgba(13, 13, 13, 0.14);
+  --border-strong: rgba(13, 13, 13, 0.3);
+  --grid-line: rgba(13, 13, 13, 0.05);
 
-  /* Accent: a single signal amber, used sparingly */
-  --accent: #ffb547;
-  --accent-soft: rgba(255, 181, 71, 0.08);
-  --accent-line: rgba(255, 181, 71, 0.42);
-  --accent-glow: rgba(255, 181, 71, 0.16);
+  /* ---- 10%: yellow accent. Fills and markers only ----
+     Yellow on white is ~1.4:1, so it is never used for text on the ground;
+     it carries black text instead. */
+  --yellow: #ffd400;
+  --accent: var(--yellow);
+  --accent-soft: rgba(255, 212, 0, 0.16);
+  --accent-line: rgba(255, 212, 0, 0.75);
+  --accent-glow: rgba(255, 212, 0, 0.35);
 
-  --shadow-media: 0 40px 80px -40px rgba(0, 0, 0, 0.85);
-  --shadow-raised: 0 24px 60px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px var(--border);
+  /* Foreground colours for use ON a filled accent or dark surface */
+  --on-accent: #0d0d0d;
+  --on-dark: #ffffff;
+
+  --shadow-media: 0 30px 60px -32px rgba(13, 13, 13, 0.3);
+  --shadow-raised: 0 18px 46px -26px rgba(13, 13, 13, 0.26), 0 0 0 1px var(--border);
 
   /* Type */
   --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
@@ -45,7 +56,7 @@
   --text-lg: 1.1875rem;
   --text-xl: clamp(1.25rem, 1.8vw, 1.5rem);
   --display-3: clamp(1.375rem, 2vw, 1.75rem);
-  --display-2: clamp(2.125rem, 4.4vw, 3.75rem);
+  --display-2: clamp(2.5rem, 5.5vw, 4.5rem);
   --display-1: clamp(2.75rem, 7.2vw, 6.75rem);
 
   --tracking-display: -0.04em;
@@ -118,8 +129,8 @@ body::before {
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(rgba(239, 236, 230, 0.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(239, 236, 230, 0.012) 1px, transparent 1px);
+    linear-gradient(rgba(13, 13, 13, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 13, 13, 0.02) 1px, transparent 1px);
   background-size: 64px 64px, 64px 64px, 16px 16px, 16px 16px;
   background-position: center top;
   mask-image: radial-gradient(ellipse 100% 80% at 50% 20%, #000 20%, transparent 80%);
@@ -128,7 +139,7 @@ body::before {
 
 ::selection {
   background: var(--accent);
-  color: #0a0a0a;
+  color: var(--on-accent);
 }
 
 img, video { max-width: 100%; display: block; }
@@ -209,8 +220,8 @@ li::marker { color: var(--faint); }
   z-index: 100;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
-  background: var(--text);
-  color: #0a0a0a;
+  background: var(--ink);
+  color: var(--on-dark);
   font-size: var(--text-sm);
   transform: translateY(-200%);
 }
@@ -270,6 +281,78 @@ li::marker { color: var(--faint); }
 
 .section-heading.centered { text-align: center; justify-items: center; }
 
+/* Highlighter: yellow sits behind the words, never in them */
+.mark {
+  background-image: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 94%, transparent 94%);
+  background-repeat: no-repeat;
+}
+
+/* Numbered section index above a heading */
+.section-index {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  color: var(--text);
+}
+
+.section-index::after {
+  content: "";
+  width: 52px;
+  height: 1px;
+  background: var(--accent-line);
+}
+
+/* Highlighter: yellow sits behind the words, never in them */
+.mark {
+  background-image: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 94%, transparent 94%);
+  background-repeat: no-repeat;
+}
+
+/* Numbered section index above a heading */
+.section-index {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  color: var(--text);
+}
+
+.section-index::after {
+  content: "";
+  width: 52px;
+  height: 1px;
+  background: var(--accent-line);
+}
+
+/* Arc tag: ARC 01 ——— */
+.arc-tag {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-4);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.arc-tag::after {
+  content: "";
+  width: 48px;
+  height: 1px;
+  background: var(--accent-line);
+}
+
 /* ==========================================================================
    Primitives
    ========================================================================== */
@@ -301,16 +384,35 @@ li::marker { color: var(--faint); }
   letter-spacing: 0.02em;
 }
 
+/* --------------------------------------------------------------------------
+   Glass: one translucent surface used by panels, cards and buttons.
+   Falls back to a solid tint where backdrop-filter is unsupported.
+   -------------------------------------------------------------------------- */
+
+.glass {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(13, 13, 13, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 44px -26px rgba(13, 13, 13, 0.3);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: rgba(255, 255, 255, 0.95); }
+}
+
 .button {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6em;
-  min-height: 44px;
-  padding: 0.75rem 1.15rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-strong);
+  min-height: 46px;
+  padding: 0.8rem 1.35rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
   font-size: var(--text-sm);
   font-weight: 500;
   line-height: 1;
@@ -319,22 +421,36 @@ li::marker { color: var(--faint); }
   transition:
     border-color var(--dur-fast) ease,
     background var(--dur-fast) ease,
-    color var(--dur-fast) ease;
+    color var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
 }
 
 .button svg { transition: transform var(--dur) var(--ease-out); }
+.button:active { transform: scale(0.975); }
 
+/* Primary: filled coral, the single loudest element on a screen */
 .button-primary {
-  background: var(--text);
-  border-color: var(--text);
-  color: #0a0a0a;
+  background: var(--yellow);
+  border-color: rgba(13, 13, 13, 0.16);
+  color: var(--on-accent);
+  font-weight: 600;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 10px 26px -14px rgba(13, 13, 13, 0.4);
 }
 
+/* Secondary: the glass recipe above */
 .button-secondary {
-  background: rgba(7, 7, 7, 0.35);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border-color: rgba(13, 13, 13, 0.18);
   color: var(--text);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .button-secondary { background: rgba(255, 255, 255, 0.95); }
 }
 
 .button-text {
@@ -346,8 +462,11 @@ li::marker { color: var(--faint); }
 }
 
 @media (hover: hover) {
-  .button-primary:hover { background: #fff; }
-  .button-secondary:hover { border-color: rgba(239, 236, 230, 0.36); background: var(--surface-2); }
+  .button-primary:hover { background: #ffdd33; }
+  .button-secondary:hover {
+    border-color: rgba(13, 13, 13, 0.32);
+    background: rgba(255, 255, 255, 0.85);
+  }
   .button-text:hover { color: var(--text); }
   .button:hover svg { transform: translate(2px, -2px); }
   .button:hover svg[data-direction="right"] { transform: translateX(3px); }
@@ -390,7 +509,7 @@ li::marker { color: var(--faint); }
   padding: 0.38rem 0.6rem 0.38rem 0.5rem;
   border-radius: var(--radius-xs);
   border: 1px solid var(--border);
-  background: rgba(7, 7, 7, 0.5);
+  background: rgba(255, 255, 255, 0.7);
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   font-weight: 500;
@@ -409,11 +528,11 @@ li::marker { color: var(--faint); }
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--led, var(--muted)) 18%, transparent);
 }
 
-.status-completed { --led: #7ddc9a; }
+.status-completed { --led: #17a35a; }
 .status-progress { --led: var(--accent); }
-.status-prototype { --led: #8fb8ff; }
+.status-prototype { --led: #2f6fd0; }
 .status-concept { --led: var(--muted); }
-.status-current { --led: var(--accent); border-color: var(--accent-line); color: var(--accent); }
+.status-current { --led: var(--accent); border-color: var(--accent-line); color: var(--text); }
 
 .status-current::before { animation: led-pulse 2.4s ease-in-out infinite; }
 
@@ -433,7 +552,7 @@ li::marker { color: var(--faint); }
 .corners { position: relative; }
 
 .corners::after {
-  --c: rgba(239, 236, 230, 0.45);
+  --c: rgba(13, 13, 13, 0.45);
   --l: 14px;
   content: "";
   position: absolute;
@@ -507,7 +626,7 @@ li::marker { color: var(--faint); }
   display: block;
   width: 100%;
   height: auto;
-  background: #000;
+  background: var(--bg-raised);
 }
 
 .video-preview-badge {
@@ -520,7 +639,7 @@ li::marker { color: var(--faint); }
   gap: 6px;
   padding: 5px 8px;
   border-radius: var(--radius-xs);
-  background: rgba(7, 7, 7, 0.72);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   color: var(--muted-strong);
@@ -554,7 +673,7 @@ li::marker { color: var(--faint); }
   margin: -450px 0 0 -450px;
   border-radius: 50%;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(255, 236, 210, 0.055), rgba(255, 236, 210, 0.018) 35%, transparent 65%);
+  background: radial-gradient(circle, rgba(255, 212, 0, 0.14), rgba(255, 212, 0, 0.05) 35%, transparent 65%);
   opacity: 0;
   transition: opacity 600ms ease;
   will-change: transform;
@@ -578,13 +697,13 @@ li::marker { color: var(--faint); }
 
 .spotlight::before {
   z-index: -1;
-  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 236, 210, 0.07), transparent 60%);
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(13, 13, 13, 0.05), transparent 60%);
 }
 
 .spotlight::after {
   z-index: 3;
   padding: 1px;
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 236, 210, 0.5), transparent 65%);
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(13, 13, 13, 0.22), transparent 65%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -594,6 +713,116 @@ li::marker { color: var(--faint); }
 @media (hover: hover) and (pointer: fine) {
   .spotlight:hover::before,
   .spotlight:hover::after { opacity: 1; }
+}
+
+/* ==========================================================================
+   Viewfinder (components/effects/Viewfinder)
+   ========================================================================== */
+
+.vf {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.vf-brackets {
+  --c: rgba(13, 13, 13, 0.8);
+  --l: 18px;
+  position: absolute;
+  inset: 12px;
+  opacity: 0.55;
+  background:
+    linear-gradient(var(--c), var(--c)) top left / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) top left / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / 1.5px var(--l) no-repeat;
+}
+
+.vf-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46px;
+  height: 34px;
+  margin: -17px 0 0 -23px;
+  border: 1px solid rgba(13, 13, 13, 0.8);
+  opacity: 0;
+}
+
+.vf-rec {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.1em;
+  opacity: 0;
+}
+
+.vf-rec i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff4b3e;
+}
+
+.vf-shutter {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-raised);
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .vf-brackets,
+  .vf-rec {
+    opacity: 0;
+    transition: opacity var(--dur-fast) ease, inset var(--dur) var(--ease-out);
+  }
+
+  .vf-brackets { inset: 4px; }
+
+  .vf-host:hover .vf-brackets { opacity: 1; inset: 12px; }
+  .vf-host:hover .vf-rec { opacity: 1; }
+  .vf-host:hover .vf-rec i { animation: vf-blink 1s steps(2, jump-none) infinite; }
+  .vf-host:hover .vf-reticle { animation: vf-reticle 700ms var(--ease-out) both; }
+  .vf-host:hover .vf-shutter { animation: vf-shutter 260ms ease-out; }
+  .vf-host:hover .vf-target { animation: vf-focus 520ms var(--ease-out); }
+}
+
+@keyframes vf-blink {
+  from { opacity: 1; }
+  to { opacity: 0.15; }
+}
+
+@keyframes vf-reticle {
+  0% { opacity: 0; transform: scale(1.7); }
+  45% { opacity: 1; transform: scale(0.94); }
+  70% { opacity: 1; transform: none; border-color: var(--text); }
+  100% { opacity: 0; transform: none; border-color: var(--text); }
+}
+
+@keyframes vf-shutter {
+  0% { opacity: 0; }
+  25% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+@keyframes vf-focus {
+  from { filter: blur(5px) brightness(0.9); }
+  to { filter: blur(0) brightness(1); }
 }
 
 /* ==========================================================================
@@ -624,4 +853,32 @@ li::marker { color: var(--faint); }
     scroll-behavior: auto !important;
   }
   .ambient-light { display: none; }
+}
+
+/* ==========================================================================
+   Landing hanger
+   While the hanger layer is up the page behind it is not scrolled by the visitor.
+   ========================================================================== */
+
+html[data-hub='open'],
+html[data-hub='leaving'] {
+  overflow: hidden;
+}
+
+/* a heading that received focus from the hanger (for screen readers) is not a control: no ring */
+[data-hub-focus]:focus,
+[data-hub-focus]:focus-visible {
+  outline: none;
+}
+
+/* ==========================================================================
+   One section at a time
+   The hanger is the only way to choose a section. Opening one shows just that section of the home page;
+   the others stay in the document (and for visitors without JavaScript) but are not displayed.
+   ========================================================================== */
+
+html[data-section='experience'] main > section:not(#experience),
+html[data-section='projects'] main > section:not(#projects):not(#awards),
+html[data-section='contact'] main > section:not(#contact) {
+  display: none;
 }

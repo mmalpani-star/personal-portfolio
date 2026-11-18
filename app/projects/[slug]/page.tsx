@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Reveal } from '@/components/animation';
-import { Parallax } from '@/components/effects';
+import { Parallax } from '@/components/effects/Parallax';
 import { ProjectGallery } from '@/components/project/ProjectGallery';
 import styles from '@/components/project/Project.module.css';
 import { Icon } from '@/components/ui/Icon';

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { Reveal } from '@/components/animation';
+import { Viewfinder } from '@/components/effects/Viewfinder';
 import { Icon } from '@/components/ui/Icon';
 import { Lightbox } from '@/components/ui/Lightbox';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
@@ -43,12 +44,13 @@ export function ProjectGallery({ media }: { media: ProjectMediaItem[] }) {
                 {item.type === 'image' ? (
                   <button
                     type="button"
-                    className={styles.galleryButton}
+                    className={`${styles.galleryButton} vf-host`}
                     style={{ aspectRatio: `${item.width} / ${item.height}` }}
                     onClick={() => setOpen(images.indexOf(item))}
                     aria-label={`Enlarge: ${item.caption ?? item.alt}`}
                   >
-                    <Image src={item.src} alt={item.alt} fill sizes="(max-width: 760px) 100vw, 50vw" />
+                    <Image src={item.src} alt={item.alt} fill sizes="(max-width: 760px) 100vw, 50vw" className="vf-target" />
+                    <Viewfinder />
                     <span className={styles.galleryZoom} aria-hidden="true">
                       <Icon name="plus" size={16} />
                     </span>

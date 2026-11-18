@@ -1,0 +1,131 @@
+{
+  "handedness_collisions": {
+    "names": [],
+    "diagonal": []
+  },
+  "stance": {
+    "angles_deg": {
+      "front_left": [
+        -1.46,
+        -8.01,
+        13.17
+      ],
+      "rear_left": [
+        -1.46,
+        -8.01,
+        13.17
+      ],
+      "front_right": [
+        -1.46,
+        -8.01,
+        13.17
+      ],
+      "rear_right": [
+        -1.46,
+        -8.01,
+        13.17
+      ]
+    },
+    "collisions": [],
+    "lowest_point_above_ground_mm": {
+      "front_left": 0.0,
+      "rear_left": 0.0,
+      "front_right": -0.0,
+      "rear_right": -0.0
+    },
+    "body_clearance_mm": 45.15
+  },
+  "mass_g_approx": 236.4,
+  "com_robot_frame_mm": [
+    -0.2,
+    -0.2,
+    -5.9
+  ],
+  "joint_free_range_about_stance_deg": {
+    "front_left": {
+      "coxa": [
+        -40,
+        90
+      ],
+      "femur": [
+        -90,
+        90
+      ],
+      "knee": [
+        -90,
+        90
+      ]
+    },
+    "rear_left": {
+      "coxa": [
+        -80,
+        60
+      ],
+      "femur": [
+        -90,
+        90
+      ],
+      "knee": [
+        -90,
+        90
+      ]
+    },
+    "front_right": {
+      "coxa": [
+        -40,
+        90
+      ],
+      "femur": [
+        -90,
+        90
+      ],
+      "knee": [
+        -90,
+        90
+      ]
+    },
+    "rear_right": {
+      "coxa": [
+        -80,
+        60
+      ],
+      "femur": [
+        -90,
+        90
+      ],
+      "knee": [
+        -90,
+        90
+      ]
+    }
+  },
+  "gait": {
+    "ik_max_residual_mm": 5.851534227244745e-11,
+    "frames": 145,
+    "joint_travel_deg": {
+      "front_left": [
+        43.5,
+        24.2,
+        34.3
+      ],
+      "rear_left": [
+        42.9,
+        24.2,
+        34.3
+      ],
+      "front_right": [
+        43.5,
+        24.2,
+        34.3
+      ],
+      "rear_right": [
+        42.9,
+        24.2,
+        34.3
+      ]
+    },
+    "collisions": [],
+    "min_static_stability_margin_mm": 13.67,
+    "body_advance_per_cycle_mm": 40.0
+  }
+}

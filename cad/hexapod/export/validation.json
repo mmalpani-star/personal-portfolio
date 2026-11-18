@@ -1,0 +1,155 @@
+{
+  "ik_max_residual_mm": 7.970785056491974e-11,
+  "stance_angles_deg": {
+    "middle_right": [
+      97.04,
+      77.34,
+      97.79
+    ],
+    "front_right": [
+      97.04,
+      77.34,
+      97.79
+    ],
+    "front_left": [
+      97.04,
+      77.34,
+      97.79
+    ],
+    "middle_left": [
+      97.04,
+      77.34,
+      97.79
+    ],
+    "rear_left": [
+      97.04,
+      77.34,
+      97.79
+    ],
+    "rear_right": [
+      97.04,
+      77.34,
+      97.79
+    ]
+  },
+  "joint_travel_over_cycle_deg": {
+    "middle_right": [
+      20.2,
+      30.4,
+      31.0
+    ],
+    "front_right": [
+      8.2,
+      38.3,
+      54.2
+    ],
+    "front_left": [
+      12.7,
+      38.3,
+      54.2
+    ],
+    "middle_left": [
+      20.2,
+      30.4,
+      31.0
+    ],
+    "rear_left": [
+      8.2,
+      38.3,
+      54.2
+    ],
+    "rear_right": [
+      12.7,
+      38.3,
+      54.2
+    ]
+  },
+  "chassis_ground_clearance_mm": 56.0,
+  "frames_checked": [
+    0,
+    6,
+    12,
+    18,
+    24,
+    30,
+    36,
+    42,
+    48
+  ],
+  "collisions": [],
+  "min_leg_height_above_ground_by_frame": {
+    "0": {
+      "middle_right": 0.0,
+      "front_right": -0.0,
+      "front_left": 0.0,
+      "middle_left": -0.0,
+      "rear_left": -0.0,
+      "rear_right": 0.0
+    },
+    "6": {
+      "middle_right": 0.0,
+      "front_right": 21.21,
+      "front_left": -0.0,
+      "middle_left": 21.21,
+      "rear_left": 0.0,
+      "rear_right": 21.21
+    },
+    "12": {
+      "middle_right": 0.0,
+      "front_right": 30.0,
+      "front_left": -0.0,
+      "middle_left": 30.0,
+      "rear_left": 0.0,
+      "rear_right": 30.0
+    },
+    "18": {
+      "middle_right": 0.0,
+      "front_right": 21.21,
+      "front_left": -0.0,
+      "middle_left": 21.21,
+      "rear_left": 0.0,
+      "rear_right": 21.21
+    },
+    "24": {
+      "middle_right": 0.0,
+      "front_right": 0.0,
+      "front_left": 0.0,
+      "middle_left": 0.0,
+      "rear_left": -0.0,
+      "rear_right": -0.0
+    },
+    "30": {
+      "middle_right": 21.21,
+      "front_right": 0.0,
+      "front_left": 21.21,
+      "middle_left": 0.0,
+      "rear_left": 21.21,
+      "rear_right": 0.0
+    },
+    "36": {
+      "middle_right": 30.0,
+      "front_right": 0.0,
+      "front_left": 30.0,
+      "middle_left": 0.0,
+      "rear_left": 30.0,
+      "rear_right": 0.0
+    },
+    "42": {
+      "middle_right": 21.21,
+      "front_right": 0.0,
+      "front_left": 21.21,
+      "middle_left": 0.0,
+      "rear_left": 21.21,
+      "rear_right": 0.0
+    },
+    "48": {
+      "middle_right": 0.0,
+      "front_right": 0.0,
+      "front_left": 0.0,
+      "middle_left": 0.0,
+      "rear_left": 0.0,
+      "rear_right": 0.0
+    }
+  },
+  "span_mm": 590.0
+}

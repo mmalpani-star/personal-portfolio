@@ -1,0 +1,94 @@
+{
+  "trot": {
+    "params": {
+      "period": 0.9,
+      "stride": 100.0,
+      "swing": 0.44,
+      "lift": 28.0,
+      "bob": 2.5,
+      "frames": 120,
+      "pairs": [
+        [
+          "front_left",
+          "rear_right"
+        ],
+        [
+          "front_right",
+          "rear_left"
+        ]
+      ]
+    },
+    "ik_max_residual_mm": 0.0,
+    "joint_travel_deg": {
+      "front_left": [
+        32.9,
+        41.8,
+        46.4
+      ],
+      "rear_left": [
+        34.5,
+        41.3,
+        48.0
+      ],
+      "front_right": [
+        32.9,
+        41.8,
+        46.4
+      ],
+      "rear_right": [
+        34.5,
+        41.3,
+        48.0
+      ]
+    },
+    "outside_free_range": [],
+    "collisions": []
+  },
+  "jump": {
+    "params": {
+      "period": 2.0,
+      "crouch": 44.0,
+      "push_top": 38.0,
+      "apex": 110.0,
+      "tuck": 62.0,
+      "settle": 34.0,
+      "frames": 200
+    },
+    "ik_max_residual_mm": 0.0,
+    "flight": {
+      "v0_mm_s": 1188.5453293837809,
+      "air_time_s": 0.24231301312615308,
+      "lift_off_s": 0.75,
+      "land_s": 0.992313013126153
+    },
+    "body_height_mm": {
+      "min": -44.0,
+      "max": 110.0
+    },
+    "joint_travel_deg": {
+      "front_left": [
+        0.0,
+        95.8,
+        80.6
+      ],
+      "rear_left": [
+        0.0,
+        95.8,
+        80.6
+      ],
+      "front_right": [
+        0.0,
+        95.8,
+        80.6
+      ],
+      "rear_right": [
+        0.0,
+        95.8,
+        80.6
+      ]
+    },
+    "outside_free_range": [],
+    "collisions": []
+  },
+  "note": "Kinematic animation: reach, joint range and collisions are checked; dynamics, torque and balance are not."
+}

@@ -1,0 +1,181 @@
+{
+  "arm_root_print": {
+    "vertices": 544,
+    "triangles": 1092,
+    "index_range": [
+      0,
+      543
+    ],
+    "open_edges": 0,
+    "volume_mm3": -54932.109745226226,
+    "size_mm": [
+      195.0,
+      16.0,
+      20.0
+    ],
+    "holes_mm": [
+      [
+        32.7,
+        32.7,
+        6.0
+      ],
+      [
+        133.1,
+        133.1,
+        6.0
+      ]
+    ]
+  },
+  "arm_tip_print": {
+    "vertices": 598,
+    "triangles": 1204,
+    "index_range": [
+      0,
+      597
+    ],
+    "open_edges": 0,
+    "volume_mm3": -52890.55699031702,
+    "size_mm": [
+      190.0,
+      16.0,
+      20.0
+    ],
+    "holes_mm": [
+      [
+        32.7,
+        32.7,
+        6.0
+      ],
+      [
+        50.4,
+        50.4,
+        6.0
+      ],
+      [
+        68.1,
+        68.1,
+        6.0
+      ]
+    ]
+  },
+  "upper_jaw_print": {
+    "vertices": 4817,
+    "triangles": 9646,
+    "index_range": [
+      0,
+      4816
+    ],
+    "open_edges": 0,
+    "volume_mm3": 147911.88254368608,
+    "size_mm": [
+      190.5,
+      68.8,
+      22.0
+    ],
+    "holes_mm": [
+      [
+        26.7,
+        26.7,
+        3.4
+      ],
+      [
+        106.7,
+        130.7,
+        2.8
+      ],
+      [
+        106.7,
+        130.7,
+        5.0
+      ],
+      [
+        124.3,
+        148.4,
+        2.8
+      ],
+      [
+        124.3,
+        148.4,
+        5.0
+      ],
+      [
+        147.0,
+        147.0,
+        3.4
+      ]
+    ]
+  },
+  "phone_cradle_print": {
+    "vertices": 7842,
+    "triangles": 15704,
+    "index_range": [
+      0,
+      7841
+    ],
+    "open_edges": 0,
+    "volume_mm3": 60737.258481284975,
+    "size_mm": [
+      156.0,
+      89.4,
+      35.0
+    ],
+    "holes_mm": [
+      [
+        95.0,
+        5.0,
+        2.0
+      ]
+    ]
+  },
+  "mates": {
+    "root_on_jaw": {
+      "root_hole": [
+        32.7,
+        32.7
+      ],
+      "jaw_hole": [
+        124.3,
+        148.4
+      ],
+      "z": [
+        22.0,
+        42.0
+      ]
+    },
+    "tip_on_root": {
+      "tip_hole": [
+        32.7,
+        32.7
+      ],
+      "root_far_hole": [
+        224.41517902006203,
+        249.08401526449433
+      ],
+      "z": [
+        42.0,
+        62.0
+      ]
+    },
+    "cradle_on_tip": {
+      "between_tip_holes": [
+        [
+          50.4,
+          50.4
+        ],
+        [
+          68.1,
+          68.1
+        ]
+      ],
+      "z0": 62.0,
+      "note": "block centre x taken from the top view (about 67 mm); the cradle has no hole that mates the tip"
+    },
+    "modelled": [
+      "lower_jaw",
+      "screw_jaw_1",
+      "screw_jaw_2",
+      "screw_pivot_jaw_root",
+      "screw_pivot_root_tip"
+    ]
+  }
+}

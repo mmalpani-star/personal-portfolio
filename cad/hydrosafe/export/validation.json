@@ -1,0 +1,323 @@
+{
+ "registration_residual_mm_mean_p99_max": {
+  "lid": [
+   [
+    4.569413542990409e-06,
+    2.2155454767016637e-05,
+    2.2767096326126794e-05
+   ]
+  ],
+  "tank": [
+   [
+    2.6604904711246274e-06,
+    2.131833782755166e-05,
+    2.1384648732691858e-05
+   ]
+  ],
+  "collar": [
+   [
+    1.3720775116292314e-06,
+    6.82043316263363e-06,
+    8.387065927970288e-06
+   ],
+   [
+    1.8283024277179633e-06,
+    9.128858353663403e-06,
+    1.1398803957416534e-05
+   ],
+   [
+    2.2007238773763825e-06,
+    1.2436088866636322e-05,
+    1.4582367311980951e-05
+   ],
+   [
+    9.734041729215229e-07,
+    5.827012970176926e-06,
+    7.0209738143588865e-06
+   ]
+  ],
+  "disc": [
+   [
+    0.000277516334998637,
+    0.00012580853191444704,
+    0.06798407356738971
+   ],
+   [
+    0.00027760612301808374,
+    0.0001263504969669326,
+    0.0679851435165658
+   ],
+   [
+    0.00027724363746797314,
+    0.00012669766601253069,
+    0.06798601470118842
+   ],
+   [
+    0.00027777970827752075,
+    0.00013065594468953575,
+    0.06798673522597244
+   ]
+  ],
+  "spring_file_to_instance0": [
+   [
+    1.390265222540514e-05,
+    5.448506885789556e-05,
+    0.00013625084666695048
+   ]
+  ]
+ },
+ "files_identified": {
+  "part_studio_3_vs_bottom_face": {
+   "max_vertex_distance_mm": 0.0,
+   "verdict": "identical geometry"
+  },
+  "part_studio_2_vs_lid": {
+   "plate_extent_ratio": [
+    0.35,
+    0.35
+   ],
+   "hole_diameter_ratio": 0.35,
+   "verdict": "a 0.35x scale model of the lid, not part of the assembly"
+  },
+  "hydro_cylinder_vs_lid": {
+   "cylinder_seat_face_diameters": [
+    137.29,
+    114.11,
+    39.96,
+    27.47
+   ],
+   "lid_seat_face_diameters": [
+    137.29,
+    114.11,
+    39.96,
+    27.47,
+    5.49
+   ],
+   "verdict": "same cylinder as the lid's five hanging cylinders (same seat-face diameters, 137.29 x 40 mm); a stand-alone export, non-watertight (22 shells), not used"
+  },
+  "cyclone_pipe_adapter_x_t": {
+   "format": "Parasolid transmit (text) written by ONSHAPE BY PTC INC, 1.223;",
+   "verdict": "not readable here (no Parasolid kernel); not used; its size and fit are unverified"
+  },
+  "spring_instances_are_exact_copies_max_err_mm": 1.7378733559780812e-05,
+  "pipe_instances_are_exact_copies_max_err_mm": 2.9761933888039493e-05,
+  "collar_instances_are_exact_copies_max_err_mm": 2.0359101540634583e-05,
+  "disc_instances_are_exact_copies_max_err_mm": 1.592134736938533e-05,
+  "pipe_stl_vs_assembly_elbow": {
+   "point_to_surface_mean_p99_max_mm": [
+    0.251,
+    0.766,
+    2.473
+   ],
+   "volume_cm3": [
+    117.83,
+    116.7
+   ],
+   "faces": [
+    10106,
+    10230
+   ],
+   "verdict": "the same elbow, tessellated differently (mean 0.25 mm, worst 2.5 mm apart); the assembly's own elbow is used"
+  }
+ },
+ "export_deviation_from_mated_pose": {
+  "springs_xy_off_seat_mm": [
+   8.71,
+   10.3,
+   12.24
+  ],
+  "springs_bottom_above_pad_mm": [
+   36.61,
+   38.88
+  ],
+  "lid_export_offset_mm": [
+   -57.2,
+   -2.3,
+   191.6
+  ],
+  "lid_seat_pattern_match_max_mm": 0.0,
+  "collars_xy_off_hole_mm": [
+   1.01,
+   1.6,
+   2.62
+  ],
+  "collars_bottom_above_mated_mm": [
+   0.1,
+   0.42
+  ],
+  "discs_xy_off_hole_mm": [
+   1.44,
+   5.64,
+   17.33
+  ],
+  "discs_bottom_above_mated_mm": [
+   0.09,
+   13.95
+  ],
+  "elbows_inlet_xy_off_hole_mm": [
+   14.5,
+   17.7
+  ],
+  "elbows_inlet_below_floor_mm": [
+   44.5,
+   55.8
+  ],
+  "elbows_inlet_tilt_deg": [
+   0.0,
+   2.1
+  ]
+ },
+ "web_geometry": {
+  "spring": {
+   "faces": [
+    136458,
+    7574
+   ],
+   "deviation_mm_mean_p99_max": [
+    0.0148,
+    0.0443,
+    0.0732
+   ]
+  },
+  "disc": {
+   "faces": [
+    112592,
+    20850
+   ],
+   "deviation_mm_mean_p99_max": [
+    0.0125,
+    0.0783,
+    0.1123
+   ],
+   "holes_and_open_area_mm2": {
+    "original": [
+     472,
+     3081.5
+    ],
+    "web": [
+     472,
+     3012.6
+    ]
+   }
+  }
+ },
+ "rest_state": {
+  "pairs_checked": 561,
+  "interference": [
+   {
+    "a": "tank_body",
+    "b": "disc_01",
+    "volume_mm3": 12.93
+   },
+   {
+    "a": "tank_body",
+    "b": "disc_02",
+    "volume_mm3": 12.93
+   },
+   {
+    "a": "tank_body",
+    "b": "disc_03",
+    "volume_mm3": 12.93
+   },
+   {
+    "a": "tank_body",
+    "b": "disc_04",
+    "volume_mm3": 12.74
+   }
+  ],
+  "contacts": {
+   "spring_bottom_to_tank_pad_mm": [
+    0.001,
+    0.001
+   ],
+   "spring_top_to_lid_pin_mm": [
+    0.0,
+    0.0
+   ],
+   "collar_bottom_to_floor_mm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "disc_top_vs_floor_face_mm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "elbow_top_vs_floor_underside_mm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "lid_plate_underside_above_rim_mm": 9.87,
+   "lid_cylinders_to_tank_wall_mm": 1.29,
+   "tank_opening_mm": [
+    535.0,
+    385.0
+   ],
+   "lid_plate_mm": [
+    535.0,
+    385.0
+   ],
+   "elbow_to_elbow_min_gap_mm": 9.54,
+   "parts_in_assembly": {
+    "tank": 1,
+    "lid": 1,
+    "spring": 20,
+    "collar": 4,
+    "disc": 4,
+    "elbow": 4
+   }
+  },
+  "tolerated_overlap_mm3": 2.0
+ },
+ "exploded_states_interference": {
+  "0.25": [],
+  "0.5": [],
+  "0.75": [],
+  "1.0": []
+ },
+ "extent_mm": {
+  "assembled": [
+   550.0,
+   400.0,
+   348.3
+  ],
+  "exploded": [
+   550.0,
+   400.0,
+   688.3
+  ]
+ },
+ "glb_mb": 1.35,
+ "stl_faces_mb": {
+  "hydrosafe_tank": [
+   12452,
+   0.62
+  ],
+  "hydrosafe_lid": [
+   21576,
+   1.08
+  ],
+  "hydrosafe_pipe_attachment": [
+   1768,
+   0.09
+  ],
+  "hydrosafe_mesh_disc_web": [
+   20850,
+   1.04
+  ],
+  "hydrosafe_spring_web": [
+   7574,
+   0.38
+  ],
+  "hydrosafe_elbow_pipe": [
+   10230,
+   0.51
+  ]
+ },
+ "step_mb": 189.0
+}

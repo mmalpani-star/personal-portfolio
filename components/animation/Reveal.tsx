@@ -48,10 +48,12 @@ export function Reveal({ children, className, style, delay = 0, as = 'div', eage
     <Component
       className={className}
       style={style}
-      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      // The hidden start state is in the server HTML, so it must not depend on the
+      // (client-only) motion preference; reduced motion just makes the reveal instant.
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={reduceMotion ? { duration: 0 } : { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
     >
       {children}
     </Component>
@@ -64,10 +66,10 @@ export function StaggerContainer({ children, className }: { children: ReactNode;
   return (
     <motion.div
       className={className}
-      initial={reduceMotion ? false : { opacity: 0 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.35 }}
+      transition={{ duration: reduceMotion ? 0 : 0.35 }}
     >
       {children}
     </motion.div>
@@ -80,10 +82,10 @@ export function StaggerItem({ children, className, delay = 0 }: { children: Reac
   return (
     <motion.div
       className={className}
-      initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={reduceMotion ? { duration: 0 } : { duration: 0.45, ease: [0.16, 1, 0.3, 1], delay }}
     >
       {children}
     </motion.div>

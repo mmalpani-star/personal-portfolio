@@ -1,0 +1,125 @@
+{
+  "units": "metres, Y up (CAD source is mm, Z up)",
+  "forward": "-Z in the GLB (+Y in CAD)",
+  "animation": {
+    "name": "tripod_walk",
+    "period_s": 1.6,
+    "body_advance_per_cycle_m": 0.1,
+    "note": "Body advances one stride per half cycle. Move the root by body_advance_per_cycle_m per clip loop and the feet do not slip."
+  },
+  "gait": {
+    "radial": 140.0,
+    "ground_z": -94.0,
+    "stride": 50.0,
+    "lift": 30.0,
+    "frames": 48,
+    "heading": 90.0,
+    "period": 1.6
+  },
+  "legs": [
+    {
+      "name": "middle_right",
+      "angle_deg": 0,
+      "tripod_group": "A"
+    },
+    {
+      "name": "front_right",
+      "angle_deg": 60,
+      "tripod_group": "B"
+    },
+    {
+      "name": "front_left",
+      "angle_deg": 120,
+      "tripod_group": "A"
+    },
+    {
+      "name": "middle_left",
+      "angle_deg": 180,
+      "tripod_group": "B"
+    },
+    {
+      "name": "rear_left",
+      "angle_deg": 240,
+      "tripod_group": "A"
+    },
+    {
+      "name": "rear_right",
+      "angle_deg": 300,
+      "tripod_group": "B"
+    }
+  ],
+  "joints": {
+    "leg_middle_right_coxa": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_middle_right_femur": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_middle_right_tibia": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_front_right_coxa": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_front_right_femur": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_front_right_tibia": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_front_left_coxa": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_front_left_femur": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_front_left_tibia": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_middle_left_coxa": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_middle_left_femur": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_middle_left_tibia": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_rear_left_coxa": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_rear_left_femur": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_rear_left_tibia": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_rear_right_coxa": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_rear_right_femur": {
+      "axis": "local +Z (servo shaft)"
+    },
+    "leg_rear_right_tibia": {
+      "axis": "local +Z (servo shaft)"
+    }
+  },
+  "source": {
+    "supplied_stl": [
+      "j1 version 2.stl",
+      "j2.stl",
+      "j3.stl",
+      "leg.stl"
+    ],
+    "designed": [
+      "chassis_top_plate",
+      "chassis_bottom_plate",
+      "standoffs",
+      "fasteners"
+    ],
+    "approximations": [
+      "MG996R servo (datasheet outline)",
+      "Arduino Mega 2560 (true outline/holes, simplified parts)"
+    ]
+  }
+}

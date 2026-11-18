@@ -1,0 +1,275 @@
+/* The Skills section keeps the portfolio's light theme: the page's own white ground, black type and yellow accent. */
+
+.stage {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--nav-h);
+  min-height: calc(100svh - var(--nav-h));
+  overflow: hidden;
+  background: transparent;
+  color: var(--text);
+  /* dragging the zipper must never select the page's text */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---------------------------------------------------------------- heading */
+
+.heading {
+  position: absolute;
+  top: 26px;
+  left: var(--gutter);
+  z-index: 4;
+  max-width: 36ch;
+  pointer-events: none;
+}
+
+.index {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+.index::after {
+  content: '';
+  width: 56px;
+  height: 1px;
+  background: var(--accent-line);
+}
+
+.title {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: var(--tracking-display);
+}
+
+.lead {
+  margin: 12px 0 0;
+  font-size: var(--text-base);
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- backpack */
+
+.packWrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: min(86vw, 560px);
+  aspect-ratio: 1 / 1.08;
+  transform-origin: 50% 50%;
+  transition: transform 1.15s var(--ease-out);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  touch-action: none; /* closed: a finger drags the zipper, it never scrolls the page */
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.8s ease;
+}
+.stage[data-ready='true'] .canvas { opacity: 1; }
+.stage[data-state='open'] .canvas,
+.stage[data-state='opening'] .canvas { touch-action: pan-y; }
+.stage[data-gl='off'] .packWrap { display: none; }
+
+/* ---------------------------------------------------------------- prompts */
+
+.cta {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  z-index: 4;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.cta[data-visible='true'] { opacity: 1; pointer-events: auto; }
+
+.hint {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.unzip,
+.repack { min-height: 44px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.repack {
+  position: absolute;
+  left: 208px;
+  bottom: 38px;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease 0.9s;
+}
+.repack[data-visible='true'] { opacity: 1; pointer-events: auto; }
+
+/* ---------------------------------------------------------------- the groups */
+
+.groups {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: 25%;
+  bottom: 200px;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: center;
+  gap: clamp(24px, 4vw, 64px);
+  pointer-events: none;
+}
+.groups[data-state='open'],
+.groups[data-state='opening'] { pointer-events: auto; }
+
+.group { min-width: 0; }
+
+.groupHead {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.groups[data-state='open'] .groupHead,
+.groups[data-state='opening'] .groupHead { opacity: 1; transition-delay: 0.6s; }
+
+.groupCode,
+.groupCount {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+.groupCount { color: var(--faint); }
+
+.groupTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+
+.logos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 8px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Not boxed or carded: a mark and a name, in one ink. Hidden until they come out of the pack. */
+.item {
+  display: grid;
+  justify-items: center;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.groups[data-state='opening'] .item,
+.groups[data-state='open'] .item,
+.groups[data-state='repacking'] .item { opacity: 1; }
+
+.bob {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  animation: bob 7s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes bob {
+  50% { transform: translateY(-3px); }
+}
+
+.logoBox {
+  --c1: currentColor;
+  --c2: currentColor;
+  --ko: var(--bg);
+  display: block;
+  width: 60px;
+  height: 60px;
+  overflow: visible;
+  color: var(--ink);
+  opacity: 0.82;
+  transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
+}
+
+/* the saved Claude file, drawn as a mask in the same ink: its own shape and proportions */
+.mask {
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* hover is quiet and still monochrome: the mark firms up and lifts a little */
+.item:hover .logoBox { opacity: 1; transform: translateY(-3px); }
+
+.label {
+  max-width: 11ch;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.25s ease;
+}
+.item:hover .label { color: var(--text); }
+
+/* ---------------------------------------------------------------- narrow screens */
+
+@media (max-width: 900px) {
+  /* stack the groups under the heading; they take no room until the pack is opened */
+  .groups {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-top: 168px;
+    padding: 0 var(--gutter);
+    max-height: 0;
+    overflow: hidden;
+  }
+  .groups[data-state='opening'],
+  .groups[data-state='open'],
+  .groups[data-state='repacking'] { max-height: none; overflow: visible; padding-bottom: 96px; }
+
+  .repack { left: auto; right: 16px; bottom: auto; top: 148px; }
+  .cta { width: calc(100% - 2 * var(--gutter)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bob { animation: none; }
+  .packWrap { transition: none; }
+}

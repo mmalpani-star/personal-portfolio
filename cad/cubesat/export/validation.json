@@ -1,0 +1,1023 @@
+{
+ "hierarchy": {
+  "nodes": 32,
+  "groups": [
+   "antenna_cassette",
+   "arduino_nano",
+   "battery",
+   "burn_wire",
+   "frame",
+   "imu",
+   "mosfet",
+   "pcb",
+   "spring_source",
+   "standoffs",
+   "transmitter"
+  ],
+  "original_nodes": 14,
+  "reconstructed_nodes": 18,
+  "duplicate_names": 0
+ },
+ "interior_extent_mm": {
+  "min": [
+   -47.4,
+   -47.0,
+   -47.5
+  ],
+  "max": [
+   47.4,
+   47.0,
+   7.1
+  ],
+  "side_clearance_to_cavity_walls_mm": 0.095,
+  "top_clearance_mm": 40.4,
+  "note": "the standoffs and the battery holder rest on the bottom plate (zero clearance by design)"
+ },
+ "interference": {
+  "pairs_boolean_checked": 30,
+  "overlaps_over_0p5_mm3": [],
+  "contacts_or_tiny": [
+   {
+    "a": "pcb_base",
+    "b": "frame_lattice",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     94.81,
+     94.0,
+     1.57
+    ]
+   },
+   {
+    "a": "pcb_base",
+    "b": "standoff_1",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     5.0,
+     5.0,
+     0.0
+    ]
+   },
+   {
+    "a": "pcb_base",
+    "b": "standoff_2",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     5.0,
+     5.0,
+     0.0
+    ]
+   },
+   {
+    "a": "pcb_base",
+    "b": "standoff_3",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     5.0,
+     5.0,
+     0.0
+    ]
+   },
+   {
+    "a": "pcb_base",
+    "b": "standoff_4",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     5.0,
+     5.0,
+     0.0
+    ]
+   },
+   {
+    "a": "arduino_nano_board",
+    "b": "frame_lattice",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     43.2,
+     18.0,
+     4.6
+    ]
+   },
+   {
+    "a": "imu_mpu6050_board",
+    "b": "frame_lattice",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     15.56,
+     20.26,
+     1.0
+    ]
+   },
+   {
+    "a": "mosfet_body",
+    "b": "mosfet_metal",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     10.0,
+     3.0,
+     9.0
+    ]
+   },
+   {
+    "a": "mosfet_body",
+    "b": "frame_lattice",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     10.0,
+     5.0,
+     9.0
+    ]
+   },
+   {
+    "a": "mosfet_metal",
+    "b": "frame_lattice",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     10.0,
+     3.0,
+     25.5
+    ]
+   },
+   {
+    "a": "transmitter",
+    "b": "frame_lattice",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     11.0,
+     3.34,
+     18.5
+    ]
+   },
+   {
+    "a": "spring_source",
+    "b": "frame_lattice",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     7.46,
+     9.47,
+     9.11
+    ]
+   },
+   {
+    "a": "battery_holder",
+    "b": "frame_lattice",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     20.0,
+     75.0,
+     14.0
+    ]
+   },
+   {
+    "a": "frame_lattice",
+    "b": "standoff_1",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     5.0,
+     5.0,
+     27.5
+    ]
+   },
+   {
+    "a": "frame_lattice",
+    "b": "standoff_2",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     5.0,
+     5.0,
+     27.5
+    ]
+   },
+   {
+    "a": "frame_lattice",
+    "b": "standoff_3",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     5.0,
+     5.0,
+     27.5
+    ]
+   },
+   {
+    "a": "frame_lattice",
+    "b": "standoff_4",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     5.0,
+     5.0,
+     27.5
+    ]
+   },
+   {
+    "a": "frame_lattice",
+    "b": "cassette_base",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     28.0,
+     14.0,
+     0.0
+    ]
+   },
+   {
+    "a": "cassette_base",
+    "b": "cassette_cheek_back",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     28.0,
+     2.5,
+     0.0
+    ]
+   },
+   {
+    "a": "cassette_base",
+    "b": "cassette_cheek_front",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     28.0,
+     2.5,
+     0.0
+    ]
+   },
+   {
+    "a": "cassette_cheek_back",
+    "b": "cassette_cap",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     28.0,
+     2.5,
+     0.0
+    ]
+   },
+   {
+    "a": "cassette_cheek_back",
+    "b": "cassette_hub",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     6.0,
+     2.5,
+     6.0
+    ]
+   },
+   {
+    "a": "cassette_cheek_front",
+    "b": "cassette_cap",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     28.0,
+     2.5,
+     0.0
+    ]
+   },
+   {
+    "a": "cassette_cheek_front",
+    "b": "cassette_hub",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     6.0,
+     2.5,
+     6.0
+    ]
+   },
+   {
+    "a": "cassette_cap",
+    "b": "cord_post_a",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     2.2,
+     2.2,
+     0.0
+    ]
+   },
+   {
+    "a": "cassette_cap",
+    "b": "terminal_a",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     2.4,
+     2.4,
+     0.0
+    ]
+   },
+   {
+    "a": "cassette_cap",
+    "b": "cord_post_b",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     2.2,
+     2.2,
+     0.0
+    ]
+   },
+   {
+    "a": "cassette_cap",
+    "b": "terminal_b",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     2.4,
+     2.4,
+     0.0
+    ]
+   },
+   {
+    "a": "cord_post_a",
+    "b": "restraint_cord",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     0.8,
+     -0.0,
+     0.8
+    ]
+   },
+   {
+    "a": "cord_post_b",
+    "b": "restraint_cord",
+    "overlap_mm3": 0.0,
+    "box_overlap_mm": [
+     0.8,
+     -0.0,
+     0.8
+    ]
+   }
+  ],
+  "pairs_with_overlapping_boxes_not_boolean_checked": [
+   {
+    "a": "arduino_nano_chips",
+    "b": "arduino_nano_small",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     36.15,
+     14.35,
+     4.21
+    ]
+   },
+   {
+    "a": "arduino_nano_chips",
+    "b": "arduino_nano_headers",
+    "same_part": true,
+    "min_surface_distance_mm": 0.007,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     36.75,
+     14.59,
+     4.61
+    ]
+   },
+   {
+    "a": "arduino_nano_chips",
+    "b": "arduino_nano_board",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 561,
+    "box_overlap_mm": [
+     36.75,
+     14.7,
+     4.26
+    ]
+   },
+   {
+    "a": "arduino_nano_chips",
+    "b": "arduino_nano_usb",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     8.05,
+     3.7,
+     3.86
+    ]
+   },
+   {
+    "a": "arduino_nano_chips",
+    "b": "frame_lattice",
+    "same_part": false,
+    "min_surface_distance_mm": 8.419,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     36.75,
+     14.82,
+     4.61
+    ]
+   },
+   {
+    "a": "arduino_nano_small",
+    "b": "arduino_nano_headers",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     38.82,
+     14.11,
+     4.21
+    ]
+   },
+   {
+    "a": "arduino_nano_small",
+    "b": "arduino_nano_board",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 1356,
+    "box_overlap_mm": [
+     41.2,
+     14.23,
+     3.9
+    ]
+   },
+   {
+    "a": "arduino_nano_small",
+    "b": "arduino_nano_usb",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     7.45,
+     3.7,
+     3.5
+    ]
+   },
+   {
+    "a": "arduino_nano_small",
+    "b": "frame_lattice",
+    "same_part": false,
+    "min_surface_distance_mm": 9.587,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     41.2,
+     14.35,
+     4.21
+    ]
+   },
+   {
+    "a": "arduino_nano_headers",
+    "b": "arduino_nano_board",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 406,
+    "box_overlap_mm": [
+     40.46,
+     17.77,
+     4.6
+    ]
+   },
+   {
+    "a": "arduino_nano_headers",
+    "b": "arduino_nano_usb",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     9.09,
+     3.46,
+     4.81
+    ]
+   },
+   {
+    "a": "arduino_nano_headers",
+    "b": "frame_lattice",
+    "same_part": false,
+    "min_surface_distance_mm": 5.206,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     40.46,
+     17.77,
+     18.6
+    ]
+   },
+   {
+    "a": "arduino_nano_board",
+    "b": "arduino_nano_usb",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 540,
+    "box_overlap_mm": [
+     9.27,
+     3.58,
+     4.2
+    ]
+   },
+   {
+    "a": "arduino_nano_usb",
+    "b": "frame_lattice",
+    "same_part": false,
+    "min_surface_distance_mm": 17.085,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     10.9,
+     10.4,
+     4.81
+    ]
+   },
+   {
+    "a": "imu_mpu6050_board",
+    "b": "imu_mpu6050_parts",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     13.7,
+     19.88,
+     0.0
+    ]
+   },
+   {
+    "a": "imu_mpu6050_parts",
+    "b": "frame_lattice",
+    "same_part": false,
+    "min_surface_distance_mm": 8.181,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     13.7,
+     19.88,
+     1.0
+    ]
+   },
+   {
+    "a": "battery_holder",
+    "b": "battery_cell",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 277,
+    "box_overlap_mm": [
+     19.35,
+     64.98,
+     13.47
+    ]
+   },
+   {
+    "a": "battery_cell",
+    "b": "frame_lattice",
+    "same_part": false,
+    "min_surface_distance_mm": 0.579,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     19.45,
+     64.98,
+     18.68
+    ]
+   },
+   {
+    "a": "terminal_a",
+    "b": "nichrome_lead_a",
+    "same_part": true,
+    "min_surface_distance_mm": 0.002,
+    "sampled_points_inside_a_closed_partner": 10,
+    "box_overlap_mm": [
+     1.31,
+     1.36,
+     0.09
+    ]
+   },
+   {
+    "a": "terminal_b",
+    "b": "nichrome_lead_b",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 24,
+    "box_overlap_mm": [
+     1.31,
+     1.36,
+     0.09
+    ]
+   },
+   {
+    "a": "restraint_cord",
+    "b": "nichrome_helix",
+    "same_part": true,
+    "min_surface_distance_mm": 0.061,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     0.8,
+     3.12,
+     0.8
+    ]
+   },
+   {
+    "a": "restraint_cord",
+    "b": "nichrome_lead_b",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 134,
+    "box_overlap_mm": [
+     0.8,
+     1.42,
+     0.52
+    ]
+   },
+   {
+    "a": "nichrome_helix",
+    "b": "nichrome_lead_a",
+    "same_part": true,
+    "min_surface_distance_mm": 0.001,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     0.25,
+     0.31,
+     0.86
+    ]
+   },
+   {
+    "a": "nichrome_helix",
+    "b": "nichrome_lead_b",
+    "same_part": true,
+    "min_surface_distance_mm": 0.0,
+    "sampled_points_inside_a_closed_partner": 0,
+    "box_overlap_mm": [
+     1.47,
+     0.31,
+     0.87
+    ]
+   }
+  ],
+  "note": "mesh booleans (manifold3d) on closed meshes; for pairs where a mesh is open (decimated electronics, tubes) the report gives sampled surface distance and the number of 4000 sampled points that fall inside a closed partner (an approximation, not a boolean)"
+ },
+ "antenna": {
+  "coil_radius_stowed_mm": 6.9137,
+  "coil_clearance_to_cassette_floor_mm": 0.586,
+  "coil_clearance_to_cap_mm": 1.086,
+  "coil_clearance_to_cheek_window_left_mm": 1.686,
+  "slot_clearance_x_mm": 1.6,
+  "slot_clearance_y_mm": 1.2,
+  "cord_above_stub_tip_mm": 0.6,
+  "post_clearance_to_tape_edge_mm": 0.7,
+  "tape_length_conserved_mm": [
+   189.98,
+   189.983,
+   189.992
+  ],
+  "deploy_axis": "+Z (world), out of the top plate; tape leaves the cap at x=4.0 mm, y=0",
+  "deployed_tip_z_mm": 220.5
+ },
+ "glb_mb": 1.59,
+ "triangles": 76716,
+ "stl_faces_mb": {
+  "cubesat_pcb": [
+   11020,
+   0.55
+  ],
+  "cubesat_battery": [
+   10944,
+   0.55
+  ],
+  "cubesat_frame": [
+   10152,
+   0.51
+  ],
+  "cubesat_standoffs": [
+   992,
+   0.05
+  ],
+  "cubesat_antenna_cassette": [
+   1088,
+   0.05
+  ],
+  "cubesat_burn_wire": [
+   2076,
+   0.1
+  ],
+  "cubesat_antenna_tape_stowed": [
+   3396,
+   0.17
+  ],
+  "cubesat_antenna_tape_deployed": [
+   196,
+   0.01
+  ]
+ },
+ "group_bounds_mm": {
+  "pcb": {
+   "min": [
+    -47.4,
+    -47.0,
+    -20.0
+   ],
+   "max": [
+    47.4,
+    47.0,
+    -18.4
+   ]
+  },
+  "arduino_nano": {
+   "min": [
+    -30.4,
+    17.6,
+    -18.4
+   ],
+   "max": [
+    14.4,
+    42.4,
+    0.2
+   ]
+  },
+  "imu": {
+   "min": [
+    22.2,
+    19.9,
+    -18.4
+   ],
+   "max": [
+    37.8,
+    40.1,
+    -16.4
+   ]
+  },
+  "mosfet": {
+   "min": [
+    25.0,
+    -24.5,
+    -18.4
+   ],
+   "max": [
+    35.0,
+    -19.5,
+    7.1
+   ]
+  },
+  "transmitter": {
+   "min": [
+    0.5,
+    -23.7,
+    -18.4
+   ],
+   "max": [
+    11.5,
+    -20.3,
+    0.1
+   ]
+  },
+  "spring_source": {
+   "min": [
+    -35.7,
+    -30.7,
+    -18.4
+   ],
+   "max": [
+    -28.3,
+    -21.3,
+    -9.3
+   ]
+  },
+  "battery": {
+   "min": [
+    -10.0,
+    -37.5,
+    -47.5
+   ],
+   "max": [
+    10.1,
+    37.5,
+    -28.3
+   ]
+  },
+  "frame": {
+   "min": [
+    -50.0,
+    -50.0,
+    -50.0
+   ],
+   "max": [
+    50.0,
+    50.0,
+    50.0
+   ]
+  },
+  "standoffs": {
+   "min": [
+    -45.5,
+    -45.5,
+    -47.5
+   ],
+   "max": [
+    45.5,
+    45.5,
+    -20.0
+   ]
+  },
+  "antenna_cassette": {
+   "min": [
+    -15.5,
+    -7.0,
+    50.0
+   ],
+   "max": [
+    12.5,
+    7.0,
+    70.5
+   ]
+  },
+  "burn_wire": {
+   "min": [
+    2.9,
+    -6.9,
+    70.5
+   ],
+   "max": [
+    11.2,
+    6.9,
+    80.0
+   ]
+  }
+ },
+ "assembly_bounds_mm": {
+  "min": [
+   -50.0,
+   -50.0,
+   -50.0
+  ],
+  "max": [
+   50.0,
+   50.0,
+   80.0
+  ]
+ },
+ "step_mb": 71.1,
+ "step_roundtrip": {
+  "file_mb": 71.1,
+  "groups": {
+   "pcb": {
+    "solids": 1,
+    "volume_mm3": 13930.4,
+    "min": [
+     -47.4,
+     -47.0,
+     -20.0
+    ],
+    "max": [
+     47.4,
+     47.0,
+     -18.4
+    ]
+   },
+   "arduino_nano": {
+    "solids": 55,
+    "volume_mm3": 2409.7,
+    "min": [
+     -30.4,
+     17.6,
+     -18.4
+    ],
+    "max": [
+     14.4,
+     42.4,
+     0.2
+    ]
+   },
+   "imu": {
+    "solids": 52,
+    "volume_mm3": 351.2,
+    "min": [
+     22.2,
+     19.9,
+     -18.4
+    ],
+    "max": [
+     37.8,
+     40.1,
+     -16.4
+    ]
+   },
+   "mosfet": {
+    "solids": 5,
+    "volume_mm3": 530.5,
+    "min": [
+     25.0,
+     -24.5,
+     -18.4
+    ],
+    "max": [
+     35.0,
+     -19.5,
+     7.1
+    ]
+   },
+   "transmitter": {
+    "solids": 1,
+    "volume_mm3": 183.2,
+    "min": [
+     0.5,
+     -23.7,
+     -18.4
+    ],
+    "max": [
+     11.5,
+     -20.3,
+     0.1
+    ]
+   },
+   "spring_source": {
+    "solids": 1,
+    "volume_mm3": 5.0,
+    "min": [
+     -35.7,
+     -30.7,
+     -18.4
+    ],
+    "max": [
+     -28.3,
+     -21.3,
+     -9.3
+    ]
+   },
+   "battery": {
+    "solids": 47,
+    "volume_mm3": 20498.4,
+    "min": [
+     -10.0,
+     -37.5,
+     -47.5
+    ],
+    "max": [
+     10.0,
+     37.5,
+     -28.3
+    ]
+   },
+   "frame": {
+    "solids": 1,
+    "volume_mm3": 80797.6,
+    "min": [
+     -50.0,
+     -50.0,
+     -50.0
+    ],
+    "max": [
+     50.0,
+     50.0,
+     50.0
+    ]
+   },
+   "standoffs": {
+    "solids": 4,
+    "volume_mm3": 2159.8,
+    "min": [
+     -45.5,
+     -45.5,
+     -47.5
+    ],
+    "max": [
+     45.5,
+     45.5,
+     -20.0
+    ]
+   },
+   "antenna_cassette": {
+    "solids": 6,
+    "volume_mm3": 3589.0,
+    "min": [
+     -15.5,
+     -7.0,
+     50.0
+    ],
+    "max": [
+     12.5,
+     7.0,
+     70.5
+    ]
+   },
+   "burn_wire": {
+    "solids": 5,
+    "volume_mm3": 90.8,
+    "min": [
+     2.9,
+     -6.9,
+     70.5
+    ],
+    "max": [
+     11.2,
+     6.9,
+     80.0
+    ]
+   },
+   "antenna_tape": {
+    "solids": 2,
+    "volume_mm3": 1126.2,
+    "min": [
+     -10.9,
+     -4.1,
+     53.4
+    ],
+    "max": [
+     4.9,
+     4.1,
+     220.5
+    ]
+   }
+  },
+  "total_solids": 180,
+  "bounds_mm": {
+   "min": [
+    -50.0,
+    -50.0,
+    -50.0
+   ],
+   "max": [
+    50.0,
+    50.0,
+    220.5
+   ]
+  },
+  "groups_missing_from_step": [],
+  "note": "antenna_tape (stowed coil and deployed blade) is in the STEP only; the web model builds it live from the manifest",
+  "max_group_bounds_deviation_from_glb_mm": 0.1,
+  "groups_off_by_more_than_0p15_mm": {}
+ }
+}

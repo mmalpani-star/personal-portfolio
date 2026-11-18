@@ -1,0 +1,322 @@
+/* Scroll-driven 3D scenes. The section is tall; the stage sticks to the
+   viewport while scroll progress drives the model, then releases. */
+.scene { position: relative; }
+.space { height: 380vh; }
+.scene[data-static='true'] { height: auto; }
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding: 76px 0 clamp(16px, 3vh, 32px);
+  overflow: hidden;
+}
+.scene[data-static='true'] .stage {
+  position: relative;
+  height: auto;
+  grid-template-rows: clamp(320px, 62vh, 620px) auto;
+}
+
+.view { position: relative; min-height: 0; }
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: pan-y;          /* page scroll keeps working on phones */
+}
+.canvas[data-inspecting='true'] { touch-action: none; cursor: grab; }
+.canvas[data-inspecting='true']:active { cursor: grabbing; }
+
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.fallback {
+  position: absolute;
+  inset: 4% 8%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-raised);
+}
+.fallback img { object-fit: cover; }
+
+/* ----------------------------------------------------- caption + button -- */
+.caption {
+  width: min(760px, calc(100% - 32px));
+  margin: 0 auto;
+  display: grid;
+  gap: var(--space-2);
+  text-align: center;
+  justify-items: center;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+  pointer-events: none;
+}
+.caption[data-shown='true'] { opacity: 1; transform: none; pointer-events: auto; }
+
+.captionHead { display: grid; gap: 8px; justify-items: center; }
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+}
+.index {
+  font: 600 var(--text-sm) / 1 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+.index span { color: var(--faint); }
+.chips { justify-content: center; margin: 0; padding: 0; list-style: none; }
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.teaser {
+  margin: 0;
+  max-width: 58ch;
+  color: var(--muted);
+  font-size: var(--text-base);
+  line-height: 1.5;
+}
+.captionFoot { display: grid; gap: var(--space-2); justify-items: center; margin-top: 4px; }
+.note {
+  max-width: 62ch;
+  font-size: var(--text-xs);
+  line-height: 1.45;
+  color: var(--faint);
+}
+
+/* ------------------------------------------------------------- controls -- */
+.controls,
+.toolbar {
+  position: absolute;
+  right: clamp(12px, 3vw, 32px);
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.toolbar { left: clamp(12px, 3vw, 32px); justify-content: space-between; flex-wrap: wrap; }
+.toolbar .controls { position: static; }
+
+.control,
+.iconButton,
+.segment button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--ctl-bg, rgba(255, 255, 255, 0.82));
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  font: 500 var(--text-sm) / 1 var(--font-sans);
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+.iconButton { width: 34px; padding: 0; font-size: 1.05rem; }
+.control:hover,
+.iconButton:hover,
+.segment button:hover { border-color: var(--ink); }
+.control[aria-pressed='true'],
+.segment button[aria-pressed='true'] { background: var(--accent); border-color: var(--ink); color: var(--ink); }
+.control:focus-visible,
+.iconButton:focus-visible,
+.segment button:focus-visible,
+.tag:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.segment { display: inline-flex; gap: 4px; }
+
+/* ------------------------------------------------------- component tags -- */
+.labels { position: absolute; inset: 0; pointer-events: none; }
+.tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% -50%;
+  padding: 4px 9px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font: 600 11px / 1.2 var(--font-mono);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--dur) ease, background var(--dur-fast) ease;
+  pointer-events: none;
+}
+.tag[data-visible='true'] { opacity: 1; pointer-events: auto; }
+.tag[data-active='true'] { background: var(--accent); z-index: 1; }
+
+.leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.leaders g { opacity: 0; transition: opacity var(--dur) ease; }
+.leaders g[data-visible='true'] { opacity: 1; }
+.leaders line { stroke: var(--ink); stroke-opacity: 0.35; stroke-width: 1; }
+.leaders circle { fill: var(--ink); fill-opacity: 0.5; }
+.leaders g[data-active='true'] line { stroke-opacity: 0.95; }
+.leaders g[data-active='true'] circle { fill-opacity: 1; fill: var(--accent); stroke: var(--ink); stroke-width: 1; }
+
+.hint { display: none; }
+
+@media (max-width: 760px) {
+  /* too narrow for every tag at once: name only the part that was tapped */
+  .tag[data-visible='true'] { opacity: 0; pointer-events: none; }
+  .tag[data-visible='true'][data-active='true'] { opacity: 1; }
+  .leaders { display: none; }
+  .hint {
+    display: block;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font: 500 var(--text-xs) / 1 var(--font-mono);
+    letter-spacing: 0.04em;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+  .stage { padding-top: 64px; }
+  .teaser { font-size: var(--text-sm); }
+  .tag { font-size: 10px; padding: 3px 7px; }
+  .toolbar { bottom: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caption, .tag { transition: none; }
+}
+
+/* ------------------------------------------------------- CubeSat: deep space --
+   The stage turns from the portfolio's white into deep space while the satellite is on
+   screen (--space runs 0..1 with scroll) and back again as the section ends. */
+.sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: var(--space, 0);
+  pointer-events: none;
+  background:
+    radial-gradient(90% 70% at 18% 8%, rgba(60, 96, 168, 0.26), transparent 60%),
+    radial-gradient(120% 90% at 72% 118%, #10264a 0%, #070f20 46%, #03060c 100%);
+}
+.stage[data-space] > .view,
+.stage[data-space] > .caption { position: relative; z-index: 1; }
+/* the canvas and its labels run under the caption too, so Earth is never cut off by the model's area */
+.stage[data-space] .canvas,
+.stage[data-space] .labels {
+  top: calc(var(--above, 0px) * -1);
+  bottom: auto;
+  height: calc(100% + var(--above, 0px) + var(--below, 0px));
+}
+.stage[data-space] .leaders line { stroke: var(--leader, var(--ink)); }
+.stage[data-space] .leaders circle { fill: var(--leader, var(--ink)); }
+.stage[data-space] :global(.status-badge) { background: var(--badge-bg, rgba(255, 255, 255, 0.7)); }
+.scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--below, 0px) + 80px);
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--space, 0);
+  background: linear-gradient(to top, rgba(2, 5, 10, 0.9) 0%, rgba(2, 5, 10, 0.72) 55%, rgba(2, 5, 10, 0) 100%);
+}
+
+/* fallback for browsers without color-mix: switch once the sky is mostly in */
+.stage[data-space][data-dark='true'] {
+  --text: #f3f1ea;
+  --muted: rgba(243, 241, 234, 0.76);
+  --muted-strong: rgba(243, 241, 234, 0.86);
+  --faint: rgba(243, 241, 234, 0.6);
+  --border: rgba(243, 241, 234, 0.2);
+  --border-strong: rgba(243, 241, 234, 0.34);
+  --surface-1: rgba(255, 255, 255, 0.06);
+  --ctl-bg: rgba(12, 17, 28, 0.72);
+  --leader: #f3f1ea;
+  --badge-bg: rgba(255, 255, 255, 0.07);
+}
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+  .stage[data-space] {
+    --text: color-mix(in srgb, #f3f1ea calc(var(--space, 0) * 100%), #0d0d0d);
+    --muted: color-mix(in srgb, rgba(243, 241, 234, 0.76) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.64));
+    --muted-strong: color-mix(in srgb, rgba(243, 241, 234, 0.86) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.76));
+    --faint: color-mix(in srgb, rgba(243, 241, 234, 0.6) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.56));
+    --border: color-mix(in srgb, rgba(243, 241, 234, 0.2) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.14));
+    --border-strong: color-mix(in srgb, rgba(243, 241, 234, 0.34) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.3));
+    --surface-1: color-mix(in srgb, rgba(255, 255, 255, 0.06) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.03));
+    --ctl-bg: color-mix(in srgb, rgba(12, 17, 28, 0.72) calc(var(--space, 0) * 100%), rgba(255, 255, 255, 0.82));
+    --leader: color-mix(in srgb, #f3f1ea calc(var(--space, 0) * 100%), #0d0d0d);
+    --badge-bg: color-mix(in srgb, rgba(255, 255, 255, 0.07) calc(var(--space, 0) * 100%), rgba(255, 255, 255, 0.7));
+  }
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+
+/* ------------------------------------------------ paired-row projects --
+   Plain type under a picture or model; no card, no box. One button: Case study. */
+.tile { display: grid; gap: clamp(16px, 2.2vw, 26px); align-content: start; min-width: 0; }
+.tileView { position: relative; aspect-ratio: 4 / 3; min-width: 0; }
+.tilePhoto { object-fit: cover; border-radius: var(--radius-lg); }
+.tileView[data-fit='contain'] { background: var(--surface-1); border-radius: var(--radius-lg); }
+.tileView[data-fit='contain'] .tilePhoto { object-fit: contain; }
+
+.tileCaption { display: grid; gap: 12px; justify-items: start; text-align: left; }
+.tileMeta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.tileTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.tileTeaser { margin: 0; max-width: 52ch; color: var(--muted); font-size: var(--text-base); line-height: 1.5; }
+.tileChips { justify-content: flex-start; margin: 0; padding: 0; list-style: none; }
+.tileFoot { display: grid; gap: 12px; justify-items: start; margin-top: 4px; }
+
+/* A half-width tile has no room for every part tag at once: each is named only while it is pointed at. */
+.tile .tag[data-visible='true'] { opacity: 0; pointer-events: none; }
+.tile .tag[data-visible='true'][data-active='true'] { opacity: 1; pointer-events: auto; }
+.tileHint {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 500 var(--text-xs) / 1 var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--faint);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.tile .toolbar { left: 0; right: 0; bottom: 4px; }
+.tile .controls { right: 0; }

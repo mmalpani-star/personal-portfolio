@@ -1,0 +1,201 @@
+{
+  "units": "metres, Y up, origin at the enclosure centre",
+  "explode_units": "millimetres in the frame of the 'aqm' node (CAD axes: x right, y back, z up); set each group node's position to explode * t, t in [0, 1]",
+  "groups": {
+    "enclosure_body": {
+      "nodes": [
+        "enclosure_body"
+      ],
+      "explode": [
+        0,
+        0,
+        0
+      ]
+    },
+    "rear_cover": {
+      "nodes": [
+        "rear_cover"
+      ],
+      "explode": [
+        0,
+        95,
+        0
+      ]
+    },
+    "display_retainers": {
+      "nodes": [
+        "display_retainer_bottom",
+        "display_retainer_top"
+      ],
+      "explode": [
+        0,
+        38,
+        0
+      ]
+    },
+    "tft_display": {
+      "nodes": [
+        "tft_pcb",
+        "tft_glass",
+        "tft_active_area",
+        "tft_header",
+        "tft_sd_socket"
+      ],
+      "explode": [
+        0,
+        -42,
+        0
+      ]
+    },
+    "esp32_devkit": {
+      "nodes": [
+        "esp32_pcb",
+        "esp32_wroom_pcb",
+        "esp32_shield_can",
+        "esp32_micro_usb",
+        "esp32_header_body_1",
+        "esp32_header_pins_1",
+        "esp32_header_body_2",
+        "esp32_header_pins_2"
+      ],
+      "explode": [
+        0,
+        68,
+        0
+      ]
+    },
+    "mh_z19e": {
+      "nodes": [
+        "mh_z19e_body",
+        "mh_z19e_membrane"
+      ],
+      "explode": [
+        0,
+        -30,
+        -24
+      ]
+    },
+    "dht22": {
+      "nodes": [
+        "dht22_body",
+        "dht22_pins"
+      ],
+      "explode": [
+        46,
+        0,
+        -14
+      ]
+    },
+    "zp07_mp503": {
+      "nodes": [
+        "mp503_pcb",
+        "mp503_sensor",
+        "mp503_sensor_mesh",
+        "mp503_xh_connector"
+      ],
+      "explode": [
+        50,
+        0,
+        0
+      ]
+    },
+    "mq131": {
+      "nodes": [
+        "mq131_pcb",
+        "mq131_sensor_base",
+        "mq131_sensor_cap",
+        "mq131_sensor_gauze",
+        "mq131_trim_pot",
+        "mq131_header"
+      ],
+      "explode": [
+        52,
+        0,
+        18
+      ]
+    }
+  },
+  "hardware_parents": {
+    "cover_screw_m3x6_1": "rear_cover",
+    "heat_set_insert_m3_1": "enclosure_body",
+    "cover_screw_m3x6_2": "rear_cover",
+    "heat_set_insert_m3_2": "enclosure_body",
+    "cover_screw_m3x6_3": "rear_cover",
+    "heat_set_insert_m3_3": "enclosure_body",
+    "cover_screw_m3x6_4": "rear_cover",
+    "heat_set_insert_m3_4": "enclosure_body",
+    "retainer_screw_m25x6_1": "display_retainers",
+    "retainer_screw_m25x6_2": "display_retainers",
+    "retainer_screw_m25x6_3": "display_retainers",
+    "retainer_screw_m25x6_4": "display_retainers",
+    "mq131_standoff_1": "mq131",
+    "mq131_screw_m3_1": "mq131",
+    "mq131_wall_screw_m3_1": "mq131",
+    "mq131_standoff_2": "mq131",
+    "mq131_screw_m3_2": "mq131",
+    "mq131_wall_screw_m3_2": "mq131"
+  },
+  "labels": {
+    "tft_display": "ILI9341 2.2\" TFT",
+    "esp32_devkit": "ESP32 DevKit",
+    "mh_z19e": "MH-Z19E CO\u2082",
+    "dht22": "DHT22 temp / humidity",
+    "zp07_mp503": "ZP07-MP503 air quality",
+    "mq131": "MQ-131 ozone",
+    "rear_cover": "Rear cover",
+    "display_retainers": "Display retainers",
+    "enclosure_body": "Enclosure"
+  },
+  "inventory": [
+    {
+      "group": "enclosure_body",
+      "part": "Enclosure body (FDM print, PETG recommended)",
+      "source": "designed"
+    },
+    {
+      "group": "rear_cover",
+      "part": "Removable rear cover with ESP32 cradle and keyholes",
+      "source": "designed"
+    },
+    {
+      "group": "display_retainers",
+      "part": "Display retainer bars x2",
+      "source": "designed"
+    },
+    {
+      "group": "tft_display",
+      "part": "ILI9341 2.2in SPI TFT",
+      "source": "approximation from published outline"
+    },
+    {
+      "group": "esp32_devkit",
+      "part": "ESP32 DevKit V1 (30-pin)",
+      "source": "approximation from published outline"
+    },
+    {
+      "group": "mh_z19e",
+      "part": "Winsen MH-Z19E",
+      "source": "approximation from Winsen dimensions"
+    },
+    {
+      "group": "dht22",
+      "part": "DHT22 / AM2302",
+      "source": "approximation from Aosong dimensions"
+    },
+    {
+      "group": "zp07_mp503",
+      "part": "Winsen ZP07-MP503",
+      "source": "approximation from published outline"
+    },
+    {
+      "group": "mq131",
+      "part": "MQ-131 ozone module",
+      "source": "approximation; cap size assumed"
+    },
+    {
+      "group": "hardware",
+      "part": "4x M3x6 SHCS + 4x M3 heat-set inserts (cover), 4x M2.5x6 (retainers), 2x M3x20 standoffs + 4x M3 screws (MQ-131)",
+      "source": "standard parts"
+    }
+  ]
+}

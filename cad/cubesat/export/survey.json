@@ -1,0 +1,759 @@
+{
+ "madhav_vs_madhav_2": {
+  "files": [
+   238,
+   238
+  ],
+  "same_names": true,
+  "identical_content": true,
+  "differing": []
+ },
+ "final_design_zip_vs_madhav": {
+  "files_in_zip": 238,
+  "identical_content": true
+ },
+ "creo": {
+  "parts": 200,
+  "assemblies": 37,
+  "versions": [
+   "11.0"
+  ],
+  "readable": false,
+  "why_unreadable": "proprietary parametric feature database (sketches, features, cached display data); no geometry kernel here reads it",
+  "assembly_references": {
+   "102_resistor_pack_asm_1": [
+    "boss-extrude5-23590_1",
+    "cut-extrude7-1030_1",
+    "fillet1-166956_1",
+    "fillet2-206679_1",
+    "lpattern3_1_-190190_1",
+    "lpattern3_2_-19200_1",
+    "lpattern3_3_-213557_1",
+    "lpattern3_4_-23309_1",
+    "lpattern3_5_-133998_1",
+    "lpattern3_6_-80875_1"
+   ],
+   "189_resistor_pack_asm_1": [
+    "boss-extrude5-40815_1",
+    "cut-extrude7-205940_1",
+    "fillet1-199880_1",
+    "fillet2-119536_1",
+    "lpattern3_1_-142601_1",
+    "lpattern3_2_-104066_1",
+    "lpattern3_3_-96317_1",
+    "lpattern3_4_-216837_1",
+    "lpattern3_5_-17696_1",
+    "lpattern3_6_-97038_1"
+   ],
+   "1x5_1_asm_1": [
+    "boss-extrude2_1",
+    "boss-extrude2_1_2_3_4_1",
+    "lpattern2_1",
+    "lpattern2_1_2_1",
+    "lpattern5_1__1",
+    "lpattern5_1__1_2_1",
+    "lpattern5_2__1",
+    "lpattern5_2__1_2_1",
+    "lpattern5_3__1",
+    "lpattern5_4__1"
+   ],
+   "2445p_screw_terminal_block-_2_1": [
+    "chamfer4_1",
+    "chamfer6_1",
+    "cut-extrude12_1",
+    "cut-extrude14_1",
+    "fillet4_1"
+   ],
+   "2_54_x_15_pitch_connector__1_as": [
+    "pitch_x_15_asm_1",
+    "plastic_x_15_1"
+   ],
+   "9v_battery_1_asm_1": [
+    "boss-extrude2_1",
+    "cut-extrude7_1",
+    "fillet10_1",
+    "fillet15_1",
+    "mirror7_1",
+    "move_face1_1"
+   ],
+   "9v_battery_asm_1": [
+    "9v_battery_1_asm_1"
+   ],
+   "9v_battery_clip_connector_1_asm": [
+    "boss-extrude5_1",
+    "fillet1_1",
+    "revolve1_1"
+   ],
+   "_x2_044204400430043d04370438044": [
+    "body1_2",
+    "body3_2",
+    "body4_2",
+    "body5_2",
+    "body6_2"
+   ],
+   "arduino_nano_1_asm_1": [
+    "102_resistor_pack_asm_1",
+    "15pin_header___1",
+    "16mhz_crystal_-_measured_1",
+    "189_resistor_pack_asm_1",
+    "2pin_header__02_1",
+    "atmega328_1",
+    "board_1",
+    "cap106c_1",
+    "ftdi_ft232rl_1",
+    "led_asm_1",
+    "miniusb_-_measured_asm_1",
+    "nano-board_1",
+    "nano_-_reg_1",
+    "nano_diode_1",
+    "reset_button_asm_1",
+    "smt_resistor222_1"
+   ],
+   "arduino_nano_asm_1": [
+    "arduino_nano_1_asm_1"
+   ],
+   "assenblyy": [
+    "assenblyy",
+    "board_1",
+    "bottomxx",
+    "f46acfd7-b99b-4570-a520-a565813",
+    "fpcb_asm_1",
+    "hol2",
+    "holdb1",
+    "pcb_component_asm_1",
+    "pcbbase_asm_1"
+   ],
+   "clip_asm_2": [
+    "9v_battery_clip_connector_1_asm"
+   ],
+   "f46acfd7-b99b-4570-a520-a565813": [
+    "pcb_component_asm_1"
+   ],
+   "ffpcb": [
+    "fpcb_asm_1"
+   ],
+   "fpcb_asm_1": [
+    "9v_battery_asm_1",
+    "arduino_nano_asm_1",
+    "caseofbattery_1",
+    "clip_asm_2",
+    "lipobattery_asm_1",
+    "mosfet_asm_1",
+    "mpu6050_v2_asm_1",
+    "pcbbase_asm_1",
+    "pin15_asm_1",
+    "pin3_asm_1",
+    "pin5_asm_1",
+    "pin8_asm_1",
+    "screwterminal_asm_1",
+    "singlebatterycase_1",
+    "spring_4",
+    "switchdpdt_asm_1",
+    "transmitter_4"
+   ],
+   "label_asm_1": [
+    "body_50_1",
+    "body_51_1",
+    "body_52_1",
+    "body_53_1",
+    "body_54_1",
+    "body_55_1",
+    "body_56_1",
+    "body_57_1",
+    "body_58_1",
+    "body_59_1",
+    "body_60_1",
+    "body_61_1",
+    "body_62_1",
+    "body_63_1",
+    "body_64_1",
+    "body_65_1",
+    "body_66_1",
+    "body_67_1",
+    "body_68_1",
+    "body_69_1",
+    "body_70_1",
+    "body_71_1",
+    "body_72_1",
+    "body_73_1",
+    "body_74_1",
+    "body_75_1",
+    "body_76_1",
+    "body_77_1",
+    "body_78_1",
+    "body_79_1",
+    "body_80_1",
+    "body_81_1",
+    "body_82_1",
+    "body_83_1",
+    "body_84_1",
+    "body_85_1",
+    "body_86_1",
+    "body_87_1",
+    "body_88_1",
+    "body_89_1",
+    "body_90_1",
+    "body_91_1",
+    "body_92_1",
+    "body_93_1",
+    "body_94_1"
+   ],
+   "led_asm_1": [
+    "boss-extrude5-173805_1",
+    "mirror3_1"
+   ],
+   "lipobattery_asm_1": [
+    "root_asm_1"
+   ],
+   "miniusb_-_measured_asm_1": [
+    "mini_usb_contact_1",
+    "miniusbcore_1",
+    "miniusbshell_1"
+   ],
+   "mosfet_asm_1": [
+    "_x2_044204400430043d04370438044"
+   ],
+   "mpu6050_1_2_asm_1": [
+    "body10_1_2_1",
+    "body11_1_2_1",
+    "body12_1_2_1",
+    "body13_1_2_1",
+    "body14_1_2_1",
+    "body15_1_2_1",
+    "body16_1_2_1",
+    "body17_1_2_1",
+    "body18_1_2_1",
+    "body19_1_2_1",
+    "body1_1_2_1",
+    "body20_1_2_1",
+    "body21_1_2_1",
+    "body22_1_2_1",
+    "body23_1_2_1",
+    "body24_1_2_1",
+    "body25_1_2_1",
+    "body26_1_2_1",
+    "body27_1_2_1",
+    "body28_1_2_1",
+    "body29_1_2_1",
+    "body2_1_2_1",
+    "body30_1_2_1",
+    "body31_1_2_1",
+    "body32_1_2_1",
+    "body33_1_2_1",
+    "body34_1_2_1",
+    "body35_1_2_1",
+    "body36_1_2_1",
+    "body37_1_2_1",
+    "body38_1_2_1",
+    "body39_1_2_1",
+    "body3_1_2_1",
+    "body40_1_2_1",
+    "body41_1_2_1",
+    "body42_1_2_1",
+    "body43_1_2_1",
+    "body44_1_2_1",
+    "body45_1_2_1",
+    "body46_1_2_1",
+    "body47_1_2_1",
+    "body48_1_2_1",
+    "body49_1_2_1",
+    "body4_1_2_1",
+    "body50_1_2_1",
+    "body51_1_2_1",
+    "body52_1_2_1",
+    "body53_1_2_1",
+    "body5_1_2_1",
+    "body6_1_2_1",
+    "body7_1_2_1",
+    "body8_1_2_1"
+   ],
+   "mpu6050_v2_asm_1": [
+    "mpu6050_1_2_asm_1"
+   ],
+   "pcb_component_asm_1": [
+    "board_1"
+   ],
+   "pcbbase_asm_1": [
+    "f46acfd7-b99b-4570-a520-a565813"
+   ],
+   "pin15_asm_1": [
+    "2_54_x_15_pitch_connector__1_as"
+   ],
+   "pin3_asm_1": [
+    "pin_header_female_2_54mm_0_1i_1"
+   ],
+   "pin5_asm_1": [
+    "1x5_1_asm_1"
+   ],
+   "pin8_asm_1": [
+    "pin_header_female_2_54mm_0_1i_3"
+   ],
+   "pin_header_female_2_54mm_0_1i_1": [
+    "boss-extrude2_1",
+    "boss-extrude2_1_1",
+    "lpattern2_1",
+    "lpattern5_1__1",
+    "lpattern5_2__1"
+   ],
+   "pin_header_female_2_54mm_0_1i_3": [
+    "boss-extrude2_1",
+    "boss-extrude2_1_2_3_1",
+    "lpattern1_1__1",
+    "lpattern1_2__1",
+    "lpattern1_3__1",
+    "lpattern1_4__1",
+    "lpattern1_5__1",
+    "lpattern1_6__1",
+    "lpattern1_7__1",
+    "lpattern1_8__1"
+   ],
+   "pitch_x_15_asm_1": [
+    "0001_1",
+    "_-129460001_1",
+    "_-129860001_1",
+    "_-137200001_1",
+    "_-137550001_1",
+    "_-1900001_1",
+    "_-197130001_1",
+    "_-201530001_1",
+    "_-61480001_1",
+    "_-64830001_1",
+    "_-68660001_1",
+    "_-69070001_1",
+    "_-69390001_1",
+    "_-70150001_1",
+    "_-980001_1"
+   ],
+   "reset_button_asm_1": [
+    "reset_core_1",
+    "reset_shell_1"
+   ],
+   "root_asm_1": [
+    "sony_murata_vtc5a_18650_2600m_1"
+   ],
+   "screwterminal_asm_1": [
+    "2445p_screw_terminal_block-_2_1"
+   ],
+   "sony_murata_vtc5a_18650_2600m_1": [
+    "body_1",
+    "label_asm_1"
+   ]
+  }
+ },
+ "top_level_assembly": {
+  "file": "assenblyy.asm.2 (the newer of .1 and .2)",
+  "references": [
+   "assenblyy",
+   "board_1",
+   "bottomxx",
+   "f46acfd7-b99b-4570-a520-a565813",
+   "fpcb_asm_1",
+   "hol2",
+   "holdb1",
+   "pcb_component_asm_1",
+   "pcbbase_asm_1"
+  ],
+  "note": "References bottomxx, hol2, holdb1, top, board, fpcb_asm_1, pcb_component_asm_1, pcbbase_asm_1; the lattice `frame` part is not referenced by any assembly here"
+ },
+ "step_ffpcb": {
+  "file": "madhav/ffpcb.stp",
+  "size_mb": 29.8,
+  "top_level_children": [
+   {
+    "index": 0,
+    "name": "PCBBASE_ASM",
+    "solids": 1,
+    "min": [
+     0.0,
+     0.0,
+     -1.6
+    ],
+    "max": [
+     94.8,
+     94.0,
+     0.0
+    ]
+   },
+   {
+    "index": 1,
+    "name": "PIN15_ASM",
+    "solids": 16,
+    "min": [
+     40.0,
+     43.0,
+     -3.2
+    ],
+    "max": [
+     42.8,
+     82.4,
+     8.3
+    ]
+   },
+   {
+    "index": 2,
+    "name": "PIN15_ASM",
+    "solids": 16,
+    "min": [
+     24.7,
+     43.3,
+     -3.2
+    ],
+    "max": [
+     27.6,
+     82.7,
+     8.3
+    ]
+   },
+   {
+    "index": 3,
+    "name": "PIN5_ASM",
+    "solids": 6,
+    "min": [
+     28.0,
+     34.6,
+     -9.1
+    ],
+    "max": [
+     40.7,
+     37.1,
+     8.5
+    ]
+   },
+   {
+    "index": 4,
+    "name": "PIN8_ASM",
+    "solids": 9,
+    "min": [
+     14.1,
+     63.7,
+     -8.3
+    ],
+    "max": [
+     16.9,
+     84.1,
+     8.5
+    ]
+   },
+   {
+    "index": 5,
+    "name": "PIN3_ASM",
+    "solids": 4,
+    "min": [
+     49.2,
+     76.7,
+     -9.1
+    ],
+    "max": [
+     51.8,
+     84.3,
+     8.5
+    ]
+   },
+   {
+    "index": 6,
+    "name": "PIN3_ASM",
+    "solids": 4,
+    "min": [
+     60.1,
+     11.2,
+     -9.1
+    ],
+    "max": [
+     63.0,
+     18.9,
+     8.5
+    ]
+   },
+   {
+    "index": 7,
+    "name": "PIN3_ASM",
+    "solids": 4,
+    "min": [
+     12.4,
+     43.7,
+     -9.1
+    ],
+    "max": [
+     20.1,
+     46.4,
+     8.5
+    ]
+   },
+   {
+    "index": 8,
+    "name": "ARDUINO_NANO_ASM",
+    "solids": 55,
+    "min": [
+     24.6,
+     40.9,
+     2.3
+    ],
+    "max": [
+     43.1,
+     86.0,
+     20.9
+    ]
+   },
+   {
+    "index": 9,
+    "name": "MOSFET_ASM",
+    "solids": 5,
+    "min": [
+     48.2,
+     75.4,
+     -1.5
+    ],
+    "max": [
+     53.3,
+     85.4,
+     24.0
+    ]
+   },
+   {
+    "index": 10,
+    "name": "TRANSMITTER",
+    "solids": 1,
+    "min": [
+     30.1,
+     33.2,
+     2.5
+    ],
+    "max": [
+     41.1,
+     36.6,
+     21.0
+    ]
+   },
+   {
+    "index": 11,
+    "name": "SCREWTERMINAL_ASM",
+    "solids": 5,
+    "min": [
+     9.2,
+     31.8,
+     -3.5
+    ],
+    "max": [
+     16.1,
+     39.6,
+     8.4
+    ]
+   },
+   {
+    "index": 12,
+    "name": "SCREWTERMINAL_ASM",
+    "solids": 5,
+    "min": [
+     60.4,
+     76.4,
+     -3.5
+    ],
+    "max": [
+     67.3,
+     84.3,
+     8.4
+    ]
+   },
+   {
+    "index": 13,
+    "name": "SCREWTERMINAL_ASM",
+    "solids": 5,
+    "min": [
+     57.6,
+     62.5,
+     -3.5
+    ],
+    "max": [
+     65.4,
+     69.4,
+     8.4
+    ]
+   },
+   {
+    "index": 14,
+    "name": "SWITCHDPDT_ASM",
+    "solids": 0,
+    "min": [
+     59.0,
+     1.8,
+     4.0
+    ],
+    "max": [
+     64.5,
+     23.9,
+     15.8
+    ]
+   },
+   {
+    "index": 15,
+    "name": "SWITCHDPDT_ASM",
+    "solids": 0,
+    "min": [
+     -2.8,
+     42.4,
+     4.0
+    ],
+    "max": [
+     19.3,
+     47.5,
+     15.8
+    ]
+   },
+   {
+    "index": 16,
+    "name": "SINGLEBATTERYCASE",
+    "solids": 1,
+    "min": [
+     70.4,
+     10.8,
+     0.0
+    ],
+    "max": [
+     90.4,
+     85.8,
+     14.0
+    ]
+   },
+   {
+    "index": 17,
+    "name": "LIPOBATTERY_ASM",
+    "solids": 46,
+    "min": [
+     71.4,
+     12.3,
+     1.0
+    ],
+    "max": [
+     89.6,
+     77.3,
+     19.2
+    ]
+   },
+   {
+    "index": 18,
+    "name": "SPRING",
+    "solids": 1,
+    "min": [
+     75.9,
+     77.5,
+     3.6
+    ],
+    "max": [
+     85.2,
+     84.8,
+     13.1
+    ]
+   },
+   {
+    "index": 19,
+    "name": "CASEOFBATTERY",
+    "solids": 1,
+    "min": [
+     3.6,
+     4.4,
+     0.0
+    ],
+    "max": [
+     48.2,
+     27.9,
+     32.5
+    ]
+   },
+   {
+    "index": 20,
+    "name": "9V_BATTERY_ASM",
+    "solids": 6,
+    "min": [
+     0.1,
+     7.4,
+     2.9
+    ],
+    "max": [
+     49.3,
+     24.9,
+     29.7
+    ]
+   },
+   {
+    "index": 21,
+    "name": "CLIP_ASM",
+    "solids": 3,
+    "min": [
+     -2.6,
+     8.3,
+     1.4
+    ],
+    "max": [
+     3.9,
+     33.7,
+     87.0
+    ]
+   },
+   {
+    "index": 22,
+    "name": "MPU6050_V2_ASM",
+    "solids": 52,
+    "min": [
+     1.0,
+     63.6,
+     8.5
+    ],
+    "max": [
+     16.9,
+     84.0,
+     10.5
+    ]
+   }
+  ],
+  "coincident_duplicates": [],
+  "reading": "components sit at their own origins (duplicates coincide), so the export is not a packed assembly"
+ },
+ "parasolid": {
+  "ARDUINO_NANO_1.x_t": {
+   "size_mb": 9.3,
+   "writer": "Onshape",
+   "kernel": "Parasolid 38.1.231",
+   "date": "2026-11-17T08:19:38 (UTC)"
+  },
+  "FPCB_ASM.x_t": {
+   "size_mb": 30.7,
+   "writer": "Onshape",
+   "kernel": "Parasolid 38.1.231",
+   "date": "2026-11-17T08:22:12 (UTC)"
+  },
+  "finelest/finelest.x_t": {
+   "size_mb": 0.9,
+   "writer": "Onshape",
+   "kernel": "Parasolid 38.1.231",
+   "date": "2026-11-17T08:27:38 (UTC)"
+  },
+  "finelest.xmm_txt": {
+   "meshes": 43,
+   "triangles": 22350,
+   "extent": [
+    2.54,
+    2.54,
+    2.54
+   ],
+   "reading": "decoded with cad/cubesat/xmm.py (plain-text vertex pool + index teeth). 43 meshes in a ~2.5 x 2.5 x 2.4 unit envelope: a small connector-like part, far too small to be a 100 mm frame"
+  },
+  "note": "The B-rep in the .x_t files needs the Parasolid XT schema to decode and was not read; the STEP of the same flex-PCB assembly (ffpcb.stp) was used instead."
+ },
+ "pdf_study_report": {
+  "pages": 10,
+  "tool": "Autodesk Fusion (2602.1.25)",
+  "assembly": "LAST ASSEMBLE v1 (S) v2",
+  "components": [
+   "BOTTOMXX",
+   "HOL2",
+   "HOLDB1",
+   "TOP",
+   "frame v1",
+   "shaft v1"
+  ],
+  "material": "PLA (yield 20 MPa, E 2240 MPa)",
+  "studies": "two static-stress studies (50 N; gravity 9.8 and 196 m/s^2)",
+  "contains_dimensions": false,
+  "contains_burn_wire_or_antenna": false
+ }
+}
