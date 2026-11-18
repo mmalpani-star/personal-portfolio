@@ -12,3 +12,16 @@
   font-size: var(--text-lg);
   line-height: 1.5;
 }
+
+/* Three rows of two; stacks to a single column on narrow screens. */
+.rows { display: grid; gap: clamp(56px, 8vw, 112px); padding-bottom: clamp(56px, 8vw, 112px); }
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+  overflow-x: clip;       /* a tile sliding in from the side never makes the page scroll sideways */
+}
+@media (max-width: 860px) {
+  .row { grid-template-columns: minmax(0, 1fr); gap: 56px; }
+}

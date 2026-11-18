@@ -26,38 +26,31 @@ function Media({ entry }: { entry: StoryEntry }) {
     case 'triton':
       return (
         <div className={styles.triton}>
-          <Reveal className={styles.pcbMain}>
-            <PcbViewer label="Interactive 3D model of the CAN FD transceiver breakout board. Drag to rotate." />
-            <p className={styles.caption}>
-              The finished CAN FD transceiver breakout board: the actual 3D model exported from EasyEDA (<code>PCB_caps_4</code>).
-            </p>
-          </Reveal>
-          <Reveal className={styles.pcbViews} delay={0.06}>
-            <Figure src="/images/experience/pcb/pcb-3d-2.jpg" alt="Top of the finished board in EasyEDA's 3D view: CAN connector, SOIC chip, capacitors and a five-pin header" w={820} h={770} caption="Top, in the 3D view" sizes="(max-width: 900px) 46vw, 300px" />
-            <Figure src="/images/experience/pcb/pcb-3d-4.jpg" alt="Back of the finished board in EasyEDA's 3D view, with its bottom-layer artwork" w={820} h={770} caption="Back, in the 3D view" sizes="(max-width: 900px) 46vw, 300px" />
+          <Reveal className={styles.block}>
+            <span className={styles.stepNo}>Capstone · CAN FD breakout board</span>
+            <div className={styles.capstone}>
+              <figure className={styles.figure}>
+                <PcbViewer label="Interactive 3D model of the CAN FD transceiver breakout board. Drag to rotate." />
+                <figcaption className={styles.caption}>
+                  The final board, from the EasyEDA 3D export (<code>PCB_caps_4</code>). Drag to turn it over.
+                </figcaption>
+              </figure>
+              <Figure src="/images/experience/caps_3.png" alt="CAN FD breakout board PCB Version 3 layout" w={498} h={792} caption="PCB V3 layout" sizes="(max-width: 900px) 40vw, 230px" className={styles.layout} />
+            </div>
           </Reveal>
 
-          <div className={styles.steps}>
-            <Reveal className={styles.step}>
-              <span className={styles.stepNo}>Week 1 &amp; 3</span>
-              <h4 className={styles.stepTitle}>LM555 timer</h4>
-              <div className={styles.stepMedia}>
-                <Figure src="/images/experience/lm555.jpg" alt="LM555 timer circuit prototype on a perfboard" w={827} h={1536} sizes="(max-width: 900px) 40vw, 200px" className={styles.tall} />
+          <Reveal className={styles.block} delay={0.05}>
+            <span className={styles.stepNo}>Week 1 &amp; 3 · LM555 timer</span>
+            <div className={styles.lm555}>
+              <Figure src="/images/experience/lm555.jpg" alt="LM555 timer circuit prototype on a perfboard" w={827} h={1536} caption="The circuit on a perfboard" sizes="(max-width: 900px) 30vw, 190px" className={styles.lmPhoto} />
+              <figure className={`${styles.figure} ${styles.lmVideo}`}>
                 <video className={styles.video} controls muted playsInline preload="none" poster="/images/experience/lm555-demo-poster.jpg" aria-label="LM555 timer demonstration">
                   <source src="/videos/experience/lm555 demo.mp4" type="video/mp4" />
                 </video>
-              </div>
-            </Reveal>
-            <Reveal className={styles.step} delay={0.06}>
-              <span className={styles.stepNo}>Capstone · V1 → V3</span>
-              <h4 className={styles.stepTitle}>From first layout to final</h4>
-              <div className={styles.stepMedia}>
-                <Figure src="/images/experience/caps_1.png" alt="CAN FD breakout board PCB Version 1 layout" w={1064} h={1128} caption="PCB V1" sizes="(max-width: 900px) 40vw, 200px" />
-                <span className={styles.arrow} aria-hidden="true"><Icon name="arrow-right" size={20} /></span>
-                <Figure src="/images/experience/caps_3.png" alt="CAN FD breakout board PCB Version 3 layout" w={498} h={792} caption="PCB V3" sizes="(max-width: 900px) 40vw, 200px" />
-              </div>
-            </Reveal>
-          </div>
+                <figcaption className={styles.caption}>Demonstration</figcaption>
+              </figure>
+            </div>
+          </Reveal>
         </div>
       );
     case 'starlabs':
@@ -76,11 +69,8 @@ function Media({ entry }: { entry: StoryEntry }) {
     case 'borderpulse':
       return (
         <Reveal className={styles.bp}>
-          <Figure src="/images/projects/borderpulse/borderpulse-presentation-wide.jpeg" alt="The BorderPulse team presenting on the cOmpiled-16 stage" w={2000} h={1333} caption="Presenting BorderPulse on the cOmpiled-16 stage" sizes="(max-width: 900px) 92vw, 760px" className={styles.bpMain} />
-          <div className={styles.pair}>
-            <Figure src="/images/projects/borderpulse/borderpulse-demo-poster.jpg" alt="BorderPulse project demonstration" w={1600} h={900} caption="The demo" sizes="(max-width: 900px) 92vw, 380px" />
-            <Figure src="/images/projects/borderpulse/borderpulse-demo-walkthrough.jpeg" alt="The BorderPulse product walkthrough projected during the hackathon" w={2000} h={1333} caption="Product walkthrough" sizes="(max-width: 900px) 92vw, 380px" />
-          </div>
+          <Figure src="/images/projects/borderpulse/borderpulse-presentation-wide.jpeg" alt="The BorderPulse team presenting on the cOmpiled-16 stage" w={2000} h={1333} caption="Presenting BorderPulse on the cOmpiled-16 stage" sizes="(max-width: 700px) 92vw, 430px" className={styles.bpPhoto} />
+          <Figure src="/images/projects/borderpulse/borderpulse-demo-walkthrough.jpeg" alt="The BorderPulse product walkthrough projected during the hackathon" w={2000} h={1333} caption="The product walkthrough" sizes="(max-width: 700px) 92vw, 430px" className={styles.bpPhoto} />
         </Reveal>
       );
     case 'iitk':

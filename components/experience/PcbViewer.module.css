@@ -1,7 +1,6 @@
 .host {
   position: relative;
   aspect-ratio: 5 / 4;
-  min-height: 320px;
   background: radial-gradient(ellipse 60% 55% at 50% 50%, var(--bg) 0%, var(--bg-elevated) 100%);
   border-radius: var(--radius-lg);
 }

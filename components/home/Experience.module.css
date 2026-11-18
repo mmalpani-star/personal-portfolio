@@ -160,20 +160,26 @@
 }
 .caption code { font-family: inherit; color: var(--text); }
 
-/* Triton: the real board first, its views beside it, then the steps that led to it */
-.triton { display: grid; gap: clamp(28px, 4vw, 44px); }
-.pcbMain { max-width: 640px; }
-.pcbViews { display: grid; grid-template-columns: repeat(2, minmax(0, 220px)); gap: 20px; }
-
-.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 36px; }
-.step { display: grid; gap: 10px; align-content: start; }
+/* Triton: two compact rows, each a set of pictures that share one height, captions directly beneath */
+.triton { display: grid; gap: clamp(28px, 4vw, 40px); max-width: 720px; }
+.block { display: grid; gap: 12px; align-content: start; }
 .stepNo { font-family: var(--font-mono); font-size: var(--text-2xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
-.stepTitle { margin: 0; font-family: var(--font-display); font-size: var(--text-lg); font-weight: 600; letter-spacing: var(--tracking-tight); }
-.stepMedia { display: flex; align-items: flex-end; gap: 14px; margin-top: 6px; }
-.stepMedia > figure { flex: 1 1 0; min-width: 0; max-width: 200px; }
-.tall { max-width: 160px; }
-.video { flex: 1 1 0; min-width: 0; max-width: 260px; max-height: 300px; border-radius: var(--radius-md); background: var(--ink); }
-.arrow { flex: none; align-self: center; color: var(--muted); }
+
+/* Widths are in proportion to each picture's own shape (5:4 model, 498:792 layout), so both come out the same height. */
+.capstone { display: grid; grid-template-columns: 1.25fr 0.63fr; gap: 16px; align-items: start; }
+.capstone > figure { min-width: 0; }
+.layout .img { aspect-ratio: 498 / 792; object-fit: contain; background: var(--surface-1); }
+
+/* 827:1536 photo and 910:512 clip at one height */
+.lm555 { display: grid; grid-template-columns: 0.538fr 1.78fr; gap: 16px; align-items: start; }
+.lm555 > figure { min-width: 0; }
+.lmPhoto .img { aspect-ratio: 827 / 1536; object-fit: cover; }
+.video { display: block; width: 100%; aspect-ratio: 910 / 512; border-radius: var(--radius-md); background: var(--ink); object-fit: cover; }
+
+@media (max-width: 560px) {
+  .capstone { grid-template-columns: 1fr; }
+  .layout { max-width: 220px; }
+}
 
 /* StarLabs: the team large, the full group set against it */
 .starlabs { position: relative; max-width: 720px; padding-bottom: 12%; }
@@ -181,8 +187,10 @@
 .starAll { position: absolute; right: 0; bottom: 0; width: 46%; }
 .starAll .img { box-shadow: 0 18px 40px -20px rgba(13, 13, 13, 0.45); border: 4px solid var(--bg); }
 
-.bp { display: grid; gap: 20px; max-width: 880px; }
-.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; max-width: 880px; }
+/* BorderPulse: two 3:2 photos, one height, side by side */
+.bp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 880px; }
+.bpPhoto .img { aspect-ratio: 3 / 2; object-fit: cover; }
+@media (max-width: 560px) { .bp { grid-template-columns: 1fr; } }
 
 /* ---------------------------------------------------------------- narrow */
 

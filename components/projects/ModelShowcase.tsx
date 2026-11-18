@@ -1,10 +1,9 @@
 'use client';
 
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { useMotionValueEvent, useReducedMotion, useScroll } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
 import type { RefObject } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -40,6 +39,7 @@ export function useLazyStage<T extends Stage>(
   useEffect(() => setReduceMotion(Boolean(prefersReduced)), [prefersReduced]);
   const [status, setStatus] = useState<Status>('idle');
   const stageRef = useRef<T | null>(null);
+  const onScreenRef = useRef(true);
   const createRef = useRef(create);
   createRef.current = create;
 
@@ -66,6 +66,7 @@ export function useLazyStage<T extends Stage>(
             return;
           }
           stageRef.current = stage;
+          stage.setVisible(onScreenRef.current); // it may have loaded while off screen
           setStatus('ready');
         })
         .catch(() => !cancelled && setStatus('failed'));
@@ -76,7 +77,10 @@ export function useLazyStage<T extends Stage>(
     });
     near.observe(host);
     const onScreen = new IntersectionObserver((entries) =>
-      entries.forEach((e) => stageRef.current?.setVisible(e.isIntersecting)),
+      entries.forEach((e) => {
+        onScreenRef.current = e.isIntersecting;
+        stageRef.current?.setVisible(e.isIntersecting);
+      }),
     );
     onScreen.observe(canvas);
 
@@ -176,89 +180,35 @@ export function Caption({ project, note, shown, index, total }: { project: Proje
 }
 
 /**
- * The caption for every showcase except the CubeSat: the same header, then a "See description" button that opens
- * the project's description beside the model as plain text (no card), plus a link to the full case study.
+ * The text beside every paired-row project: plain type, and one button, "Case study". (The CubeSat keeps `Caption`.)
  */
-export function DescribedCaption({ project, note, shown, index, total }: { project: Project; note?: string; shown: boolean } & Place) {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const panelId = `desc-${project.slug}`;
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
-    window.addEventListener('keydown', onKey);
-    const root = rootRef.current;
-    const watch = root ? new IntersectionObserver((entries) => entries.every((e) => !e.isIntersecting) && setOpen(false)) : null;
-    if (root && watch) watch.observe(root);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      watch?.disconnect();
-    };
-  }, [open]);
-
+export function TileCaption({ project, note, index, total }: { project: Project; note?: string } & Place) {
   return (
-    <div ref={rootRef} className={styles.caption} data-shown={shown} data-open={open}>
-      <div className={styles.captionHead}>
-        <div className={styles.meta}>
-          <span className={styles.index} aria-label={`Project ${index} of ${total}`}>
-            {pad2(index)}
-            <span aria-hidden="true">/{pad2(total)}</span>
-          </span>
-          <span className="label">{project.category}</span>
-          <StatusBadge status={project.status} />
-        </div>
-        <h3 className={styles.title}>{project.title}</h3>
+    <div className={styles.tileCaption}>
+      <div className={styles.tileMeta}>
+        <span className={styles.index} aria-label={`Project ${index} of ${total}`}>
+          {pad2(index)}
+          <span aria-hidden="true">/{pad2(total)}</span>
+        </span>
+        <span className="label">{project.category}</span>
+        <StatusBadge status={project.status} />
       </div>
-      <p className={styles.teaser}>{project.teaser}</p>
-      <ul className={`tag-list ${styles.chips}`}>
+      <h3 className={styles.tileTitle}>{project.title}</h3>
+      <p className={styles.tileTeaser}>{project.teaser}</p>
+      <ul className={`tag-list ${styles.tileChips}`}>
         {project.chips.map((chip) => (
           <li key={chip} className="tag">
             {chip}
           </li>
         ))}
       </ul>
-      <div className={styles.describe}>
-        <button type="button" className={`button button-primary ${styles.describeBtn}`} aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((v) => !v)}>
-          {open ? 'Hide description' : 'See description'}
-          <Icon name="plus" size={15} />
-        </button>
-        <Link href={`/projects/${project.slug}`} className={styles.moreLink}>
-          Full case study
-          <Icon name="arrow-right" size={13} />
+      <div className={styles.tileFoot}>
+        <Link href={`/projects/${project.slug}`} className="button button-primary">
+          Case study
+          <Icon name="arrow-right" size={15} />
         </Link>
         {note ? <span className={styles.note}>{note}</span> : null}
       </div>
-
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            id={panelId}
-            role="region"
-            aria-label={`${project.title} description`}
-            className={styles.details}
-            initial={reduce ? false : { opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, x: 40 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h4 className={styles.detailsTitle}>{project.title}</h4>
-            <p className={styles.detailsText}>{project.description}</p>
-            {project.highlights?.length ? (
-              <ul className={styles.detailsList}>
-                {project.highlights.map((h) => (
-                  <li key={h}>{h}</li>
-                ))}
-              </ul>
-            ) : null}
-            {project.technologies?.length ? <p className={styles.detailsText}>{project.technologies.join(' · ')}</p> : null}
-            <button type="button" className={styles.detailsClose} onClick={() => setOpen(false)}>
-              Close
-            </button>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
     </div>
   );
 }
@@ -276,28 +226,20 @@ type WalkerProps = Place & {
   note: string;
 };
 
-/** A legged robot walking in from the right on its baked, IK-solved gait. */
-function WalkerShowcase({ project, src, loadManifest, facing, framing, label, note, index, total }: WalkerProps) {
+/**
+ * A legged robot that walks continuously on its baked, IK-solved gait. The cycle is driven by the clock alone: scrolling
+ * only decides when the tile enters or leaves the screen (the scene pauses off screen and resumes from the same step).
+ */
+function WalkerTile({ project, src, loadManifest, facing, framing, label, note, index, total }: WalkerProps) {
   const hostRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [arrived, setArrived] = useState(false);
   const [inspecting, setInspecting] = useState(false);
 
-  const { status, stageRef, reduceMotion } = useLazyStage<Stage>(hostRef, canvasRef, async (canvas, reduced) => {
+  const { status, stageRef } = useLazyStage<Stage>(hostRef, canvasRef, async (canvas, reduced) => {
     const [{ createWalkerStage }, manifest] = await Promise.all([import('@/lib/three/scenes'), loadManifest()]);
-    return createWalkerStage({ canvas, reducedMotion: reduced, manifest, src, facing, framing });
+    return createWalkerStage({ canvas, reducedMotion: reduced, manifest, src, facing, framing, continuous: true });
   });
 
-  const { scrollYProgress } = useScroll({ target: hostRef, offset: ['start start', 'end end'] });
-  useMotionValueEvent(scrollYProgress, 'change', (p) => {
-    stageRef.current?.setProgress(p);
-    setArrived(p > 0.6);
-  });
-  useEffect(() => {
-    if (status === 'ready') stageRef.current?.setProgress(scrollYProgress.get());
-  }, [status, stageRef, scrollYProgress]);
-
-  const settled = reduceMotion || arrived || status === 'failed';
   const toggle = () => {
     const next = !inspecting;
     setInspecting(next);
@@ -305,30 +247,29 @@ function WalkerShowcase({ project, src, loadManifest, facing, framing, label, no
   };
 
   return (
-    <section ref={hostRef} className={`${styles.scene} ${styles.walk}`} data-static={reduceMotion} aria-label={`${project.title}, 3D model`}>
-      <div className={styles.stage}>
-        <div className={styles.view}>
-          <canvas ref={canvasRef} className={styles.canvas} data-inspecting={inspecting} aria-label={label} role="img" />
-          {status === 'failed' ? <Fallback project={project} /> : null}
-          {status === 'loading' ? <span className={styles.loading}>Loading model…</span> : null}
-          {status === 'ready' && settled ? <InspectControls stage={stageRef} inspecting={inspecting} onToggle={toggle} /> : null}
-        </div>
-        <DescribedCaption project={project} shown={settled} note={note} index={index} total={total} />
+    <section ref={hostRef} className={styles.tile} aria-label={`${project.title}, 3D model`}>
+      <div className={styles.tileView}>
+        <canvas ref={canvasRef} className={styles.canvas} data-inspecting={inspecting} aria-label={label} role="img" />
+        {status === 'failed' ? <Fallback project={project} /> : null}
+        {status === 'loading' ? <span className={styles.loading}>Loading model…</span> : null}
+        {status === 'ready' ? <InspectControls stage={stageRef} inspecting={inspecting} onToggle={toggle} /> : null}
       </div>
+      <TileCaption project={project} note={note} index={index} total={total} />
     </section>
   );
 }
 
 export function HexapodShowcase({ project, index, total }: { project: Project } & Place) {
   return (
-    <WalkerShowcase
+    <WalkerTile
       project={project}
       index={index}
       total={total}
       src="/models/hexapod.glb"
       loadManifest={() => import('@/data/models/hexapod.manifest.json').then((m) => m.default)}
       facing={Math.PI / 2}
-      label="3D model of the hexapod. Turn on Rotate & zoom to inspect it."
+      framing={{ distance: 1.32 }}
+      label="3D model of the hexapod, walking. Turn on Rotate & zoom to inspect it."
       note="CAD reconstruction from the printed parts. The tripod gait is solved with inverse kinematics; the robot itself is still learning to walk."
     />
   );
@@ -336,15 +277,15 @@ export function HexapodShowcase({ project, index, total }: { project: Project } 
 
 export function QuadrupedShowcase({ project, index, total }: { project: Project } & Place) {
   return (
-    <WalkerShowcase
+    <WalkerTile
       project={project}
       index={index}
       total={total}
       src="/models/quadruped.glb"
       loadManifest={() => import('@/data/models/quadruped.manifest.json').then((m) => m.default)}
       facing={Math.PI}
-      framing={{ distance: 1.6, target: 0.38 }}
-      label="3D model of the quadruped. Turn on Rotate & zoom to inspect it."
+      framing={{ distance: 1.78, target: 0.38 }}
+      label="3D model of the quadruped, walking. Turn on Rotate & zoom to inspect it."
       note="Assembled in CAD from the original printed-part files, joint by joint from their holes. The crawl gait is solved with inverse kinematics and checked for static stability; the physical robot is still being brought up."
     />
   );
@@ -359,41 +300,23 @@ type ExplodeProps = Place & {
   loadManifest: () => Promise<ExplodeManifest>;
   /** Groups with no tag (the reference body). */
   unlabelled: string[];
-  /** Entry slide, open-out timeline and camera for the scroll-driven version. */
+  /** Camera and open-out timeline for the scene's own progress (0..1). */
   dynamic?: NonNullable<Parameters<typeof import('@/lib/three/scenes').createExplodedStage>[0]['dynamic']>;
-  /** Scroll fractions at which the caption appears and at which the model counts as open. */
-  arriveAt: number;
+  /** The part of the scene's progress that runs as the tile scrolls into view: assembled at the start, open at the end. */
+  range: [number, number];
+  /** Progress at which the model counts as open. */
   openAt: number;
-  height: 'tall' | 'long';
-  /** `column` lines the tags up beside the model with leader lines, so none sits on top of it. */
-  labelMode?: 'anchor' | 'column';
   label: string;
   note: string;
 };
 
-function ExplodeShowcase({
-  project,
-  src,
-  labels: labelMap,
-  loadManifest,
-  unlabelled,
-  dynamic,
-  arriveAt,
-  openAt,
-  height,
-  labelMode = 'anchor',
-  label,
-  note,
-  index,
-  total,
-}: ExplodeProps) {
+function ExplodeTile({ project, src, labels: labelMap, loadManifest, unlabelled, dynamic, range, openAt, label, note, index, total }: ExplodeProps) {
   const hostRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelsRef = useRef<HTMLDivElement>(null);
   const [inspecting, setInspecting] = useState(false);
   const [mode, setMode] = useState<'scroll' | 'assembled' | 'exploded'>('scroll');
   const [active, setActive] = useState<string | null>(null);
-  const [arrived, setArrived] = useState(false);
   const [opened, setOpened] = useState(false);
 
   const { status, stageRef, reduceMotion } = useLazyStage<ExplodeStage>(hostRef, canvasRef, async (canvas, reduced) => {
@@ -410,65 +333,31 @@ function ExplodeShowcase({
     return stage;
   });
 
+  // Tags follow their parts; in a half-width tile each one is shown only for the part being pointed at.
   function placeLabels(stage: ExplodeStage | null) {
     const host = labelsRef.current;
     if (!host || !stage) return;
-    const items = stage.labelPositions();
-    const column = labelMode === 'column' && host.clientWidth >= 760;
-
-    // Column mode: tags line up beside the model, nearest-to-anchor order, with a minimum gap
-    const place = new Map<string, { x: number; y: number; ax: number; ay: number; edge: number }>();
-    if (column) {
-      const b = stage.bounds();
-      const right = b.right + 190 <= host.clientWidth - 8;
-      const sorted = [...items].sort((p, q) => p.y - q.y);
-      let last = -Infinity;
-      for (const it of sorted) {
-        const el = host.querySelector<HTMLElement>(`[data-id="${it.id}"]`);
-        if (!el) continue;
-        const w = el.offsetWidth;
-        const y = Math.min(host.clientHeight - 26, Math.max(18, Math.max(it.y, last + 34)));
-        last = y;
-        const edge = right ? b.right + 30 : b.left - 30;
-        place.set(it.id, { x: right ? edge + w / 2 : edge - w / 2, y, ax: it.x, ay: it.y, edge });
-      }
-    }
-
-    for (const p of items) {
+    for (const p of stage.labelPositions()) {
       const el = host.querySelector<HTMLElement>(`[data-id="${p.id}"]`);
       if (!el) continue;
-      const pl = place.get(p.id);
-      // keep every tag fully inside the frame
       const half = el.offsetWidth / 2 + 6;
-      const x = pl ? pl.x : Math.min(host.clientWidth - half, Math.max(half, p.x));
-      const y = pl ? pl.y : p.y;
-      el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      const x = Math.min(host.clientWidth - half, Math.max(half, p.x));
+      el.style.transform = `translate(${x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
       el.dataset.visible = String(p.visible);
-      const line = host.querySelector<SVGGElement>(`[data-line="${p.id}"]`);
-      if (line) {
-        const l = line.querySelector('line');
-        const c = line.querySelector('circle');
-        if (pl && l && c) {
-          l.setAttribute('x1', pl.edge.toFixed(1));
-          l.setAttribute('y1', pl.y.toFixed(1));
-          l.setAttribute('x2', pl.ax.toFixed(1));
-          l.setAttribute('y2', pl.ay.toFixed(1));
-          c.setAttribute('cx', pl.ax.toFixed(1));
-          c.setAttribute('cy', pl.ay.toFixed(1));
-        }
-        line.dataset.visible = String(p.visible && Boolean(pl));
-      }
     }
   }
 
-  const { scrollYProgress } = useScroll({ target: hostRef, offset: ['start start', 'end end'] });
-  useMotionValueEvent(scrollYProgress, 'change', (p) => {
+  // The tile opens out as it rises into view (assembled when it enters, open by the time it is centred).
+  const { scrollYProgress } = useScroll({ target: hostRef, offset: ['start end', 'center center'] });
+  const progressAt = (t: number) => range[0] + Math.min(1, Math.max(0, t)) * (range[1] - range[0]);
+  useMotionValueEvent(scrollYProgress, 'change', (t) => {
+    const p = progressAt(t);
     stageRef.current?.setProgress(p);
-    setArrived(p > arriveAt);
     setOpened(p > openAt);
   });
   useEffect(() => {
-    if (status === 'ready') stageRef.current?.setProgress(scrollYProgress.get());
+    if (status === 'ready') stageRef.current?.setProgress(progressAt(scrollYProgress.get()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, stageRef, scrollYProgress]);
   useEffect(() => {
     stageRef.current?.setHighlight(active);
@@ -485,79 +374,66 @@ function ExplodeShowcase({
   };
 
   const tags = Object.entries(labelMap).filter(([id]) => !unlabelled.includes(id));
-  const settled = reduceMotion || arrived || status === 'failed';
   const isOpen = reduceMotion || opened;
 
   return (
-    <section ref={hostRef} className={`${styles.scene} ${height === 'long' ? styles.long : styles.explode}`} data-static={reduceMotion} aria-label={`${project.title}, 3D model`}>
-      <div className={styles.stage}>
-        <div className={styles.view}>
-          <canvas
-            ref={canvasRef}
-            className={styles.canvas}
-            data-inspecting={inspecting}
-            role="img"
-            aria-label={label}
-            onPointerMove={(e) => {
-              if (e.pointerType === 'mouse') setActive(stageRef.current?.pick(e.clientX, e.clientY) ?? null);
-            }}
-            onPointerLeave={() => setActive(null)}
-            onClick={(e) => setActive(stageRef.current?.pick(e.clientX, e.clientY) ?? null)}
-          />
-          <div ref={labelsRef} className={styles.labels} aria-hidden={status !== 'ready'}>
-            {labelMode === 'column' ? (
-              <svg className={styles.leaders} aria-hidden="true">
-                {tags.map(([id]) => (
-                  <g key={id} data-line={id} data-visible="false" data-active={active === id}>
-                    <line />
-                    <circle r="2.5" />
-                  </g>
-                ))}
-              </svg>
-            ) : null}
-            {tags.map(([id, text]) => (
-              <button
-                key={id}
-                type="button"
-                data-id={id}
-                data-visible="false"
-                data-active={active === id}
-                className={styles.tag}
-                onMouseEnter={() => setActive(id)}
-                onMouseLeave={() => setActive(null)}
-                onFocus={() => setActive(id)}
-                onBlur={() => setActive(null)}
-              >
-                {text}
-              </button>
-            ))}
-          </div>
-          {status === 'ready' && isOpen ? <span className={styles.hint}>Tap a part to name it</span> : null}
-          {status === 'failed' ? <Fallback project={project} /> : null}
-          {status === 'loading' ? <span className={styles.loading}>Loading model…</span> : null}
-          {status === 'ready' && settled ? (
-            <div className={styles.toolbar}>
-              <div className={styles.segment} role="group" aria-label="Assembly view">
-                <button type="button" aria-pressed={mode === 'assembled'} onClick={() => choose('assembled')}>
-                  Assembled
-                </button>
-                <button type="button" aria-pressed={mode === 'exploded' || (mode === 'scroll' && isOpen)} onClick={() => choose('exploded')}>
-                  Exploded
-                </button>
-              </div>
-              <InspectControls stage={stageRef} inspecting={inspecting} onToggle={toggle} />
-            </div>
-          ) : null}
+    <section ref={hostRef} className={styles.tile} aria-label={`${project.title}, 3D model`}>
+      <div className={styles.tileView}>
+        <canvas
+          ref={canvasRef}
+          className={styles.canvas}
+          data-inspecting={inspecting}
+          role="img"
+          aria-label={label}
+          onPointerMove={(e) => {
+            if (e.pointerType === 'mouse') setActive(stageRef.current?.pick(e.clientX, e.clientY) ?? null);
+          }}
+          onPointerLeave={() => setActive(null)}
+          onClick={(e) => setActive(stageRef.current?.pick(e.clientX, e.clientY) ?? null)}
+        />
+        <div ref={labelsRef} className={styles.labels} aria-hidden={status !== 'ready'}>
+          {tags.map(([id, text]) => (
+            <button
+              key={id}
+              type="button"
+              data-id={id}
+              data-visible="false"
+              data-active={active === id}
+              className={styles.tag}
+              onMouseEnter={() => setActive(id)}
+              onMouseLeave={() => setActive(null)}
+              onFocus={() => setActive(id)}
+              onBlur={() => setActive(null)}
+            >
+              {text}
+            </button>
+          ))}
         </div>
-        <DescribedCaption project={project} shown={settled} note={note} index={index} total={total} />
+        {status === 'ready' && isOpen ? <span className={styles.tileHint}>Hover or tap a part to name it</span> : null}
+        {status === 'failed' ? <Fallback project={project} /> : null}
+        {status === 'loading' ? <span className={styles.loading}>Loading model…</span> : null}
+        {status === 'ready' ? (
+          <div className={styles.toolbar}>
+            <div className={styles.segment} role="group" aria-label="Assembly view">
+              <button type="button" aria-pressed={mode === 'assembled'} onClick={() => choose('assembled')}>
+                Assembled
+              </button>
+              <button type="button" aria-pressed={mode === 'exploded' || (mode === 'scroll' && isOpen)} onClick={() => choose('exploded')}>
+                Exploded
+              </button>
+            </div>
+            <InspectControls stage={stageRef} inspecting={inspecting} onToggle={toggle} />
+          </div>
+        ) : null}
       </div>
+      <TileCaption project={project} note={note} index={index} total={total} />
     </section>
   );
 }
 
 export function AqmShowcase({ project, index, total }: { project: Project } & Place) {
   return (
-    <ExplodeShowcase
+    <ExplodeTile
       project={project}
       index={index}
       total={total}
@@ -565,9 +441,8 @@ export function AqmShowcase({ project, index, total }: { project: Project } & Pl
       labels={aqmManifest.labels}
       loadManifest={() => Promise.resolve(aqmManifest)}
       unlabelled={['enclosure_body']}
-      arriveAt={0.5}
+      range={[0.15, 0.72]}
       openAt={0.5}
-      height="tall"
       label="Exploded 3D model of the air quality monitor enclosure and its sensors."
       note="Proposed enclosure, designed in CAD around the real parts list. The working prototype is on a breadboard."
     />
@@ -585,7 +460,7 @@ const hydroLabels: Record<string, string> = {
 
 export function HydroSafeShowcase({ project, index, total }: { project: Project } & Place) {
   return (
-    <ExplodeShowcase
+    <ExplodeTile
       project={project}
       index={index}
       total={total}
@@ -594,61 +469,28 @@ export function HydroSafeShowcase({ project, index, total }: { project: Project 
       loadManifest={() => import('@/data/models/hydrosafe.manifest.json').then((m) => m.default)}
       unlabelled={[]}
       dynamic={{ entryEnd: 0.24, explodeStart: 0.42, explodeEnd: 0.8, azimuth: 0.7, elevation: 0.42 }}
-      arriveAt={0.22}
+      range={[0.24, 0.82]}
       openAt={0.62}
-      height="long"
-      labelMode="column"
-      label="3D model of the HydroSafe assembly. It opens out into its lid, springs, pipe attachments, mesh discs, tank and elbow pipes as you scroll."
+      label="3D model of the HydroSafe assembly. It opens out into its lid, springs, pipe attachments, mesh discs, tank and elbow pipes as it scrolls into view."
       note="Assembled in CAD from the original part files. The lid and springs are shown at their rest position, worked out from the part geometry, since the CAD export leaves them unmated."
     />
   );
 }
 
 // ------------------------------------------------------------------ photos --
-/**
- * Projects with no 3D model are presented the same way: the project photo
- * slides in from the side as you scroll, then the same caption and button.
- */
+/** Projects with no 3D model are shown the same way, with their project photo in place of the model. */
 export function PhotoShowcase({ project, index, total }: { project: Project } & Place) {
-  const hostRef = useRef<HTMLElement>(null);
-  const prefersReduced = useReducedMotion();
-  const [still, setStill] = useState(false);
-  useEffect(() => setStill(Boolean(prefersReduced)), [prefersReduced]);
-  const [arrived, setArrived] = useState(false);
-
-  const { scrollYProgress } = useScroll({ target: hostRef, offset: ['start start', 'end end'] });
-  const side = index % 2 === 0 ? -1 : 1;
-  const x = useTransform(scrollYProgress, [0, 0.4], [`${side * 58}vw`, '0vw']);
-  const opacity = useTransform(scrollYProgress, [0, 0.22], [0, 1]);
-  const scale = useTransform(scrollYProgress, [0, 0.4], [0.94, 1]);
-  useMotionValueEvent(scrollYProgress, 'change', (p) => setArrived(p > 0.36));
-
   const hero = project.heroMedia?.type === 'image' ? project.heroMedia : undefined;
-
+  // Fill the frame when the picture is close to its shape; otherwise show all of it rather than crop it.
+  const fits = hero ? Math.abs(hero.width / hero.height / (4 / 3) - 1) < 0.2 : true;
   return (
-    <section ref={hostRef} className={`${styles.scene} ${styles.photoScene}`} data-static={still} aria-label={`${project.title}, project photo`}>
-      <div className={styles.stage}>
-        <div className={styles.view}>
-          {hero ? (
-            <div className={styles.photo}>
-              <motion.div
-                className={styles.photoFrame}
-                style={{ ['--ratio' as string]: hero.width / hero.height, ...(still ? {} : { x, opacity, scale }) }}
-              >
-                <Image
-                  src={hero.src}
-                  alt={hero.alt}
-                  fill
-                  sizes="(max-width: 900px) 92vw, 980px"
-                  quality={72}
-                  className={styles.photoImage}
-                />
-              </motion.div>
-            </div>
-          ) : null}
-        </div>
-        <DescribedCaption project={project} shown={still || arrived} index={index} total={total} />
+    <section className={styles.tile} aria-label={`${project.title}, project photo`}>
+      <div className={styles.tileView} data-fit={fits ? 'cover' : 'contain'}>
+        {hero ? (
+          <Image src={hero.src} alt={hero.alt} fill sizes="(max-width: 860px) 92vw, 560px" quality={72} className={styles.tilePhoto} />
+        ) : null}
       </div>
+      <TileCaption project={project} index={index} total={total} />
     </section>
   );
 }

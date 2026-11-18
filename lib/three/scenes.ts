@@ -183,6 +183,12 @@ export async function createWalkerStage(
     facing: number;
     /** Camera distance multiplier and look-at height (fraction of model height). */
     framing?: { distance?: number; target?: number };
+    /**
+     * Walk on the spot, forever, at the gait's own pace. The cycle is driven by the clock alone (never by scroll), the
+     * ground slides past at exactly the body's speed so the feet do not slip, and the loop pauses while the canvas is
+     * off screen and resumes from the same phase.
+     */
+    continuous?: boolean;
   },
 ): Promise<Stage> {
   const facing = opts.facing;
@@ -241,7 +247,47 @@ export async function createWalkerStage(
   let progress = reducedMotion ? 1 : 0;
   let shown = progress;
 
+  // Continuous walking: the robot stays in frame; ground marks slide under it at the body's speed.
+  const continuous = Boolean(opts.continuous);
+  let clock = 0;
+  const marks: { mesh: THREE.Mesh; mat: THREE.MeshBasicMaterial }[] = [];
+  const markGap = span * 0.4;
+  const markCount = 22;
+  const markSpan = markGap * markCount;
+  if (continuous) {
+    const geo = new THREE.PlaneGeometry(span * 0.01, span * 0.7);
+    for (let i = 0; i < markCount; i++) {
+      const mat = new THREE.MeshBasicMaterial({ color: 0x0d0d0d, transparent: true, opacity: 0, depthWrite: false });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.rotation.x = -Math.PI / 2;
+      mesh.position.y = 0.0004;
+      scene.add(mesh);
+      marks.push({ mesh, mat });
+    }
+  }
+
+  const applyContinuous = () => {
+    robot.position.x = 0;
+    shadow.position.x = 0;
+    if (action) {
+      action.time = reducedMotion ? 0 : clock % period;
+      action.weight = reducedMotion ? 0 : 1;
+      mixer.update(0);
+    }
+    gltf.scene.rotation.y = facing;
+    const speed = perCycle / period;
+    marks.forEach(({ mesh, mat }, i) => {
+      const x = ((((i * markGap + clock * speed) % markSpan) + markSpan) % markSpan) - markSpan / 2;
+      mesh.position.x = x;
+      mat.opacity = reducedMotion ? 0 : 0.2 * (1 - smooth(clamp(Math.abs(x) / (markSpan / 2))));
+    });
+  };
+
   const apply = () => {
+    if (continuous) {
+      applyContinuous();
+      return;
+    }
     const walk = smooth(clamp(shown / 0.64));          // reaches the centre at 64% of the scroll
     const x = startX * (1 - walk);
     robot.position.x = x;
@@ -261,6 +307,15 @@ export async function createWalkerStage(
   apply();
 
   const run = loop((dt) => {
+    if (continuous) {
+      if (!reducedMotion) clock += dt;
+      canvas.dataset.gaitClock = clock.toFixed(3); // seconds walked, for tests
+      apply();
+      if (controls.enabled) controls.update();
+      renderer.render(scene, camera);
+      opts.onFrame?.();
+      return !reducedMotion || controls.enabled;
+    }
     const before = shown;
     // The walk is paced by the clock, not by the scroll: ease toward the target but never faster than a steady
     // walking pace, so a quick scroll cannot make the robot sprint (and scrolling back is just as unhurried).
@@ -276,6 +331,7 @@ export async function createWalkerStage(
     return shown !== before || controls.enabled;
   });
   opts.onReady?.();
+  if (continuous) run.wake(); // nothing scrolls it into motion, so start it here
 
   return {
     setProgress(p) {
