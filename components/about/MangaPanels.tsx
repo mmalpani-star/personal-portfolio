@@ -108,12 +108,12 @@ function Panel({
         ) : null}
 
         <div className={styles.actions}>
-          {panel.link ? (
-            <a className={styles.linkButton} href={panel.link.href} target="_blank" rel="noreferrer">
-              {panel.link.label}
-              <Icon name="arrow-up-right" size={13} />
+          {[...(panel.link ? [panel.link] : []), ...(panel.moreLinks ?? [])].map((link) => (
+            <a key={link.href} className={styles.linkButton} href={link.href} target="_blank" rel="noreferrer">
+              {link.label}
+              <Icon name={link.icon ?? 'arrow-up-right'} size={13} />
             </a>
-          ) : null}
+          ))}
         </div>
       </div>
     </motion.article>

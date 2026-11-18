@@ -848,22 +848,16 @@ export const education: Education[] = [
     degree: 'B.S. Artificial Intelligence',
     expectedGraduation: 'June 2030',
   },
-  {
-    institution: 'Delhi Public School, Surat',
-    degree: 'Central Board of Secondary Education (CBSE)',
-    dates: '2011–2026',
-    summary: 'Student Council House Captain and captain of the school basketball team.',
-    details: [
-      'Senior secondary subjects: Mathematics, Physics, Chemistry, English, and Computer Science',
-      'Scored 93 in Computer Science and 89 in Mathematics',
-      'Captain of the school basketball team (2026)',
-      'Student Council House Captain — one of only 4 selected out of 200',
-      'Represented Dragon House (1,000+ students)',
-    ],
-  },
 ];
 
 export const awards: Award[] = [
+  {
+    name: 'SanD Hacks 2026',
+    detail: 'Winner — MLH Best Use of Tiger Data',
+    year: '2026',
+    figure: 'Winner',
+    context: '— MLH Best Use of Tiger Data',
+  },
   {
     name: 'cOmpiled-16 UCSD Hackathon',
     detail: 'Top 7 of 200+ teams',
@@ -1027,7 +1021,9 @@ export type AboutPanel = {
   /** Laid out as drawings pinned to the page, rather than filling the frame. */
   images?: AboutImage[];
   /** Optional button out to media hosted elsewhere. */
-  link?: { label: string; href: string };
+  link?: { label: string; href: string; icon?: 'play' };
+  /** Further buttons of the same kind, shown after `link`. */
+  moreLinks?: Array<{ label: string; href: string; icon?: 'play' }>;
 };
 
 /** "About Me" panels. The lines are mine; every number below is verified. */
@@ -1182,6 +1178,11 @@ export const aboutPanels: AboutPanel[] = [
     line: 'Valorant with my friends, most nights. Reading a round, calling it out and trusting four other people to follow taught me more about leading than any title has — and it is where some of my closest friendships came from.',
     sfx: 'バン',
     sfxRoman: 'ban',
+    link: {
+      label: 'Watch My Streams',
+      href: 'https://www.youtube.com/@gamer-d5l6o/streams',
+      icon: 'play',
+    },
   },
   {
     id: 'pickleball',
@@ -1202,6 +1203,10 @@ export const aboutPanels: AboutPanel[] = [
       alt: 'Pickle It Down tournament players with the trophy',
       // Bias upward so the players' faces stay in frame on a wide crop.
       position: '52% 33%',
+    },
+    link: {
+      label: 'Visit our Instagram',
+      href: 'https://www.instagram.com/_pickleitdown_',
     },
   },
 ];

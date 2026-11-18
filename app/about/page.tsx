@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MangaPanels } from '@/components/about/MangaPanels';
 import { ReactorIntro } from '@/components/about/ReactorIntro';
 import { Reveal } from '@/components/animation';
+import { CollabSection } from '@/components/shared/CollabSection';
 import { Magnetic } from '@/components/effects/Magnetic';
 import { Icon } from '@/components/ui/Icon';
 import { aboutPanels, currentlyBuilding, education, technicalInterests } from '@/data/site-data';
@@ -83,6 +84,9 @@ export default function AboutPage() {
                 <span className={styles.profileRole}>AI · Robotics · Hardware</span>
               </span>
             </div>
+            <span className="label" style={{ display: 'block', margin: '4px 0 10px' }}>
+              Education
+            </span>
             <dl className={styles.profileRows}>
               <div>
                 <dt>Studying</dt>
@@ -159,6 +163,8 @@ export default function AboutPage() {
           </Reveal>
         </div>
       </section>
+
+      <CollabSection idPrefix="about-collab" />
     </main>
   );
 }

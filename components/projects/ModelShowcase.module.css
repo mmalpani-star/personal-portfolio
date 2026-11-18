@@ -1,11 +1,11 @@
 /* Scroll-driven 3D scenes. The section is tall; the stage sticks to the
    viewport while scroll progress drives the model, then releases. */
 .scene { position: relative; }
-.walk { height: 250vh; }
-.explode { height: 210vh; }
+.walk { height: 175vh; }
+.explode { height: 160vh; }
 .long { height: 330vh; }
 .space { height: 380vh; }
-.photoScene { height: 170vh; }
+.photoScene { height: 135vh; }
 .scene[data-static='true'] { height: auto; }
 
 .stage {
@@ -210,8 +210,8 @@
     color: var(--faint);
     white-space: nowrap;
   }
-  .walk { height: 200vh; }
-  .explode { height: 180vh; }
+  .walk { height: 160vh; }
+  .explode { height: 150vh; }
   .stage { padding-top: 64px; }
   .teaser { font-size: var(--text-sm); }
   .tag { font-size: 10px; padding: 3px 7px; }
@@ -245,7 +245,7 @@
 @media (max-width: 760px) {
   .long { height: 260vh; }
   .space { height: 300vh; }
-  .photoScene { height: 150vh; }
+  .photoScene { height: 125vh; }
   .photoFrame { width: min(100%, calc((100svh - 500px) * var(--ratio, 1.5))); min-width: min(100%, 240px); }
 }
 
@@ -314,3 +314,50 @@
   }
 }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+
+/* ------------------------------------------ "See description": plain type, no box ---- */
+.describe { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 22px; }
+.describeBtn { display: inline-flex; align-items: center; gap: 8px; }
+.describeBtn svg { transition: transform var(--dur-fast) var(--ease-out); }
+.describeBtn[aria-expanded='true'] svg { transform: rotate(45deg); }
+.moreLink {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
+  font-size: var(--text-sm); font-weight: 500;
+  border-bottom: 1px solid var(--accent-line);
+}
+.moreLink:hover { border-bottom-color: var(--ink); }
+
+.details {
+  position: absolute;
+  z-index: 5;
+  right: var(--gutter);
+  top: 84px;
+  bottom: 24px;
+  width: min(400px, calc(100% - 2 * var(--gutter)));
+  overflow-y: auto;
+  padding: 8px 0 8px 22px;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.92) 18px);
+  text-align: left;
+  display: grid;
+  align-content: center;
+  gap: 16px;
+}
+.detailsTitle { margin: 0; font-family: var(--font-display); font-size: var(--text-xl); letter-spacing: var(--tracking-tight); }
+.detailsText { margin: 0; font-size: var(--text-sm); line-height: 1.6; color: var(--muted-strong); }
+.detailsList { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: var(--text-sm); color: var(--muted-strong); }
+.detailsList li { position: relative; padding-left: 18px; }
+.detailsList li::before { content: ''; position: absolute; left: 0; top: 0.65em; width: 8px; height: 2px; background: var(--ink); }
+.detailsClose { justify-self: start; min-height: 44px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 0; border-bottom: 1px solid var(--ink); cursor: pointer; padding: 0; }
+
+@media (min-width: 901px) {
+  /* while the description is open, the caption steps aside so the two never overlap */
+  .caption[data-open='true'] { margin-left: var(--gutter); margin-right: auto; width: min(520px, calc(100% - 480px)); text-align: left; justify-items: start; }
+  .caption[data-open='true'] .captionHead,
+  .caption[data-open='true'] .describe { justify-items: start; justify-content: flex-start; }
+}
+
+@media (max-width: 900px) {
+  .details { top: auto; bottom: 0; right: 0; left: 0; width: auto; max-height: 62%; padding: 18px var(--gutter) 22px; border-left: 0; border-top: 3px solid var(--accent); background: rgba(255, 255, 255, 0.96); }
+}

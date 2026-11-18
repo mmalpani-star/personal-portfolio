@@ -1,5 +1,7 @@
 .section {
   overflow: hidden;
+  border-top: 1px solid var(--border);
+  padding-block: var(--section-pad);
   background:
     radial-gradient(ellipse 50% 70% at 15% 100%, rgba(255, 212, 0, 0.06), transparent 70%),
     var(--bg);

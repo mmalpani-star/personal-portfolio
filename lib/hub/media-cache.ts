@@ -33,6 +33,9 @@ export function preloadMedia(urls: string[]) {
 export type TransitionMedia = {
   /** A fresh object URL: show it in a newly created <img> and the animation starts at frame one. */
   src: string;
+  /** Natural size of the picture, for choosing how to fit it to the screen (0 if it could not be read). */
+  width: number;
+  height: number;
   release: () => void;
 };
 
@@ -40,12 +43,16 @@ export type TransitionMedia = {
 export async function createTransitionMedia(url: string): Promise<TransitionMedia> {
   const blob = await getMediaBlob(url);
   const src = URL.createObjectURL(blob);
+  let width = 0;
+  let height = 0;
   try {
     const probe = new Image();
     probe.src = src;
     await probe.decode();
+    width = probe.naturalWidth;
+    height = probe.naturalHeight;
   } catch {
     // decode() can reject for formats it cannot pre-decode; the visible <img> will still load it
   }
-  return { src, release: () => URL.revokeObjectURL(src) };
+  return { src, width, height, release: () => URL.revokeObjectURL(src) };
 }

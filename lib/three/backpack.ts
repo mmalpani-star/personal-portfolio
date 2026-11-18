@@ -5,8 +5,7 @@
  *   fabric behind it peels up, so the mouth opens progressively exactly where the zipper has been.
  * - Brass teeth (instanced) interlock in the zipped part of the seam and part where it is open; the slider
  *   carries a yellow puller that swings as it is dragged.
- * - Light spills out: a warm glow lining the cavity, a point light, soft beams and a halo, all scaled by how
- *   much of the zipper is open and by how far along it each beam sits.
+ * - A soft warm light inside shows the lining as it opens; nothing else glows.
  *
  * Original geometry throughout; there is no imported model. The pack is generic (not a particular product).
  */
@@ -121,30 +120,6 @@ function radialTexture(stops: Array<[number, string]>, size = 256) {
   return t;
 }
 
-function beamTexture() {
-  const c = document.createElement('canvas');
-  c.width = 64;
-  c.height = 256;
-  const g = c.getContext('2d')!;
-  const v = g.createLinearGradient(0, 256, 0, 0);
-  v.addColorStop(0, 'rgba(255,236,180,0.95)');
-  v.addColorStop(0.35, 'rgba(255,220,140,0.4)');
-  v.addColorStop(1, 'rgba(255,200,100,0)');
-  g.fillStyle = v;
-  g.fillRect(0, 0, 64, 256);
-  // soften the sides
-  g.globalCompositeOperation = 'destination-in';
-  const h = g.createLinearGradient(0, 0, 64, 0);
-  h.addColorStop(0, 'rgba(0,0,0,0)');
-  h.addColorStop(0.5, 'rgba(0,0,0,1)');
-  h.addColorStop(1, 'rgba(0,0,0,0)');
-  g.fillStyle = h;
-  g.fillRect(0, 0, 64, 256);
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace;
-  return t;
-}
-
 function patchTexture() {
   const c = document.createElement('canvas');
   c.width = 256;
@@ -184,33 +159,47 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
   const coarse = window.matchMedia('(pointer: coarse)').matches;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse ? 1.75 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.0;
   renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environment = env;
-  scene.environmentIntensity = 0.28;
+  scene.environmentIntensity = 0.62;
   pmrem.dispose();
 
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 30);
-  const key = new THREE.DirectionalLight(0xcfe0ff, 1.25);
-  key.position.set(-2.2, 3.2, 3.4);
-  const rim = new THREE.DirectionalLight(0xffd29a, 0.9);
-  rim.position.set(2.4, 2.0, -2.6);
-  scene.add(key, rim);
+  const key = new THREE.DirectionalLight(0xffffff, 1.5);
+  key.position.set(-1.4, 5.2, 1.6);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.camera.left = -3.2;
+  key.shadow.camera.right = 3.2;
+  key.shadow.camera.top = 3.2;
+  key.shadow.camera.bottom = -3.2;
+  key.shadow.camera.near = 1;
+  key.shadow.camera.far = 10;
+  key.shadow.bias = -0.0004;
+  key.shadow.normalBias = 0.02;
+  key.shadow.radius = 5;
+  const fill = new THREE.DirectionalLight(0xfff3e0, 0.45);
+  fill.position.set(2.6, 1.6, 2.2);
+  scene.add(key, fill);
 
   const pack = new THREE.Group();
   scene.add(pack);
 
   /* ---------- materials ---------- */
-  const weave = weaveTexture('#1d2736', 'rgba(255,255,255,0.035)');
-  const weave2 = weaveTexture('#27344a', 'rgba(255,255,255,0.04)');
-  const fabric = new THREE.MeshStandardMaterial({ color: 0xffffff, map: weave, bumpMap: weave, bumpScale: 0.7, roughness: 0.86, metalness: 0 });
-  const fabric2 = new THREE.MeshStandardMaterial({ color: 0xffffff, map: weave2, bumpMap: weave2, bumpScale: 0.7, roughness: 0.88, metalness: 0 });
-  const lidInner = new THREE.MeshStandardMaterial({ color: 0xe9dfc9, roughness: 0.8, side: THREE.BackSide, emissive: 0x4a3414, emissiveIntensity: 0 });
+  const weave = weaveTexture('#1a2232', 'rgba(255,255,255,0.02)');
+  const weave2 = weaveTexture('#222d42', 'rgba(255,255,255,0.025)');
+  const sheen = new THREE.Color(0x6f7f99);
+  const fabric = new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: weave, bumpMap: weave, bumpScale: 0.5, roughness: 0.9, metalness: 0, sheen: 0.4, sheenRoughness: 0.7, sheenColor: sheen });
+  const fabric2 = new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: weave2, bumpMap: weave2, bumpScale: 0.5, roughness: 0.92, metalness: 0, sheen: 0.4, sheenRoughness: 0.7, sheenColor: sheen });
+  const lidInner = new THREE.MeshStandardMaterial({ color: 0xd9cdb4, roughness: 0.85, side: THREE.BackSide, emissive: 0x6a4e22, emissiveIntensity: 0 });
   const rubber = new THREE.MeshStandardMaterial({ color: 0x0f1218, roughness: 0.7 });
   const webbing = new THREE.MeshStandardMaterial({ color: 0x0c0f14, roughness: 0.92 });
   const brass = new THREE.MeshStandardMaterial({ color: 0xe6bd4c, metalness: 1, roughness: 0.3 });
@@ -224,6 +213,8 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
   const lowerGeo = new RoundedBoxGeometry(W, LOW_H, D, 6, 0.13);
   const lower = new THREE.Mesh(lowerGeo, fabric);
   lower.position.y = BASE_Y + LOW_H / 2;
+  lower.castShadow = true;
+  lower.receiveShadow = true;
   pack.add(lower);
 
   const baseGeo = new RoundedBoxGeometry(W + 0.012, 0.075, D + 0.012, 4, 0.03);
@@ -241,6 +232,7 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
   const pocketGeo = new RoundedBoxGeometry(0.8, 0.46, 0.17, 5, 0.07);
   const pocket = new THREE.Mesh(pocketGeo, fabric2);
   pocket.position.set(0, -0.43, D / 2 + 0.045);
+  pocket.castShadow = true;
   pack.add(pocket);
   const pocketZipGeo = new THREE.BoxGeometry(0.66, 0.012, 0.012);
   const pocketZip = new THREE.Mesh(pocketZipGeo, brass);
@@ -256,6 +248,7 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
   [-1, 1].forEach((s) => {
     const m = new THREE.Mesh(sideGeo, fabric2);
     m.position.set(s * (W / 2 + 0.03), -0.4, 0.02);
+    m.castShadow = true;
     pack.add(m);
   });
 
@@ -276,6 +269,15 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
     m.scale.z = 0.28;
     pack.add(m);
   });
+
+  // thread along the pocket edge and the bag's vertical seams
+  const thread = new THREE.MeshStandardMaterial({ color: 0x55637a, roughness: 0.8 });
+  const stitch = (a: THREE.Vector3, b: THREE.Vector3) => {
+    const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(a, b), 2, 0.0035, 5, false), thread);
+    pack.add(m);
+    return m;
+  };
+  stitch(new THREE.Vector3(-0.36, -0.215, D / 2 + 0.131), new THREE.Vector3(0.36, -0.215, D / 2 + 0.131));
 
   /* ---------- the lid: a sheet hinged at the back, peeled up behind the slider ---------- */
   const profilePts = [
@@ -308,7 +310,22 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
   const lidOuter = new THREE.Mesh(lidGeo, fabric);
   const lidInnerMesh = new THREE.Mesh(lidGeo, lidInner);
   lidOuter.frustumCulled = lidInnerMesh.frustumCulled = false;
+  lidOuter.castShadow = true;
   pack.add(lidOuter, lidInnerMesh);
+
+  // The floor only catches the pack's shadow; a soft dark blob under it grounds it on the page.
+  const floorY = BASE_Y - 0.002;
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.ShadowMaterial({ opacity: 0.16 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = floorY;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  const contactTex = radialTexture([[0, 'rgba(0,0,0,0.38)'], [0.55, 'rgba(0,0,0,0.14)'], [1, 'rgba(0,0,0,0)']]);
+  const contactMat = new THREE.MeshBasicMaterial({ map: contactTex, transparent: true, depthWrite: false, toneMapped: false });
+  const contact = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 1.2), contactMat);
+  contact.rotation.x = -Math.PI / 2;
+  contact.position.y = floorY + 0.001;
+  scene.add(contact);
 
   const liftAt = (u: number, p: number) => smooth((sliderU(p) - u) / RAMP) * smooth(p / 0.05) * LIFT_MAX;
 
@@ -352,33 +369,10 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
   slider.add(proxy);
   pack.add(slider);
 
-  /* ---------- light spilling out ---------- */
-  const lamp = new THREE.PointLight(0xffe2a0, 0, 4.5, 1.5);
-  lamp.position.set(0, HC + 0.22, 0.02);
+  /* ---------- the one soft light inside ---------- */
+  const lamp = new THREE.PointLight(0xffe2a0, 0, 3.5, 1.6);
+  lamp.position.set(0, HC + 0.2, 0.02);
   pack.add(lamp);
-  const beamMap = beamTexture();
-  const beams: Array<{ sprite: THREE.Sprite; u: number; phase: number; base: number }> = [];
-  for (let i = 0; i < 9; i++) {
-    const u = 0.14 + (i / 8) * 0.72;
-    const mat = new THREE.SpriteMaterial({ map: beamMap, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
-    const s = new THREE.Sprite(mat);
-    const w = 0.22 + ((i * 37) % 5) * 0.045;
-    const h = 0.7 + ((i * 53) % 4) * 0.16;
-    s.scale.set(w, h, 1);
-    s.position.set((u - 0.5) * W * 0.85, HC + 0.08 + h / 2, ((i % 3) - 1) * 0.08);
-    pack.add(s);
-    beams.push({ sprite: s, u, phase: i * 1.7, base: 0.5 + (i % 3) * 0.12 });
-  }
-  const haloMap = radialTexture([[0, 'rgba(255,240,190,0.95)'], [0.3, 'rgba(255,214,120,0.45)'], [1, 'rgba(255,190,80,0)']]);
-  const haloMat = new THREE.SpriteMaterial({ map: haloMap, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
-  const halo = new THREE.Sprite(haloMat);
-  halo.position.set(0, HC + 0.2, 0.05);
-  halo.scale.setScalar(1.5);
-  pack.add(halo);
-  const nudgeMat = new THREE.SpriteMaterial({ map: haloMap, color: 0xffd400, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
-  const nudge = new THREE.Sprite(nudgeMat); // a soft pulse on the puller that says "pull me"
-  nudge.scale.setScalar(0.34);
-  slider.add(nudge);
 
   /* ---------- state ---------- */
   let progress = 0;
@@ -553,7 +547,7 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
       const c = Math.cos(theta);
       const s = Math.sin(theta);
       const x = (u - 0.5) * (W - 0.02);
-      const edge = smooth(Math.min(u, 1 - u) / 0.07); // the lid flattens onto the body at both ends: no open sides
+      const edge = smooth(Math.min(u, 1 - u) / 0.05); // the lid flattens onto the body at both ends: no open sides
       for (let iv = 0; iv <= NV; iv++) {
         const pt = profile[iv];
         const dz = pt.x - hingeZ;
@@ -588,21 +582,13 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
     pullerVel += (-18 * pullerSwing - 3.2 * pullerVel - vx * 2.4) * dt;
     pullerSwing = clamp(pullerSwing + pullerVel * dt, -0.7, 0.7);
     pullerPivot.rotation.z = reduced ? 0 : pullerSwing;
-    const wait = !touched && progress < 0.02;
-    nudgeMat.opacity = wait && !reduced ? 0.28 + 0.22 * Math.sin(t * 3.1) : 0;
-    nudge.position.set(0, -0.15, 0.03);
+    const wait = false;
 
-    // light
+    // the lining warms a little as it opens (the only light effect)
     const open = smooth(progress * 1.25);
-    lamp.intensity = open * 16;
-    cavity.color.setScalar(lerp(0.16, 1, open));
-    lidInner.emissiveIntensity = open * 1.4;
-    haloMat.opacity = open * 0.5;
-    beams.forEach((b) => {
-      const reach = smooth((sliderU(progress) - b.u) / 0.18); // a beam appears once the zipper has passed it
-      const flick = reduced ? 1 : 0.88 + 0.12 * Math.sin(t * 1.6 + b.phase);
-      (b.sprite.material as THREE.SpriteMaterial).opacity = reach * b.base * 0.55 * flick;
-    });
+    lamp.intensity = open * 5;
+    cavity.color.setScalar(lerp(0.5, 1, open));
+    lidInner.emissiveIntensity = open * 0.6;
 
     // gentle life: a slow sway and a lean toward the pointer, never while it is being zipped
     const calm = dragging ? 0.25 : 1;
@@ -689,9 +675,9 @@ export function createBackpack(options: BackpackOptions): BackpackHandle {
         const mesh = o as THREE.Mesh;
         if (mesh.isMesh || (o as THREE.InstancedMesh).isInstancedMesh) mesh.geometry?.dispose();
       });
-      [fabric, fabric2, lidInner, rubber, webbing, brass, puller, cavity, patchMat, haloMat, nudgeMat].forEach((m) => m.dispose());
-      beams.forEach((b) => (b.sprite.material as THREE.Material).dispose());
-      [weave, weave2, glowTex, patchMap, beamMap, haloMap].forEach((t) => t.dispose());
+      [fabric, fabric2, lidInner, rubber, webbing, brass, puller, cavity, patchMat, thread, contactMat].forEach((m) => m.dispose());
+      (floor.material as THREE.Material).dispose();
+      [weave, weave2, glowTex, patchMap, contactTex].forEach((t) => t.dispose());
       teethBody.dispose();
       teethLid.dispose();
       env.dispose();

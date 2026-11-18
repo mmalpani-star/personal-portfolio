@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CollabSection } from '@/components/shared/CollabSection';
 import { SkillsExperience } from '@/components/skills/SkillsExperience';
 
 export const metadata: Metadata = {
@@ -10,6 +11,7 @@ export default function SkillsPage() {
   return (
     <main>
       <SkillsExperience />
+      <CollabSection idPrefix="skills-collab" />
     </main>
   );
 }

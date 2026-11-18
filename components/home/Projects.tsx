@@ -1,4 +1,6 @@
 import { Reveal } from '@/components/animation';
+import { CollabSection } from '@/components/shared/CollabSection';
+import { SideEnter } from '@/components/projects/SideEnter';
 import { CubesatShowcase } from '@/components/projects/CubesatShowcase';
 import {
   AqmShowcase,
@@ -38,10 +40,22 @@ export function Projects() {
         </Reveal>
       </div>
 
-      {displayProjects.map((project, i) => {
-        const Scene = scenes[project.slug] ?? PhotoShowcase;
-        return <Scene key={project.slug} project={project} index={i + 1} total={total} />;
-      })}
+      {(() => {
+        let side = 0; // alternates across the showcases that slide in; the CubeSat is left exactly as it was
+        return displayProjects.map((project, i) => {
+          const Scene = scenes[project.slug] ?? PhotoShowcase;
+          const node = <Scene key={project.slug} project={project} index={i + 1} total={total} />;
+          if (project.slug === 'cubesat-antenna-mechanism') return node;
+          const dir = side++ % 2 === 0 ? 'left' : 'right';
+          return (
+            <SideEnter key={project.slug} side={dir}>
+              {node}
+            </SideEnter>
+          );
+        });
+      })()}
+
+      <CollabSection idPrefix="projects-collab" />
     </section>
   );
 }

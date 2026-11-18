@@ -262,7 +262,12 @@ export async function createWalkerStage(
 
   const run = loop((dt) => {
     const before = shown;
-    shown += (progress - shown) * Math.min(1, dt * 7);
+    // The walk is paced by the clock, not by the scroll: ease toward the target but never faster than a steady
+    // walking pace, so a quick scroll cannot make the robot sprint (and scrolling back is just as unhurried).
+    const gap = progress - shown;
+    const eased = gap * Math.min(1, dt * 2.5);
+    const cap = dt * 0.17;
+    shown += Math.max(-cap, Math.min(cap, eased));
     if (Math.abs(progress - shown) < 0.0005) shown = progress;
     apply();
     if (controls.enabled) controls.update();

@@ -4,6 +4,7 @@ import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import type { RefObject } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -174,6 +175,94 @@ export function Caption({ project, note, shown, index, total }: { project: Proje
   );
 }
 
+/**
+ * The caption for every showcase except the CubeSat: the same header, then a "See description" button that opens
+ * the project's description beside the model as plain text (no card), plus a link to the full case study.
+ */
+export function DescribedCaption({ project, note, shown, index, total }: { project: Project; note?: string; shown: boolean } & Place) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const panelId = `desc-${project.slug}`;
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    const root = rootRef.current;
+    const watch = root ? new IntersectionObserver((entries) => entries.every((e) => !e.isIntersecting) && setOpen(false)) : null;
+    if (root && watch) watch.observe(root);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      watch?.disconnect();
+    };
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className={styles.caption} data-shown={shown} data-open={open}>
+      <div className={styles.captionHead}>
+        <div className={styles.meta}>
+          <span className={styles.index} aria-label={`Project ${index} of ${total}`}>
+            {pad2(index)}
+            <span aria-hidden="true">/{pad2(total)}</span>
+          </span>
+          <span className="label">{project.category}</span>
+          <StatusBadge status={project.status} />
+        </div>
+        <h3 className={styles.title}>{project.title}</h3>
+      </div>
+      <p className={styles.teaser}>{project.teaser}</p>
+      <ul className={`tag-list ${styles.chips}`}>
+        {project.chips.map((chip) => (
+          <li key={chip} className="tag">
+            {chip}
+          </li>
+        ))}
+      </ul>
+      <div className={styles.describe}>
+        <button type="button" className={`button button-primary ${styles.describeBtn}`} aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((v) => !v)}>
+          {open ? 'Hide description' : 'See description'}
+          <Icon name="plus" size={15} />
+        </button>
+        <Link href={`/projects/${project.slug}`} className={styles.moreLink}>
+          Full case study
+          <Icon name="arrow-right" size={13} />
+        </Link>
+        {note ? <span className={styles.note}>{note}</span> : null}
+      </div>
+
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            id={panelId}
+            role="region"
+            aria-label={`${project.title} description`}
+            className={styles.details}
+            initial={reduce ? false : { opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, x: 40 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h4 className={styles.detailsTitle}>{project.title}</h4>
+            <p className={styles.detailsText}>{project.description}</p>
+            {project.highlights?.length ? (
+              <ul className={styles.detailsList}>
+                {project.highlights.map((h) => (
+                  <li key={h}>{h}</li>
+                ))}
+              </ul>
+            ) : null}
+            {project.technologies?.length ? <p className={styles.detailsText}>{project.technologies.join(' · ')}</p> : null}
+            <button type="button" className={styles.detailsClose} onClick={() => setOpen(false)}>
+              Close
+            </button>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // ------------------------------------------------------------------ walkers --
 type WalkerProps = Place & {
   project: Project;
@@ -224,7 +313,7 @@ function WalkerShowcase({ project, src, loadManifest, facing, framing, label, no
           {status === 'loading' ? <span className={styles.loading}>Loading model…</span> : null}
           {status === 'ready' && settled ? <InspectControls stage={stageRef} inspecting={inspecting} onToggle={toggle} /> : null}
         </div>
-        <Caption project={project} shown={settled} note={note} index={index} total={total} />
+        <DescribedCaption project={project} shown={settled} note={note} index={index} total={total} />
       </div>
     </section>
   );
@@ -460,7 +549,7 @@ function ExplodeShowcase({
             </div>
           ) : null}
         </div>
-        <Caption project={project} shown={settled} note={note} index={index} total={total} />
+        <DescribedCaption project={project} shown={settled} note={note} index={index} total={total} />
       </div>
     </section>
   );
@@ -558,7 +647,7 @@ export function PhotoShowcase({ project, index, total }: { project: Project } & 
             </div>
           ) : null}
         </div>
-        <Caption project={project} shown={still || arrived} index={index} total={total} />
+        <DescribedCaption project={project} shown={still || arrived} index={index} total={total} />
       </div>
     </section>
   );

@@ -27,8 +27,6 @@ export function SkillsExperience() {
   const stageRef = useRef<HTMLElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const trailRef = useRef<HTMLCanvasElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<BackpackHandle | null>(null);
   const flightRef = useRef<Flight | null>(null);
   const phaseRef = useRef<Phase>('closed');
@@ -117,16 +115,7 @@ export function SkillsExperience() {
             onThreshold: () => {
               if (phaseRef.current === 'closed') setPhase('opening');
             },
-            onProgress: (p) => {
-              const glow = glowRef.current;
-              const stage = stageRef.current;
-              if (!glow || !stage || !handle) return;
-              const mouth = handle.getMouthPoint();
-              const rect = stage.getBoundingClientRect();
-              glow.style.setProperty('--open', p.toFixed(3));
-              glow.style.setProperty('--mx', `${(mouth.x - rect.left).toFixed(1)}px`);
-              glow.style.setProperty('--my', `${(mouth.y - rect.top).toFixed(1)}px`);
-            },
+            onProgress: () => undefined,
           },
         });
         handleRef.current = handle;
@@ -149,7 +138,7 @@ export function SkillsExperience() {
   const collect = () => {
     const stage = stageRef.current;
     if (!stage) return [];
-    return Array.from(stage.querySelectorAll<HTMLElement>('[data-logo]')).map((el) => ({ el, color: el.dataset.brand ?? '#ffffff' }));
+    return Array.from(stage.querySelectorAll<HTMLElement>('[data-logo]')).map((el) => ({ el }));
   };
 
   /* ----- opening: logos burst out, the pack moves to its corner ----- */
@@ -158,13 +147,12 @@ export function SkillsExperience() {
     handleRef.current?.setInteractive(false);
     void handleRef.current?.animateTo(1, 650);
     const handle = handleRef.current;
-    const trails = trailRef.current;
-    if (reducedRef.current || !handle || !trails) {
+    if (reducedRef.current || !handle) {
       place('corner');
       setPhase('open');
       return;
     }
-    flightRef.current = flyLogos({ items: collect(), getMouth: () => handle.getMouthPoint(), direction: 'out', trails });
+    flightRef.current = flyLogos({ items: collect(), getMouth: () => handle.getMouthPoint(), direction: 'out' });
     const move = window.setTimeout(() => place('corner'), 800);
     let alive = true;
     flightRef.current.done.then(() => {
@@ -182,12 +170,11 @@ export function SkillsExperience() {
     let alive = true;
     (async () => {
       const handle = handleRef.current;
-      const trails = trailRef.current;
       place('center');
-      if (!reducedRef.current && handle && trails) {
+      if (!reducedRef.current && handle) {
         await sleep(520); // let the pack travel back so the logos have somewhere to go
         if (!alive) return;
-        flightRef.current = flyLogos({ items: collect(), getMouth: () => handle.getMouthPoint(), direction: 'in', trails });
+        flightRef.current = flyLogos({ items: collect(), getMouth: () => handle.getMouthPoint(), direction: 'in' });
         await flightRef.current.done;
         if (!alive) return;
       }
@@ -227,8 +214,6 @@ export function SkillsExperience() {
       data-reduced={reduced}
       aria-labelledby="skills-title"
     >
-      <div ref={glowRef} className={styles.glow} aria-hidden="true" />
-
       <header className={styles.heading}>
         <span className={styles.index}>05</span>
         <h1 id="skills-title" className={styles.title}>
@@ -248,12 +233,12 @@ export function SkillsExperience() {
 
       <div className={styles.cta} data-visible={phase === 'closed' && gl !== 'off'}>
         <p className={styles.hint}>Drag the zipper to open the backpack</p>
-        <button type="button" className={styles.unzip} onClick={unzip} disabled={phase !== 'closed'}>
+        <button type="button" className={`button button-secondary ${styles.unzip}`} onClick={unzip} disabled={phase !== 'closed'}>
           Unzip it for me
         </button>
       </div>
 
-      <button type="button" className={styles.repack} onClick={repack} disabled={phase !== 'open'} data-visible={phase === 'open' && gl !== 'off'}>
+      <button type="button" className={`button button-secondary ${styles.repack}`} onClick={repack} disabled={phase !== 'open'} data-visible={phase === 'open' && gl !== 'off'}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M4 12a8 8 0 1 0 2.34-5.66M4 4v4h4" />
         </svg>
@@ -276,11 +261,19 @@ export function SkillsExperience() {
                   key={logo.label}
                   className={styles.item}
                   data-logo=""
-                  data-brand={logo.c1}
-                  style={{ '--b1': logo.c1, '--b2': logo.c2 ?? logo.c1, '--d': `${-(i * 0.9 + index * 0.5)}s` } as CSSProperties}
+                  style={{ '--d': `${-(i * 0.9 + index * 0.5)}s` } as CSSProperties}
                 >
                   <span className={styles.bob}>
-                    <svg className={styles.logoBox} viewBox="0 0 24 24" aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: logo.svg }} />
+                    {logo.src ? (
+                      // the saved file, drawn in the ink colour: its own shape and proportions, one colour
+                      <span
+                        className={`${styles.logoBox} ${styles.mask}`}
+                        style={{ WebkitMaskImage: `url(${logo.src})`, maskImage: `url(${logo.src})` }}
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <svg className={styles.logoBox} viewBox="0 0 24 24" aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: logo.svg }} />
+                    )}
                     <span className={styles.label}>{logo.label}</span>
                   </span>
                 </li>
@@ -290,7 +283,6 @@ export function SkillsExperience() {
         ))}
       </div>
 
-      <canvas ref={trailRef} className={styles.trails} aria-hidden="true" />
     </section>
   );
 }

@@ -1,206 +1,202 @@
-'use client';
-
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
-import { useId, useState } from 'react';
-import type { ReactNode } from 'react';
+import Link from 'next/link';
 import { Reveal } from '@/components/animation';
-import { ApertureReveal } from '@/components/effects/ApertureReveal';
+import { PcbViewer } from '@/components/experience/PcbViewer';
+import { CollabSection } from '@/components/shared/CollabSection';
 import { Icon } from '@/components/ui/Icon';
-import { education, experience } from '@/data/site-data';
-import type { Experience as ExperienceItem } from '@/data/site-data';
-import { IterationStrip } from './IterationStrip';
+import { experienceStory } from '@/data/experience-story';
+import type { StoryEntry } from '@/data/experience-story';
 import styles from './Experience.module.css';
 
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const pad = (n: number) => String(n).padStart(2, '0');
 
-/** Sort key from the start of a "Mon YYYY – …" range. */
-function startKey(item: ExperienceItem) {
-  const [month, year] = (item.dates ?? '').split(' ');
-  return Number(year) * 12 + Math.max(0, months.indexOf(month));
+/** A photo with its caption beneath: no frame, no card. */
+function Figure({ src, alt, w, h, caption, sizes, className = '', priority = false }: { src: string; alt: string; w: number; h: number; caption?: string; sizes: string; className?: string; priority?: boolean }) {
+  return (
+    <figure className={`${styles.figure} ${className}`}>
+      <Image src={src} alt={alt} width={w} height={h} sizes={sizes} quality={78} priority={priority} className={styles.img} />
+      {caption ? <figcaption className={styles.caption}>{caption}</figcaption> : null}
+    </figure>
+  );
 }
 
-type RowProps = {
-  tag: string;
-  dates?: string;
-  title: string;
-  organization: string;
-  summary?: string;
-  current?: boolean;
-  delay?: number;
-  /** Expanded content. Rows without any are not expandable. */
-  children?: ReactNode;
-};
+/** The pictures and models for one entry. Each is arranged for what it shows, not poured into a grid. */
+function Media({ entry }: { entry: StoryEntry }) {
+  switch (entry.id) {
+    case 'triton':
+      return (
+        <div className={styles.triton}>
+          <Reveal className={styles.pcbMain}>
+            <PcbViewer label="Interactive 3D model of the CAN FD transceiver breakout board. Drag to rotate." />
+            <p className={styles.caption}>
+              The finished CAN FD transceiver breakout board: the actual 3D model exported from EasyEDA (<code>PCB_caps_4</code>).
+            </p>
+          </Reveal>
+          <Reveal className={styles.pcbViews} delay={0.06}>
+            <Figure src="/images/experience/pcb/pcb-3d-2.jpg" alt="Top of the finished board in EasyEDA's 3D view: CAN connector, SOIC chip, capacitors and a five-pin header" w={820} h={770} caption="Top, in the 3D view" sizes="(max-width: 900px) 46vw, 300px" />
+            <Figure src="/images/experience/pcb/pcb-3d-4.jpg" alt="Back of the finished board in EasyEDA's 3D view, with its bottom-layer artwork" w={820} h={770} caption="Back, in the 3D view" sizes="(max-width: 900px) 46vw, 300px" />
+          </Reveal>
 
-/** One timeline row: a one-line summary, with the full detail behind "Expand". */
-function Row({ tag, dates, title, organization, summary, current = false, delay = 0, children }: RowProps) {
-  const reduceMotion = useReducedMotion();
-  const [open, setOpen] = useState(false);
-  const panelId = useId();
+          <div className={styles.steps}>
+            <Reveal className={styles.step}>
+              <span className={styles.stepNo}>Week 1 &amp; 3</span>
+              <h4 className={styles.stepTitle}>LM555 timer</h4>
+              <div className={styles.stepMedia}>
+                <Figure src="/images/experience/lm555.jpg" alt="LM555 timer circuit prototype on a perfboard" w={827} h={1536} sizes="(max-width: 900px) 40vw, 200px" className={styles.tall} />
+                <video className={styles.video} controls muted playsInline preload="none" poster="/images/experience/lm555-demo-poster.jpg" aria-label="LM555 timer demonstration">
+                  <source src="/videos/experience/lm555 demo.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </Reveal>
+            <Reveal className={styles.step} delay={0.06}>
+              <span className={styles.stepNo}>Capstone · V1 → V3</span>
+              <h4 className={styles.stepTitle}>From first layout to final</h4>
+              <div className={styles.stepMedia}>
+                <Figure src="/images/experience/caps_1.png" alt="CAN FD breakout board PCB Version 1 layout" w={1064} h={1128} caption="PCB V1" sizes="(max-width: 900px) 40vw, 200px" />
+                <span className={styles.arrow} aria-hidden="true"><Icon name="arrow-right" size={20} /></span>
+                <Figure src="/images/experience/caps_3.png" alt="CAN FD breakout board PCB Version 3 layout" w={498} h={792} caption="PCB V3" sizes="(max-width: 900px) 40vw, 200px" />
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      );
+    case 'starlabs':
+      return (
+        <Reveal className={styles.starlabs}>
+          <Figure src="/images/experience/starlabs-team.jpeg" alt="The StarLabs team standing in front of a rocket" w={2048} h={1152} caption="The StarLabs team" sizes="(max-width: 900px) 92vw, 640px" className={styles.starTeam} />
+          <Figure src="/images/experience/starlabs-all-teams.jpeg" alt="All the StarLabs teams together in the workshop, holding a rocket body" w={1280} h={960} caption="All the teams" sizes="(max-width: 900px) 60vw, 360px" className={styles.starAll} />
+        </Reveal>
+      );
+    case 'sandhacks':
+      return (
+        <Reveal>
+          <Figure src="/images/experience/sand-hacks-team.jpg" alt="The Sitwise team at SanD Hacks in front of the winners' slide" w={2524} h={1684} caption="The Sitwise team at SanD Hacks" sizes="(max-width: 900px) 92vw, 760px" />
+        </Reveal>
+      );
+    case 'borderpulse':
+      return (
+        <Reveal className={styles.bp}>
+          <Figure src="/images/projects/borderpulse/borderpulse-presentation-wide.jpeg" alt="The BorderPulse team presenting on the cOmpiled-16 stage" w={2000} h={1333} caption="Presenting BorderPulse on the cOmpiled-16 stage" sizes="(max-width: 900px) 92vw, 760px" className={styles.bpMain} />
+          <div className={styles.pair}>
+            <Figure src="/images/projects/borderpulse/borderpulse-demo-poster.jpg" alt="BorderPulse project demonstration" w={1600} h={900} caption="The demo" sizes="(max-width: 900px) 92vw, 380px" />
+            <Figure src="/images/projects/borderpulse/borderpulse-demo-walkthrough.jpeg" alt="The BorderPulse product walkthrough projected during the hackathon" w={2000} h={1333} caption="Product walkthrough" sizes="(max-width: 900px) 92vw, 380px" />
+          </div>
+        </Reveal>
+      );
+    case 'iitk':
+      return (
+        <Reveal>
+          <Figure src="/images/experience/iitk-python-ai-ml-certificate.jpg" alt="IIT Kanpur certificate for the Certification Program on Python for Artificial Intelligence, Machine Learning, and Deep Learning" w={1400} h={939} caption="Python for AI, ML & Deep Learning certificate" sizes="(max-width: 900px) 92vw, 560px" />
+        </Reveal>
+      );
+  }
+}
 
-  const cells = (
-    <>
-      <span className={styles.meta}>
-        <span className={styles.tag}>
-          {current ? <span className={styles.live} aria-hidden="true" /> : null}
-          {tag}
-        </span>
-        <span className={styles.dates}>{dates}</span>
-      </span>
-      <span className={styles.who}>
-        <span className={styles.rowTitle}>{title}</span>
-        <span className={styles.rowOrg}>{organization}</span>
-      </span>
-      <span className={styles.summary}>{summary}</span>
-    </>
-  );
-
+function Entry({ entry, index }: { entry: StoryEntry; index: number }) {
   return (
-    <Reveal as="li" className={`${styles.row} ${current ? styles.rowCurrent : ''}`} delay={delay}>
-      <h3 className={styles.rowHeading}>
-        {children ? (
-          <button
-            type="button"
-            className={styles.rowButton}
-            aria-expanded={open}
-            aria-controls={panelId}
-            onClick={() => setOpen((value) => !value)}
-          >
-            {cells}
-            <span className={styles.expand}>
-              <span className={styles.expandLabel}>{open ? 'Collapse' : 'Expand'}</span>
-              <span className={styles.expandIcon} data-open={open} aria-hidden="true">
-                <Icon name="plus" size={14} />
-              </span>
+    <article className={styles.entry} aria-labelledby={`exp-${entry.id}`}>
+      <header className={styles.rail}>
+        <Reveal>
+          <span className={styles.no}>{pad(index + 1)}</span>
+          {entry.dates ? (
+            <span className={styles.dates}>
+              {entry.current ? <span className={styles.live} aria-hidden="true" /> : null}
+              {entry.dates}
             </span>
-          </button>
-        ) : (
-          <span className={styles.rowButton}>{cells}</span>
-        )}
-      </h3>
+          ) : null}
+          <h3 id={`exp-${entry.id}`} className={styles.title}>
+            {entry.title}
+          </h3>
+          <p className={styles.org}>
+            {entry.organization}
+            {entry.descriptor ? <span> · {entry.descriptor}</span> : null}
+          </p>
+        </Reveal>
+      </header>
 
-      <AnimatePresence initial={false}>
-        {open && children ? (
-          <motion.div
-            id={panelId}
-            className={styles.panelWrap}
-            initial={reduceMotion ? false : { height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={reduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className={styles.panel}>{children}</div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </Reveal>
-  );
-}
+      <div className={styles.body}>
+        <Reveal>
+          <p className={styles.intro}>{entry.intro}</p>
+        </Reveal>
 
-function ExperienceDetail({ item }: { item: ExperienceItem }) {
-  return (
-    <>
-      <div className={styles.panelText}>
-        {item.details ? (
-          <ul className={styles.checklist}>
-            {item.details.map((detail) => (
-              <li key={detail}>{detail}</li>
-            ))}
-          </ul>
+        {entry.achievement ? (
+          <Reveal>
+            <p className={styles.win}>
+              <span className={styles.winMark} aria-hidden="true" />
+              {entry.achievement}
+            </p>
+          </Reveal>
         ) : null}
-        {item.socialLink ? (
-          <a href={item.socialLink.href} className={styles.social} target="_blank" rel="noreferrer">
-            {item.socialLink.label}
-            <Icon name="arrow-up-right" size={13} />
-          </a>
+
+        <Media entry={entry} />
+
+        <div className={styles.text}>
+          <Reveal>
+            <h4 className={styles.label}>{entry.project ? 'My part' : 'What I did'}</h4>
+            <ol className={styles.points}>
+              {entry.points.map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ol>
+          </Reveal>
+          {entry.project ? (
+            <Reveal delay={0.05}>
+              <h4 className={styles.label}>{entry.project.heading}</h4>
+              <ul className={styles.points}>
+                {entry.project.points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+            </Reveal>
+          ) : null}
+        </div>
+
+        {entry.links?.length ? (
+          <Reveal>
+            <ul className={styles.links}>
+              {entry.links.map((link) => (
+                <li key={link.href}>
+                  {link.internal ? (
+                    <Link href={link.href} className={styles.link}>
+                      {link.label}
+                      <Icon name="arrow-right" size={13} />
+                    </Link>
+                  ) : (
+                    <a href={link.href} className={styles.link} target="_blank" rel="noreferrer">
+                      {link.label}
+                      <Icon name="arrow-up-right" size={13} />
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         ) : null}
       </div>
-
-      {item.isCurrent ? (
-        <div className={styles.panelMedia}>
-          <span className="label">Iteration log</span>
-          <IterationStrip images={item.images} videos={item.videos} />
-        </div>
-      ) : item.images?.length ? (
-        <div className={styles.entryMedia}>
-          {item.images.map((image) => (
-            <figure
-              key={image.src}
-              className={`${styles.entryFigure} ${image.width > image.height ? styles.entryFigureWide : ''}`}
-            >
-              <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes="176px" />
-              {image.caption ? <figcaption>{image.caption}</figcaption> : null}
-            </figure>
-          ))}
-        </div>
-      ) : null}
-    </>
+    </article>
   );
 }
 
-// Pickle It Down is community work, not engineering: it lives on the About Me page.
-const aboutMeOnly = new Set(['Pickle It Down']);
-
+/**
+ * Experience as an editorial timeline: each entry has a rail (role, organization, dates) and a story beside it
+ * (introduction, what I did, then the pictures, models and links that belong to it). Nothing expands or hides.
+ */
 export function Experience() {
-  const sorted = [...experience]
-    .filter((item) => !aboutMeOnly.has(item.organization))
-    .sort((a, b) => startKey(b) - startKey(a));
-
   return (
-    <section id="experience" className={`section section--raised ${styles.section}`} aria-labelledby="experience-title">
-      <ApertureReveal className="page-shell">
+    <section id="experience" className={`section ${styles.section}`} aria-labelledby="experience-title">
+      <div className="page-shell">
         <Reveal className={styles.heading}>
           <span className="section-index">01</span>
           <h2 id="experience-title">Experience</h2>
-          <p>A robotics team, two internships and the training behind them.</p>
+          <p>Teams, internships and hackathons, with the boards, models and photos that go with them.</p>
         </Reveal>
 
-        <ol className={styles.timeline}>
-          {sorted.map((item, index) => (
-            <Row
-              key={`${item.organization}-${item.title}`}
-              tag={String(sorted.length - index).padStart(2, '0')}
-              dates={item.dates}
-              title={item.title}
-              organization={[item.organization, item.location].filter(Boolean).join(' · ')}
-              summary={item.summary}
-              current={item.isCurrent}
-              delay={index * 0.05}
-            >
-              <ExperienceDetail item={item} />
-            </Row>
-          ))}
-        </ol>
+        {experienceStory.map((entry, index) => (
+          <Entry key={entry.id} entry={entry} index={index} />
+        ))}
+      </div>
 
-        <div className={styles.education}>
-          <div className={styles.educationHead}>
-            <span className="label">Education</span>
-          </div>
-          <ol className={styles.timeline}>
-            {education.map((item, index) => (
-              <Row
-                key={item.institution}
-                tag="EDU"
-                dates={item.expectedGraduation ? `Exp. ${item.expectedGraduation}` : item.dates}
-                title={item.institution}
-                organization={item.degree}
-                summary={item.summary}
-                delay={index * 0.05}
-              >
-                {item.details ? (
-                  <div className={styles.panelText}>
-                    <ul className={styles.checklist}>
-                      {item.details.map((detail) => (
-                        <li key={detail}>{detail}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-              </Row>
-            ))}
-          </ol>
-        </div>
-      </ApertureReveal>
+      <CollabSection idPrefix="experience-collab" />
     </section>
   );
 }
