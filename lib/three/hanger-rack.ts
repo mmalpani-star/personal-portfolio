@@ -66,7 +66,7 @@ export type RackHandle = {
 /* ------------------------------------------------------------------ geometry constants */
 
 const TAU = Math.PI * 2;
-// Sized for five hangers: 72 degrees apart is 1.5 m of chord, against a 0.6 m tag, so neighbours clear each other
+// Sized for the ring of four: 90 degrees apart is 1.8 m of chord, against a 0.6 m tag, so neighbours clear each other
 // even when one swivels to face the viewer, and near tags hide as little of the far ones as possible.
 const RING_R = 1.3;
 const CHROME_R = 0.022;

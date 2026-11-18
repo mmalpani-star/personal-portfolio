@@ -1,5 +1,6 @@
 /**
- * The four navigation tags on the rack. Exactly four, in the order they appear on the ring.
+ * The navigation tags on the rack, in the order they appear on the ring. Contact is not a hanger: it is reached from the
+ * "Let's build something useful." block that closes every section (and by its direct link).
  * Blurbs are the existing one-line descriptions from each section, not new copy.
  */
 
@@ -25,7 +26,7 @@ export type HubMedia =
     };
 
 export type HubTag = {
-  id: 'projects' | 'experience' | 'about' | 'contact' | 'skills';
+  id: 'projects' | 'experience' | 'about' | 'skills';
   label: string;
   blurb: string;
   /** Existing route or in-page anchor. */
@@ -35,7 +36,7 @@ export type HubTag = {
   media: HubMedia;
 };
 
-/** The five tags, in the order they hang on the rack. The hanger builds exactly one hanger per entry. */
+/** The four tags, in the order they hang on the rack. The hanger builds exactly one hanger per entry. */
 export const HUB_TAGS: HubTag[] = [
   {
     id: 'projects',
@@ -79,19 +80,6 @@ export const HUB_TAGS: HubTag[] = [
       src: '/images/about/luffy.webp',
       alt: 'Luffy tipping his straw hat',
       focus: [0.55, 0.5],
-    },
-  },
-  {
-    id: 'contact',
-    label: 'Contact',
-    blurb: 'Let’s build something useful.',
-    href: '/#contact',
-    focusSelector: '#contact-title',
-    media: {
-      kind: 'animated',
-      src: '/images/about/tony-stark.gif',
-      alt: 'Tony Stark in his workshop',
-      focus: [0.5, 0.25],
     },
   },
   {

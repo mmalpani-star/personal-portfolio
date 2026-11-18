@@ -34,6 +34,8 @@ exactly where it was. When hidden its render loop is at 0 calls per second.
   hangers; this one has four by design, on a smaller ring so four tags still read as a rack.
 - Motion that is not in the reference and was added deliberately: the swivel toward the viewer on
   hover/focus/select, and the camera dolly into a chosen tag.
+- The rack carries four hangers: Projects, Experience, About and Skills. Contact is not a hanger; it is reached from the
+  closing "Let's build something useful." block in every section, and by `/#contact`.
 - Tag pictures are the site owner's own files (`arc-reactor.webp`, `san d hacks.gif`, `luffy.webp`,
-  `tony-stark.gif`). `san d hacks.gif` has a single frame, so the Experience tag shows a still photo (whole, with
+  `skils.webp`). `san d hacks.gif` has a single frame, so the Experience tag shows a still photo (whole, with
   `fit: 'contain'`); the other three animate. The tag code still supports a video + poster media kind, currently unused.
