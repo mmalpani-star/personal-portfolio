@@ -1157,6 +1157,12 @@ export const aboutPanels: AboutPanel[] = [
         width: 1230,
         height: 1600,
       },
+      {
+        src: '/images/about/sketch-3.jpg',
+        alt: 'My pencil sketch of an anime character resting their chin on one hand and smiling, drawn in graphite',
+        width: 1598,
+        height: 1484,
+      },
     ],
     link: {
       label: 'More sketches',

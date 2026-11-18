@@ -218,7 +218,11 @@
 }
 
 .sketch:first-child { transform: rotate(-3deg); }
+.sketch:nth-child(2):not(:last-child) { transform: rotate(1.2deg) translateY(6px); }
 .sketch:last-child { transform: rotate(2.5deg); }
+
+/* Three sketches share the corner, so each is a little smaller */
+.panel[data-panel='sketchbook'] .sketches .sketch { width: clamp(84px, 8.4vw, 118px); padding: 5px; }
 
 /* Titles printed under a pinned image, like a caption under a photo on a page */
 .pinCaption {
