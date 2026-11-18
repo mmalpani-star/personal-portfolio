@@ -776,7 +776,7 @@ export const experience: Experience[] = [
       'Modified the center-board PCB during week 2 of training',
       'Built an LM555 timer circuit on a general-purpose board during week 1 and week 3 training',
       'Designed and built a CAN FD transceiver breakout board as the capstone project',
-      'Developed PCB Version 1 and PCB Version 3 in chronological order',
+      'Soldered through-hole and SMD components onto boards, assembled PCBs and reviewed datasheets',
     ],
     images: [
       {
