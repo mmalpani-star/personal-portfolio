@@ -27,6 +27,11 @@ function Media({ entry }: { entry: StoryEntry }) {
       return (
         <div className={styles.triton}>
           <Reveal className={styles.block}>
+            <span className={styles.stepNo}>ARCC 2026 · Purdue</span>
+            <Figure src="/images/experience/triton-robotics-purdue-arcc.jpg" alt="Three Triton Robotics robots, numbered 1 and 3 visible, in front of the Purdue University arch" w={802} h={602} caption="Triton Robotics' three robots at Purdue University, where we went for the ARCC 2026 competition" sizes="(max-width: 900px) 92vw, 560px" className={styles.arcc} />
+          </Reveal>
+
+          <Reveal className={styles.block} delay={0.05}>
             <span className={styles.stepNo}>Capstone · CAN FD breakout board</span>
             <div className={styles.capstone}>
               <figure className={styles.figure}>
@@ -87,6 +92,7 @@ function Entry({ entry, index }: { entry: StoryEntry; index: number }) {
     <article className={styles.entry} aria-labelledby={`exp-${entry.id}`}>
       <header className={styles.rail}>
         <Reveal>
+          {entry.logo ? <Image src={entry.logo.src} alt={entry.logo.alt} width={entry.logo.width} height={entry.logo.height} className={styles.logo} /> : null}
           <span className={styles.no}>{pad(index + 1)}</span>
           {entry.dates ? (
             <span className={styles.dates}>

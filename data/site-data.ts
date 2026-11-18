@@ -726,7 +726,7 @@ export const currentlyBuilding: {
   description: string;
 } = {
   organization: 'Triton Robotics',
-  team: 'Electronics Sub-Team Recruit',
+  team: 'Electronics Member',
   location: 'UC San Diego',
   dates: 'Aug 2026 – Present',
   status: 'COMPLETED',
@@ -765,7 +765,7 @@ export const experience: Experience[] = [
     ],
   },
   {
-    title: 'Electronics Sub-Team Recruit',
+    title: 'Electronics Member',
     organization: 'Triton Robotics',
     location: 'UC San Diego',
     dates: 'Aug 2026 – Present',

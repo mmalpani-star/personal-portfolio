@@ -23,6 +23,8 @@
   .rail { position: sticky; top: calc(var(--nav-h) + 28px); }
 }
 
+.logo { width: auto; height: 56px; border-radius: var(--radius-md); margin-bottom: 6px; justify-self: start; }
+
 .no {
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
@@ -166,6 +168,9 @@
 .stepNo { font-family: var(--font-mono); font-size: var(--text-2xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
 
 /* Widths are in proportion to each picture's own shape (5:4 model, 498:792 layout), so both come out the same height. */
+.arcc { max-width: 560px; }
+.arcc .img { aspect-ratio: 4 / 3; object-fit: cover; }
+
 .capstone { display: grid; grid-template-columns: 1.25fr 0.63fr; gap: 16px; align-items: start; }
 .capstone > figure { min-width: 0; }
 .layout .img { aspect-ratio: 498 / 792; object-fit: contain; background: var(--surface-1); }

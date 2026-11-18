@@ -8,6 +8,8 @@ export type StoryLink = { label: string; href: string; internal?: boolean };
 export type StoryEntry = {
   id: 'triton' | 'sandhacks' | 'borderpulse' | 'starlabs' | 'iitk';
   title: string;
+  /** The organization's mark, shown above the title. */
+  logo?: { src: string; alt: string; width: number; height: number };
   organization: string;
   /** What the organization is, where the portfolio already says so. */
   descriptor?: string;
@@ -25,7 +27,8 @@ export type StoryEntry = {
 export const experienceStory: StoryEntry[] = [
   {
     id: 'triton',
-    title: 'Electronics Sub-Team Recruit',
+    title: 'Electronics Member',
+    logo: { src: '/images/experience/triton-robotics-logo.png', alt: 'Triton Robotics logo', width: 146, height: 120 },
     organization: 'Triton Robotics',
     descriptor: 'UC San Diego',
     dates: 'Aug 2026 – Present',
