@@ -7,7 +7,8 @@ type Status = 'idle' | 'loading' | 'ready' | 'failed';
 
 /**
  * The four printed parts from the SanD Hacks hardware (`/models/sandhacks/hardware.glb`, built by
- * `cad/sandhacks/build.py` from the supplied Parasolid files). They are laid out side by side, not assembled.
+ * `cad/sandhacks/build.py` from the supplied Parasolid files), in two poses: ASSEMBLED (inferred from hole alignment and
+ * the photo; the files carry no mates) and LAID OUT side by side (nothing inferred). The toggle slides between them.
  * Loaded only when it nears the viewport; drag to turn it. It turns slowly on its own unless motion is reduced.
  */
 export function HardwareViewer({ label, ratio = '1 / 1' }: { label: string; ratio?: string }) {
@@ -15,6 +16,14 @@ export function HardwareViewer({ label, ratio = '1 / 1' }: { label: string; rati
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [status, setStatus] = useState<Status>('idle');
   const [touched, setTouched] = useState(false);
+  const [mode, setMode] = useState<'assembled' | 'laid'>('assembled');
+  const modeRef = useRef<'assembled' | 'laid'>('assembled');
+  const wakeRef = useRef<() => void>(() => {});
+  const choose = (m: 'assembled' | 'laid') => {
+    modeRef.current = m;
+    setMode(m);
+    wakeRef.current();
+  };
 
   useEffect(() => {
     const host = hostRef.current;
@@ -58,10 +67,21 @@ export function HardwareViewer({ label, ratio = '1 / 1' }: { label: string; rati
           return;
         }
 
-        // Centre the laid-out parts and scale them so their bounding sphere has radius 1.
-        const box = new THREE.Box3().setFromObject(gltf.scene);
-        const centre = box.getCenter(new THREE.Vector3());
-        const radius = box.getSize(new THREE.Vector3()).length() / 2 || 1;
+        // Each part carries both placements (written by build.py); the viewer blends between them.
+        type Place = { t: [number, number, number]; q: [number, number, number, number] };
+        const pieces = gltf.scene.children.filter((c) => c.userData?.assembled && c.userData?.laid);
+        const place = (which: 'assembled' | 'laid') => pieces.forEach((c) => {
+          const pl = c.userData[which] as Place;
+          c.position.set(...pl.t);
+          c.quaternion.set(...pl.q);
+        });
+        const union = new THREE.Box3();
+        // Framed on the assembled pose (the longer one); the laid-out pose is smaller and fits inside it.
+        place('assembled');
+        gltf.scene.updateMatrixWorld(true);
+        union.union(new THREE.Box3().setFromObject(gltf.scene));
+        const centre = union.getCenter(new THREE.Vector3());
+        const radius = union.getSize(new THREE.Vector3()).length() / 2 || 1;
         // A soft shadow under the parts so the pale ones read against the page.
         const sc = document.createElement('canvas');
         sc.width = sc.height = 128;
@@ -74,17 +94,36 @@ export function HardwareViewer({ label, ratio = '1 / 1' }: { label: string; rati
         sg.fillRect(0, 0, 128, 128);
         const shadowTex = new THREE.CanvasTexture(sc);
         const shadow = new THREE.Mesh(
-          new THREE.PlaneGeometry(radius * 2.4, radius * 2.4),
+          new THREE.PlaneGeometry(radius * 2.2, radius * 2.2),
           new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }),
         );
         shadow.rotation.x = -Math.PI / 2;
-        shadow.position.set(centre.x, box.min.y - 0.002, centre.z);
-        gltf.scene.add(shadow);
-        gltf.scene.position.sub(centre);
+        shadow.position.set(0, union.min.y - 0.002, 0);
+        const world = new THREE.Group();
+        world.add(gltf.scene);
+        world.add(shadow);
+        world.position.sub(centre);
         const pivot = new THREE.Group();
-        pivot.add(gltf.scene);
+        pivot.add(world);
         pivot.scale.setScalar(1 / radius);
         scene.add(pivot);
+
+        // blend: 1 = assembled, 0 = laid out
+        const qa = new THREE.Quaternion();
+        const qb = new THREE.Quaternion();
+        let blend = modeRef.current === 'assembled' ? 1 : 0;
+        const applyBlend = () => {
+          const e = blend * blend * (3 - 2 * blend);
+          pieces.forEach((c) => {
+            const a = c.userData.assembled as Place;
+            const l = c.userData.laid as Place;
+            c.position.set(l.t[0] + (a.t[0] - l.t[0]) * e, l.t[1] + (a.t[1] - l.t[1]) * e, l.t[2] + (a.t[2] - l.t[2]) * e);
+            qa.set(...l.q);
+            qb.set(...a.q);
+            c.quaternion.copy(qa.slerp(qb, e));
+          });
+        };
+        applyBlend();
 
         let yaw = -0.4;
         let pitch = 0.95;
@@ -102,7 +141,7 @@ export function HardwareViewer({ label, ratio = '1 / 1' }: { label: string; rati
           renderer.setSize(w, h, false);
           camera.aspect = w / h;
           const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-          camera.position.set(0, 0, Math.max(1.28 / tan, 1.28 / (tan * camera.aspect)));
+          camera.position.set(0, 0, Math.max(1.05 / tan, 1.05 / (tan * camera.aspect)));
           camera.updateProjectionMatrix();
         };
         const ro = new ResizeObserver(resize);
@@ -117,10 +156,16 @@ export function HardwareViewer({ label, ratio = '1 / 1' }: { label: string; rati
             vel *= Math.exp(-dt * 3);
             yaw += vel * dt + (reduced ? 0 : 0.2 * dt);
           }
+          const goal = modeRef.current === 'assembled' ? 1 : 0;
+          const moving = Math.abs(goal - blend) > 0.002;
+          if (moving) {
+            blend += Math.sign(goal - blend) * Math.min(Math.abs(goal - blend), dt * (reduced ? 20 : 1.4));
+            applyBlend();
+          }
           pivot.rotation.set(pitch, yaw, 0, 'XYZ');
           renderer.render(scene, camera);
           if (visible && !reduced) raf = requestAnimationFrame(frame);
-          else if (visible && (dragging || Math.abs(vel) > 0.01)) raf = requestAnimationFrame(frame);
+          else if (visible && (dragging || moving || Math.abs(vel) > 0.01)) raf = requestAnimationFrame(frame);
         };
         const wake = () => {
           if (!raf) {
@@ -128,6 +173,7 @@ export function HardwareViewer({ label, ratio = '1 / 1' }: { label: string; rati
             raf = requestAnimationFrame(frame);
           }
         };
+        wakeRef.current = wake;
         const down = (e: PointerEvent) => {
           dragging = true;
           lastX = e.clientX;
@@ -202,6 +248,16 @@ export function HardwareViewer({ label, ratio = '1 / 1' }: { label: string; rati
       {status === 'loading' ? <span className={styles.note}>Loading the 3D model…</span> : null}
       {status === 'failed' ? <span className={styles.note}>The 3D model could not be loaded.</span> : null}
       {status === 'ready' && !touched ? <span className={styles.hint}>Drag to rotate</span> : null}
+      {status === 'ready' ? (
+        <div className={styles.modes} role="group" aria-label="Pose">
+          <button type="button" aria-pressed={mode === 'assembled'} onClick={() => choose('assembled')}>
+            Assembled
+          </button>
+          <button type="button" aria-pressed={mode === 'laid'} onClick={() => choose('laid')}>
+            Laid out
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

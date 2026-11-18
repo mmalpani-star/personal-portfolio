@@ -81,7 +81,7 @@ function Media({ entry }: { entry: StoryEntry }) {
               <figure className={styles.figure}>
                 <HardwareViewer label="3D model of the four printed parts of the chair attachment, laid out side by side. Drag to rotate." />
                 <figcaption className={styles.caption}>
-                  The four printed parts, from the CAD files: arm root, arm tip, upper jaw and phone cradle. Laid out, not assembled. Drag to turn them.
+                  The four printed parts from the CAD files, assembled on the lower jaw with the pivot and clamp screws. The lower jaw and the screws are modelled from my description; the assembly is worked out from the holes. Drag to turn it, or lay the parts out.
                 </figcaption>
               </figure>
             </div>

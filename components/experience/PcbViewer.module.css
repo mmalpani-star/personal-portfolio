@@ -28,3 +28,18 @@
   pointer-events: none;
 }
 .note { top: 50%; bottom: auto; transform: translate(-50%, -50%); }
+
+/* Pose toggle for the SanD Hacks parts viewer */
+.modes { position: absolute; left: 10px; top: 10px; display: flex; gap: 4px; }
+.modes button {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--text);
+  font: 500 12px / 1 var(--font-sans);
+  cursor: pointer;
+}
+.modes button[aria-pressed='true'] { background: var(--accent); border-color: var(--ink); color: var(--ink); }
+.modes button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }

@@ -486,18 +486,20 @@ Earth in the scene: Solar System Scope maps (CC BY 4.0), resized by `earth_textu
 
 ---
 
-## SanD Hacks hardware (laid out, not assembled)
+## SanD Hacks hardware (assembled from the owner's description)
 
 `3d models/san d hacks /` holds four printed parts (arm root, arm tip, upper jaw, phone cradle) as Parasolid
 **mesh** exports from Onshape (`*.xmm_txt`). They are triangle meshes, not B-reps, and are read by
-`cad/sandhacks/psm_mesh.py` (the format notes are in its docstring; every part reads back as a closed manifold).
+`cad/sandhacks/psm_mesh.py` (format notes in its docstring; every part reads back as a closed manifold).
 `cad/sandhacks/build.py` writes `public/models/sandhacks/hardware.glb` (standard library only).
 
-* **ORIGINAL** every triangle, the part colours (the files' own colour attribute), the dimensions (arm root 195 x 16 x 20 mm,
-  arm tip 190 x 16 x 20, upper jaw 190.5 x 68.8 x 22, phone cradle 156 x 89.4 x 35; the OBJ-style unit is metres in the file).
-* **LAID OUT** side by side, long axes along X, resting flat. This is **not** an assembly: the files carry no mates.
-  What the geometry does show: the arm root has two 12 mm holes 142 mm apart; the arm tip has three 12 mm holes at 25 mm
-  pitch; the upper jaw has a block with two 5.6 mm holes (10 mm counterbore) also at 25 mm pitch and two 6.8 mm holes
-  170 mm apart. The matching 25 mm pitch suggests the jaw block bolts to the arm tip, but nothing else is determined, so
-  nothing was assembled.
-* **NOT MODELLED** servos, bearings, screws, the phone: none were supplied.
+* **ORIGINAL** every triangle of the four parts, their colours (the files' own colour attribute) and sizes (arm root 195 x 16 x 20 mm,
+  arm tip 190 x 16 x 20, upper jaw 190.5 x 68.8 x 22, phone cradle 156 x 89.4 x 35).
+* **ASSEMBLED** following the owner's description: lower jaw, upper jaw, arm root, arm tip, phone cradle, bottom to top, no servos,
+  screws between the parts. Hole alignment gives the positions (root's end hole over the jaw block's near hole; tip's first hole
+  over the root's far hole, both 12 mm; the cradle's clamp block between the tip's 2nd and 3rd holes, 25 mm apart). The arm
+  is shown straight, as in the photo. **ASSUMED**: the stacking heights, the straight pose, where along the arm's width the
+  cradle block sits (taken from its top view).
+* **MODELLED** (not in the files): the lower jaw, a cuboid sized to the upper jaw's footprint and 22 mm thick (ASSUMED, its two
+  holes are hidden by the screws) and the cap screws (generic, sizes taken from the holes). Marked `modelled` in the GLB.
+* The GLB holds both an assembled and a laid-out placement per part; the viewer slides between them.
