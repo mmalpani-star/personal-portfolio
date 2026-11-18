@@ -284,9 +284,9 @@ export function QuadrupedShowcase({ project, index, total }: { project: Project 
       src="/models/quadruped.glb"
       loadManifest={() => import('@/data/models/quadruped.manifest.json').then((m) => m.default)}
       facing={Math.PI}
-      framing={{ distance: 1.78, target: 0.38 }}
+      framing={{ distance: 1.95, target: 0.4 }}
       label="3D model of the quadruped, walking. Turn on Rotate & zoom to inspect it."
-      note="Assembled in CAD from the original printed-part files, joint by joint from their holes. The crawl gait is solved with inverse kinematics and checked for static stability; the physical robot is still being brought up."
+      note="Assembled in CAD from the original printed-part files, joint by joint from their holes. The trot and the jump are animations solved with inverse kinematics and checked for reach, joint range and collisions; they are not simulation results (the MuJoCo twin used a statically stable crawl and reports about 11 cm for its jump, the height drawn here). The physical robot is still being brought up."
     />
   );
 }

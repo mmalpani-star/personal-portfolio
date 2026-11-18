@@ -447,7 +447,7 @@ def crawl(specs, feet, q_stance):
     for f in range(N + 1):
         t = f / N
         y = body_sway(t)
-        row = {"_t": t, "_body": np.array([GAIT["step"] * t, y, 0.0]), "_down": []}
+        row = {"_t": t, "_body": np.array([GAIT["step"] * t, y, 0.0]), "_offset": np.array([0.0, y, 0.0]), "_down": []}
         for s in specs:
             n = s["name"]
             down, fx, fz = foot_phase(t, GAIT["order"].index(n))
@@ -549,7 +549,8 @@ PARENT_OF_PART = {"coxa": "coxa", "shold_coxa": "coxa", "femur_servo": "coxa",
                   "femur": "femur", "tibia": "knee", "shold_tibia": "knee", "knee_servo": "knee"}
 
 
-def export_glb(specs, q_st, frames, M):
+def export_glb(specs, q_st, clips, M):
+    """`clips` = [(name, frames, period_s), ...]; each frame holds the joint angles, `_body` offset (CAD mm)."""
     import pygltflib as G
     sc = trimesh.Scene()
     conv = np.eye(4); conv[:3, :3] = [[1, 0, 0], [0, 0, 1], [0, -1, 0]]
@@ -598,34 +599,36 @@ def export_glb(specs, q_st, frames, M):
                                       max=arr.max(0).tolist() if typ == G.SCALAR else None))
         return len(g.accessors) - 1
 
-    times = acc(np.linspace(0, GAIT["period"], len(frames)).reshape(-1, 1), G.SCALAR)
-    anim = G.Animation(name="crawl", samplers=[], channels=[])
-    worlds = [node_worlds(specs, {n: fr[n] for n in q_st}, fr["_body"] * np.array([0, 1, 0])) for fr in frames]
-    animated = ["trunk"] + [f"leg_{s['name']}{suf}" for s in specs for suf in ("_coxa", "_femur", "_knee")]
     parent = {"trunk": "quadruped"}
     for s in specs:
         L = f"leg_{s['name']}"
         parent.update({f"{L}_coxa": L, f"{L}_femur": f"{L}_coxa", f"{L}_knee": f"{L}_femur"})
-    for name in animated:
-        i = idx[name]
-        locs = []
-        for w in worlds:
-            P = np.eye(4) if parent[name] == "quadruped" else w[parent[name]]
-            locs.append(np.linalg.inv(P) @ w[name])
-        tr0, q0 = trs(np.linalg.inv(np.eye(4) if parent[name] == "quadruped" else rest[parent[name]]) @ rest[name])
-        n = g.nodes[i]; n.matrix = None; n.translation = tr0; n.rotation = q0
-        if name == "trunk":
-            out = acc(np.array([L_[:3, 3] for L_ in locs]), G.VEC3); path_ = "translation"
-        else:
-            qs = np.array([trs(L_)[1] for L_ in locs])
-            for k in range(1, len(qs)):
-                if np.dot(qs[k], qs[k - 1]) < 0:
-                    qs[k] *= -1
-            out = acc(qs, G.VEC4); path_ = "rotation"
-        anim.samplers.append(G.AnimationSampler(input=times, output=out, interpolation="LINEAR"))
-        anim.channels.append(G.AnimationChannel(sampler=len(anim.samplers) - 1,
-                                                target=G.AnimationChannelTarget(node=i, path=path_)))
-    g.animations = [anim]
+    animated = ["trunk"] + [f"leg_{s['name']}{suf}" for s in specs for suf in ("_coxa", "_femur", "_knee")]
+    g.animations = []
+    for clip_name, frames, period in clips:
+        times = acc(np.linspace(0, period, len(frames)).reshape(-1, 1), G.SCALAR)
+        anim = G.Animation(name=clip_name, samplers=[], channels=[])
+        worlds = [node_worlds(specs, {n: fr[n] for n in q_st}, np.asarray(fr["_offset"], dtype=float)) for fr in frames]
+        for name in animated:
+            i = idx[name]
+            locs = []
+            for w in worlds:
+                P = np.eye(4) if parent[name] == "quadruped" else w[parent[name]]
+                locs.append(np.linalg.inv(P) @ w[name])
+            tr0, q0 = trs(np.linalg.inv(np.eye(4) if parent[name] == "quadruped" else rest[parent[name]]) @ rest[name])
+            n = g.nodes[i]; n.matrix = None; n.translation = tr0; n.rotation = q0
+            if name == "trunk":
+                out = acc(np.array([L_[:3, 3] for L_ in locs]), G.VEC3); path_ = "translation"
+            else:
+                qs = np.array([trs(L_)[1] for L_ in locs])
+                for k in range(1, len(qs)):
+                    if np.dot(qs[k], qs[k - 1]) < 0:
+                        qs[k] *= -1
+                out = acc(qs, G.VEC4); path_ = "rotation"
+            anim.samplers.append(G.AnimationSampler(input=times, output=out, interpolation="LINEAR"))
+            anim.channels.append(G.AnimationChannel(sampler=len(anim.samplers) - 1,
+                                                    target=G.AnimationChannelTarget(node=i, path=path_)))
+        g.animations.append(anim)
     g.buffers[0].byteLength = len(blob)
     g.set_binary_blob(bytes(blob))
     g.save_binary(path)
@@ -744,7 +747,7 @@ def main():
     with open(os.path.join(OUT, "validation.json"), "w") as f:
         json.dump(report, f, indent=2, default=lambda o: o.tolist() if hasattr(o, "tolist") else str(o))
 
-    glb = export_glb(specs, q_st, frames, M)
+    glb = export_glb(specs, q_st, [("crawl", frames, GAIT["period"])], M)
     export_cad(specs, q_st, M)
     manifest = dict(
         units="metres, Y up (CAD: mm, Z up, +X forward)", forward="+X in CAD = +X in the GLB",

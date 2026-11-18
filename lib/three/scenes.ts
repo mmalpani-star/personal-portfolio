@@ -167,6 +167,8 @@ export function loop(tick: (dt: number) => boolean | void) {
 // --------------------------------------------------------------------------
 export type WalkerManifest = {
   animation: { name: string; period_s: number; body_advance_per_cycle_m: number };
+  /** An optional in-place jump clip, played now and then between walking cycles. */
+  jump?: { name: string; period_s: number; apex_mm?: number };
 };
 /** @deprecated kept for existing imports */
 export type HexapodManifest = WalkerManifest;
@@ -220,6 +222,17 @@ export async function createWalkerStage(
   const clip = gltf.animations.find((a) => a.name === manifest.animation.name) ?? gltf.animations[0];
   const action = clip ? mixer.clipAction(clip) : null;
   action?.play();
+  const jumpClip = opts.continuous && manifest.jump ? gltf.animations.find((a) => a.name === manifest.jump!.name) : undefined;
+  const jumpAction = jumpClip ? mixer.clipAction(jumpClip) : null;
+  if (jumpAction) {
+    jumpAction.weight = 0;
+    jumpAction.play();
+  }
+  // Rest height of the trunk in the world, to tell how far a jump has lifted the body
+  const trunkNode = gltf.scene.getObjectByName('trunk');
+  const tmpV = new THREE.Vector3();
+  gltf.scene.updateMatrixWorld(true);
+  const trunkRestY = trunkNode ? trunkNode.getWorldPosition(tmpV).y : 0;
 
   const span = Math.max(size.x, size.z);
   const target = new THREE.Vector3(0, size.y * framing.target, 0);
@@ -250,6 +263,28 @@ export async function createWalkerStage(
   // Continuous walking: the robot stays in frame; ground marks slide under it at the body's speed.
   const continuous = Boolean(opts.continuous);
   let clock = 0;
+  let groundPos = 0;                 // how far the ground has slid under the robot (scene units)
+  let lift = 0;                      // how high the jump has raised the body, as a fraction of the robot's height
+  // One cycle: walk for three strides, then a jump, with 0.3 s crossfades each way.
+  const FADE = 0.3;
+  const walkDur = period * 3;
+  const jumpDur = manifest.jump?.period_s ?? 0;
+  const cycleLen = jumpAction ? walkDur - FADE + jumpDur : walkDur;
+  const smooth01 = (x: number) => {
+    const c = Math.min(1, Math.max(0, x));
+    return c * c * (3 - 2 * c);
+  };
+  /** Where the cycle is at `clock`: walking time, jump time and how much of the jump is blended in. */
+  const phaseAt = (t: number) => {
+    if (!jumpAction) return { walkT: t, jumpT: 0, mix: 0 };
+    const u = t % cycleLen;
+    const j0 = walkDur - FADE;
+    if (u < j0) return { walkT: u + FADE, jumpT: 0, mix: 0 };
+    const jt = u - j0;
+    const mix = Math.min(smooth01(jt / FADE), smooth01((jumpDur - jt) / FADE));
+    const walkT = jt < jumpDur - FADE ? u + FADE : jt - (jumpDur - FADE);   // walking restarts from its first step
+    return { walkT, jumpT: jt, mix };
+  };
   const marks: { mesh: THREE.Mesh; mat: THREE.MeshBasicMaterial }[] = [];
   const markGap = span * 0.4;
   const markCount = 22;
@@ -266,26 +301,46 @@ export async function createWalkerStage(
     }
   }
 
-  const applyContinuous = () => {
+  const applyContinuous = (dt: number) => {
     robot.position.x = 0;
     shadow.position.x = 0;
+    const ph = phaseAt(clock);
     if (action) {
-      action.time = reducedMotion ? 0 : clock % period;
-      action.weight = reducedMotion ? 0 : 1;
-      mixer.update(0);
+      action.time = reducedMotion ? 0 : ph.walkT % period;
+      action.weight = reducedMotion ? 0 : 1 - ph.mix;
     }
+    if (jumpAction) {
+      jumpAction.time = Math.min(Math.max(ph.jumpT, 0), jumpDur - 1e-3);
+      jumpAction.weight = reducedMotion ? 0 : ph.mix;
+    }
+    mixer.update(0);
     gltf.scene.rotation.y = facing;
-    const speed = perCycle / period;
+    // The ground slides at the walk's speed, easing to a stop for the jump (the jump is in place).
+    groundPos += (perCycle / period) * (1 - ph.mix) * dt;
+    if (trunkNode && jumpAction) {
+      gltf.scene.updateMatrixWorld(true);
+      lift = Math.max(0, (trunkNode.getWorldPosition(tmpV).y - trunkRestY) / size.y);
+      const k = 1 - Math.min(0.45, lift * 0.55);
+      shadow.scale.set(size.x * 1.25 * k, size.z * 1.25 * k, 1);
+      (shadow.material as THREE.MeshBasicMaterial).opacity = 1 - Math.min(0.5, lift * 0.7);
+      // the camera rises with the body (about half as far) so the top of the jump stays in frame
+      if (!controls.enabled) {
+        const rise = lift * size.y * 0.6;
+        camera.position.copy(home);
+        camera.position.y += rise;
+        camera.lookAt(target.x, target.y + rise, target.z);
+      }
+    }
     marks.forEach(({ mesh, mat }, i) => {
-      const x = ((((i * markGap + clock * speed) % markSpan) + markSpan) % markSpan) - markSpan / 2;
+      const x = ((((i * markGap + groundPos) % markSpan) + markSpan) % markSpan) - markSpan / 2;
       mesh.position.x = x;
       mat.opacity = reducedMotion ? 0 : 0.2 * (1 - smooth(clamp(Math.abs(x) / (markSpan / 2))));
     });
   };
 
-  const apply = () => {
+  const apply = (dt = 0) => {
     if (continuous) {
-      applyContinuous();
+      applyContinuous(dt);
       return;
     }
     const walk = smooth(clamp(shown / 0.64));          // reaches the centre at 64% of the scroll
@@ -309,8 +364,9 @@ export async function createWalkerStage(
   const run = loop((dt) => {
     if (continuous) {
       if (!reducedMotion) clock += dt;
-      canvas.dataset.gaitClock = clock.toFixed(3); // seconds walked, for tests
-      apply();
+      canvas.dataset.gaitClock = clock.toFixed(3); // seconds elapsed, for tests
+      apply(reducedMotion ? 0 : dt);
+      if (jumpAction) canvas.dataset.gaitMix = phaseAt(clock).mix.toFixed(2);
       if (controls.enabled) controls.update();
       renderer.render(scene, camera);
       opts.onFrame?.();

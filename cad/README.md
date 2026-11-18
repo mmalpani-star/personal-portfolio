@@ -486,6 +486,23 @@ Earth in the scene: Solar System Scope maps (CC BY 4.0), resized by `earth_textu
 
 ---
 
+## Quadruped: trot and jump (`cad/quadruped/gait2.py`)
+
+The original clip is a lateral-sequence **crawl** (3.6 s per cycle, 40 mm steps, a 26 mm sideways lurch): the safest gait on a
+statically stable robot, but it reads on screen as a slow shuffle. `gait2.py` adds two clips to the same GLB, solved with the same
+IK, and keeps the crawl:
+
+* **trot**: diagonal pairs swing together, 0.9 s per cycle, 100 mm per cycle, swing feet on a velocity-matched Hermite path and a
+  sin^2 lift (no snap at lift-off or touch-down), 2.5 mm body bob, no sideways sway, planted feet do not slip.
+* **jump**: in place; crouch 44 mm, push, a parabolic flight under 1 g, feet tucked, landing, recovery. Apex 110 mm above standing, the figure the project's MuJoCo twin reports.
+* Checked per frame: IK residual (0.00 mm), every joint inside the free range found in `validation.json`, part-to-part collisions on a
+  sample of frames (none). Written to `export/gait2_validation.json`.
+* **Not checked**: dynamics. A trot is not statically stable (the crawl's 13.7 mm margin does not apply), and the jump height is a design
+  value for the animation, not computed from the servos' torque or the real robot's mass.
+* The site plays three trot strides, then the jump, in a loop (`lib/three/scenes.ts`), the ground slowing to a stop for the jump.
+
+---
+
 ## SanD Hacks hardware (assembled from the owner's description)
 
 `3d models/san d hacks /` holds four printed parts (arm root, arm tip, upper jaw, phone cradle) as Parasolid

@@ -2,10 +2,10 @@
   "units": "metres, Y up (CAD: mm, Z up, +X forward)",
   "forward": "+X in CAD = +X in the GLB",
   "animation": {
-    "name": "crawl",
-    "period_s": 3.6,
-    "body_advance_per_cycle_m": 0.04,
-    "note": "Move the root by body_advance_per_cycle_m per clip loop and planted feet do not slip. The clip moves the trunk sideways (sway) itself."
+    "name": "trot",
+    "period_s": 0.9,
+    "body_advance_per_cycle_m": 0.1,
+    "note": "Move the root by body_advance_per_cycle_m per clip loop and planted feet do not slip. The clip bobs the trunk a few millimetres; no sideways sway."
   },
   "gait": {
     "foot_radius": 125.0,
@@ -41,5 +41,44 @@
       "name": "rear_right",
       "mirrored": true
     }
-  ]
+  ],
+  "jump": {
+    "name": "jump",
+    "period_s": 2.0,
+    "apex_mm": 110.0,
+    "in_place": true,
+    "note": "In place. The body height follows a parabola under 1 g between lift-off and touch-down."
+  },
+  "crawl": {
+    "name": "crawl",
+    "period_s": 3.6,
+    "body_advance_per_cycle_m": 0.04
+  },
+  "gait_trot": {
+    "period": 0.9,
+    "stride": 100.0,
+    "swing": 0.44,
+    "lift": 28.0,
+    "bob": 2.5,
+    "frames": 120,
+    "pairs": [
+      [
+        "front_left",
+        "rear_right"
+      ],
+      [
+        "front_right",
+        "rear_left"
+      ]
+    ]
+  },
+  "gait_jump": {
+    "period": 2.0,
+    "crouch": 44.0,
+    "push_top": 38.0,
+    "apex": 110.0,
+    "tuck": 62.0,
+    "settle": 34.0,
+    "frames": 200
+  }
 }
