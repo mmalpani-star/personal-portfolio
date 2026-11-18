@@ -817,6 +817,7 @@ export function createHangerRack(options: RackOptions): RackHandle {
   };
 
   /* ---------- media ---------- */
+  const mediaFrames: Record<string, number> = {};
   const abort = new AbortController();
   const winPxW = coarse ? 384 : 512;
   const winPxH = Math.round(winPxW / WIN_ASPECT);
@@ -844,11 +845,18 @@ export function createHangerRack(options: RackOptions): RackHandle {
           outW: winPxW,
           outH: winPxH,
           focus: media.focus,
+          fit: media.fit,
+          stillW: coarse ? 768 : 1024,
           firstFrameOnly: reduced,
           signal: abort.signal,
         });
         if (disposed) return;
         rig.frames = decoded.frames.map(newCanvasTexture);
+        // Readable by tests and tooling: how many frames each tag's picture really has (1 = a still).
+        mediaFrames[tag.id] = rig.frames.length;
+        canvas.dataset.media = Object.keys(mediaFrames)
+          .map((id) => `${id}:${mediaFrames[id]}`)
+          .join(' ');
         rig.delays = decoded.delays;
         rig.duration = decoded.duration;
         rig.frameIndex = 0;

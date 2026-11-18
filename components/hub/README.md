@@ -34,5 +34,6 @@ exactly where it was. When hidden its render loop is at 0 calls per second.
   hangers; this one has four by design, on a smaller ring so four tags still read as a rack.
 - Motion that is not in the reference and was added deliberately: the swivel toward the viewer on
   hover/focus/select, and the camera dolly into a chosen tag.
-- Tag pictures are the site owner's own files (`arc-reactor.webp`, the 555 circuit video with `lm555.jpg` as its
-  poster, `luffy.webp`, `tony-stark.gif`).
+- Tag pictures are the site owner's own files (`arc-reactor.webp`, `san d hacks.gif`, `luffy.webp`,
+  `tony-stark.gif`). `san d hacks.gif` has a single frame, so the Experience tag shows a still photo (whole, with
+  `fit: 'contain'`); the other three animate. The tag code still supports a video + poster media kind, currently unused.

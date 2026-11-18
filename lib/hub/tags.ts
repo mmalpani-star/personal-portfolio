@@ -11,6 +11,8 @@ export type HubMedia =
       alt: string;
       /** Crop focus inside the window when aspect ratios differ (0 = start edge, 1 = end edge). */
       focus: [number, number];
+      /** `contain` shows the whole picture at its own aspect ratio instead of cropping it to the window. */
+      fit?: 'cover' | 'contain';
     }
   | {
       kind: 'video';
@@ -54,12 +56,13 @@ export const HUB_TAGS: HubTag[] = [
     href: '/#experience',
     focusSelector: '#experience-title',
     media: {
-      kind: 'video',
-      src: '/videos/experience/lm555 demo.mp4',
-      poster: '/images/experience/lm555.jpg',
-      alt: 'An LM555 timer circuit on a perfboard, blinking an LED',
+      kind: 'animated',
+      // The existing San Diego Hacks file, used as-is. It is a single-frame image (verified with the
+      // browser's own decoder), so it is shown as a still, whole and undistorted.
+      src: '/images/about/san d hacks.gif',
+      alt: 'The San Diego Hacks team photo',
       focus: [0.5, 0.5],
-      posterFocus: [0.5, 0.6],
+      fit: 'contain',
     },
   },
   {

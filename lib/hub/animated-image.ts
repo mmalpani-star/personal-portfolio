@@ -25,6 +25,10 @@ export type DecodeOptions = {
   outH: number;
   /** Where the crop sits when the source aspect differs: 0 = start edge, 1 = end edge. */
   focus: [number, number];
+  /** `cover` (default) fills the window and crops the overflow; `contain` shows the whole picture with bars. */
+  fit?: 'cover' | 'contain';
+  /** Output width to use when the file turns out to have a single frame (a still), where a bigger texture is cheap. */
+  stillW?: number;
   /** Decode only the first frame (reduced motion). */
   firstFrameOnly?: boolean;
   signal?: AbortSignal;
@@ -311,16 +315,33 @@ export async function decodeAnimated(url: string, options: DecodeOptions): Promi
   snapshot.height = height;
   const snapCtx = snapshot.getContext('2d')!;
 
-  // Cover-crop box inside the source.
+  // A single frame is a still: one bigger texture costs the same as one frame of a clip.
   const aspect = options.outW / options.outH;
+  const outW = patches.length === 1 && options.stillW ? options.stillW : options.outW;
+  const outH = Math.round(outW / aspect);
+  const contain = options.fit === 'contain';
+
+  // Cover: the crop box inside the source. Contain: where the whole picture lands inside the output.
   let sw = width;
   let sh = width / aspect;
   if (sh > height) {
     sh = height;
     sw = height * aspect;
   }
-  const sx = (width - sw) * options.focus[0];
-  const sy = (height - sh) * options.focus[1];
+  const sx = contain ? 0 : (width - sw) * options.focus[0];
+  const sy = contain ? 0 : (height - sh) * options.focus[1];
+  const srcAspect = width / height;
+  let dw = outW;
+  let dh = outH;
+  if (contain) {
+    dh = outW / srcAspect;
+    if (dh > outH) {
+      dh = outH;
+      dw = outH * srcAspect;
+    }
+  }
+  const dx = contain ? (outW - dw) / 2 : 0;
+  const dy = contain ? (outH - dh) / 2 : 0;
 
   const frames: HTMLCanvasElement[] = [];
   const delays: number[] = [];
@@ -353,13 +374,14 @@ export async function decodeAnimated(url: string, options: DecodeOptions): Promi
     }
 
     const out = document.createElement('canvas');
-    out.width = options.outW;
-    out.height = options.outH;
+    out.width = outW;
+    out.height = outH;
     const octx = out.getContext('2d')!;
     octx.fillStyle = '#0d0d0d';
     octx.fillRect(0, 0, out.width, out.height);
     octx.imageSmoothingQuality = 'high';
-    octx.drawImage(work, sx, sy, sw, sh, 0, 0, out.width, out.height);
+    if (contain) octx.drawImage(work, 0, 0, width, height, dx, dy, dw, dh);
+    else octx.drawImage(work, sx, sy, sw, sh, 0, 0, out.width, out.height);
     frames.push(out);
     delays.push(patch.delay);
 
