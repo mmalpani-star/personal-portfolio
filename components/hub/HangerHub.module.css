@@ -1,0 +1,343 @@
+/* The hanger is a full-screen layer over the page. `html[data-hub]` (set before first paint by an
+   inline script, then by HangerHub) says whether it is showing, so the page never flashes. */
+
+.hub {
+  position: fixed;
+  inset: 0;
+  z-index: 110; /* above the nav (50) and lightbox (80), below the About intro (120) */
+  overflow: hidden;
+  outline: none;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  overscroll-behavior: none;
+  background: radial-gradient(ellipse 70% 58% at 50% 40%, #fffffd 0%, #fbfaf6 52%, #f2f0ea 100%);
+  transition: opacity 0.5s var(--ease-out), visibility 0s linear 0.5s;
+}
+
+/* the same engineering grid as the rest of the site, quieter */
+.hub::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center top;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 38%, #000 8%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 38%, #000 8%, transparent 72%);
+}
+
+:global(html[data-hub='open']) .hub {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.5s var(--ease-out), visibility 0s;
+}
+
+:global(html[data-hub='leaving']) .hub {
+  visibility: visible;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out) 0.08s, visibility 0s linear 0.6s;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  touch-action: none; /* the hanger is a fixed screen: a finger turns the rack, it never scrolls */
+  cursor: grab;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.7s ease;
+}
+.hub[data-ready='true'] .canvas { opacity: 1; }
+.canvas[data-dragging='true'] { cursor: grabbing; }
+.hub[data-state='selecting'] .canvas { cursor: default; }
+
+/* ---------------------------------------------------------------- chrome */
+
+.brand {
+  position: absolute;
+  top: 16px;
+  left: var(--gutter);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  pointer-events: none;
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.pause {
+  position: absolute;
+  top: 16px;
+  right: var(--gutter);
+  height: 48px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--dur-fast) ease;
+}
+.pause:hover { color: var(--text); }
+.pause:focus-visible,
+.step:focus-visible,
+.open:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* The links are visually hidden but real: Tab walks them and the rack turns to each in turn. */
+.links {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+
+.link:focus-visible {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  z-index: 3;
+  width: max-content;
+  padding: 10px 16px;
+  transform: translateX(-50%);
+  border-radius: var(--radius-md);
+  background: var(--ink);
+  color: var(--on-dark);
+  font-size: var(--text-sm);
+  outline: 3px solid var(--yellow);
+}
+
+/* ---------------------------------------------------------------- caption dock */
+
+.dock {
+  position: absolute;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 46px);
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: clamp(8px, 3vw, 24px);
+  width: min(640px, calc(100% - 2 * var(--gutter)));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.dock > * { pointer-events: auto; }
+
+.caption {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 3.4vw, 2.375rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: var(--tracking-display);
+}
+
+.blurb {
+  max-width: 42ch;
+  min-height: 2.9em;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 6px;
+  padding: 0 18px;
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) ease;
+}
+.open:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -14px var(--accent-glow); }
+.open:disabled { opacity: 0.5; cursor: default; }
+
+.step {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.step:hover:not(:disabled) { background: var(--ink); color: var(--on-dark); }
+.step:disabled { opacity: 0.4; cursor: default; }
+
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  margin: 0;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  transition: opacity 0.6s ease;
+}
+/* once a tag is chosen the caption gets out of its way */
+.dock,
+.hint { transition: opacity 0.3s ease; }
+.hub[data-state='selecting'] .dock,
+.hub[data-state='selecting'] .hint { opacity: 0; pointer-events: none; }
+.hint[data-hidden='true'] { opacity: 0; }
+.hintTouch { display: none; }
+@media (pointer: coarse), (max-width: 600px) {
+  .hintFine { display: none; }
+  .hintTouch { display: inline; }
+}
+
+.tip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  background: var(--ink);
+  color: var(--on-dark);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.tipArrow { color: var(--yellow); }
+
+/* ---------------------------------------------------------------- no WebGL */
+
+.fallback {
+  pointer-events: none; /* decoration only: the real links sit underneath and take the click */
+  position: absolute;
+  inset: 88px var(--gutter) 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  align-content: center;
+}
+.fallbackTag {
+  display: grid;
+  min-height: 180px;
+  padding: 18px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--paper);
+  align-content: end;
+}
+.fallbackLabel {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: var(--tracking-display);
+}
+.hub[data-gl='off'] .links {
+  position: absolute;
+  inset: 88px var(--gutter) 40px;
+  width: auto;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  align-content: center; /* line up exactly with the decorative cards */
+  overflow: visible;
+}
+.hub[data-gl='off'] .link {
+  display: block;
+  min-height: 180px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .brandName { font-size: 14px; }
+  .blurb { min-height: 0; max-width: 30ch; }
+}
+
+@media (max-height: 640px) {
+  .blurb { display: none; }
+  .dock { bottom: calc(env(safe-area-inset-bottom, 0px) + 40px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hub,
+  :global(html[data-hub='open']) .hub,
+  :global(html[data-hub='leaving']) .hub { transition-duration: 0.15s, 0s; }
+  .canvas { transition: none; }
+  .open:hover { transform: none; }
+}

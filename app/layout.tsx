@@ -2,6 +2,8 @@ import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google';
 import { PointerFX } from '@/components/effects/PointerFX';
+import { BackToHanger } from '@/components/hub/BackToHanger';
+import { HangerHub } from '@/components/hub/HangerHub';
 import { Footer, Navbar } from '@/components/layout';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
@@ -22,10 +24,18 @@ export const viewport: Viewport = {
   colorScheme: 'dark',
 };
 
+/**
+ * Runs while the HTML is parsed, before first paint: the landing hanger shows on `/` with no hash.
+ * Every other URL (a section anchor, /about, a project page) opens straight into its content.
+ * HangerHub takes over from here once React is running.
+ */
+const hubBootScript = `(function(){try{var d=document.documentElement,h=location.hash;d.dataset.hub=location.pathname==='/'&&(!h||h==='#')?'open':'closed'}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <body id="top">
+        <script dangerouslySetInnerHTML={{ __html: hubBootScript }} />
         <a href="#main" className="skip-link">
           Skip to content
         </a>
@@ -33,6 +43,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <div id="main">{children}</div>
         <Footer />
+        <HangerHub />
+        <BackToHanger />
       </body>
     </html>
   );

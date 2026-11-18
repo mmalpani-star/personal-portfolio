@@ -854,3 +854,19 @@ li::marker { color: var(--faint); }
   }
   .ambient-light { display: none; }
 }
+
+/* ==========================================================================
+   Landing hanger
+   While the hanger layer is up the page behind it is not scrolled by the visitor.
+   ========================================================================== */
+
+html[data-hub='open'],
+html[data-hub='leaving'] {
+  overflow: hidden;
+}
+
+/* a heading that received focus from the hanger (for screen readers) is not a control: no ring */
+[data-hub-focus]:focus,
+[data-hub-focus]:focus-visible {
+  outline: none;
+}

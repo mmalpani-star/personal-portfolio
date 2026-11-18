@@ -50,6 +50,31 @@ export function Contact() {
             ))}
           </ul>
         </Reveal>
+
+        {/* The same Tony Stark clip as the Contact tag on the hanger, set as a paper tag of its own. */}
+        <Reveal className={styles.figure} delay={0.16}>
+          <figure className={styles.tag}>
+            <div className={styles.tagBar} aria-hidden="true">
+              <span>04 / 04</span>
+              <span className={styles.tagMark}>MM</span>
+            </div>
+            <picture>
+              {/* Reduced motion gets the clip's first frame; everyone else gets the animation as-is. */}
+              <source media="(prefers-reduced-motion: reduce)" srcSet="/images/about/tony-stark-still.jpg" />
+              {/* eslint-disable-next-line @next/next/no-img-element -- an animated GIF must bypass the image optimiser */}
+              <img
+                className={styles.tagImg}
+                src="/images/about/tony-stark.gif"
+                width={480}
+                height={480}
+                alt="Tony Stark in his workshop"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+            <figcaption className={styles.tagLabel}>Contact</figcaption>
+          </figure>
+        </Reveal>
       </div>
     </section>
   );
