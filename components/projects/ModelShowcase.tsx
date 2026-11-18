@@ -27,7 +27,7 @@ function hasWebGL() {
  * Loads three.js and the model only when the scene is close to the viewport,
  * pauses rendering while it is off screen and frees the GPU on unmount.
  */
-function useLazyStage<T extends Stage>(
+export function useLazyStage<T extends Stage>(
   hostRef: RefObject<HTMLElement>,
   canvasRef: RefObject<HTMLCanvasElement>,
   create: (canvas: HTMLCanvasElement, reducedMotion: boolean) => Promise<T>,
@@ -91,7 +91,7 @@ function useLazyStage<T extends Stage>(
   return { status, stageRef, reduceMotion };
 }
 
-function InspectControls({
+export function InspectControls({
   stage,
   inspecting,
   onToggle,
@@ -123,7 +123,7 @@ function InspectControls({
   );
 }
 
-function Fallback({ project }: { project: Project }) {
+export function Fallback({ project }: { project: Project }) {
   const hero = project.heroMedia?.type === 'image' ? project.heroMedia : undefined;
   if (!hero) return null;
   return (
@@ -133,7 +133,7 @@ function Fallback({ project }: { project: Project }) {
   );
 }
 
-type Place = { index: number; total: number };
+export type Place = { index: number; total: number };
 
 const pad2 = (n: number) => String(n).padStart(2, '0');
 
@@ -141,7 +141,7 @@ const pad2 = (n: number) => String(n).padStart(2, '0');
  * What every showcase shows beneath its scene: project number, category and
  * status, title, short description, technical tags and the Case Study button.
  */
-function Caption({ project, note, shown, index, total }: { project: Project; note?: string; shown: boolean } & Place) {
+export function Caption({ project, note, shown, index, total }: { project: Project; note?: string; shown: boolean } & Place) {
   return (
     <div className={styles.caption} data-shown={shown}>
       <div className={styles.captionHead}>

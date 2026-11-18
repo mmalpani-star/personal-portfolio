@@ -15,3 +15,5 @@ cad/hydrosafe/cache/
 cad/quadruped/export/views/
 cad/**/__pycache__/
 cad/hexapod/export/views/
+cad/cubesat/export/step/cubesat_assembly.step
+cad/cubesat/cache/

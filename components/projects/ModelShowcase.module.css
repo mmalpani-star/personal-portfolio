@@ -4,6 +4,7 @@
 .walk { height: 250vh; }
 .explode { height: 210vh; }
 .long { height: 330vh; }
+.space { height: 380vh; }
 .photoScene { height: 170vh; }
 .scene[data-static='true'] { height: auto; }
 
@@ -134,7 +135,7 @@
   padding: 0 12px;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--ctl-bg, rgba(255, 255, 255, 0.82));
   backdrop-filter: blur(12px);
   color: var(--text);
   font: 500 var(--text-sm) / 1 var(--font-sans);
@@ -146,7 +147,7 @@
 .iconButton:hover,
 .segment button:hover { border-color: var(--ink); }
 .control[aria-pressed='true'],
-.segment button[aria-pressed='true'] { background: var(--accent); border-color: var(--ink); }
+.segment button[aria-pressed='true'] { background: var(--accent); border-color: var(--ink); color: var(--ink); }
 .control:focus-visible,
 .iconButton:focus-visible,
 .segment button:focus-visible,
@@ -243,6 +244,73 @@
 
 @media (max-width: 760px) {
   .long { height: 260vh; }
+  .space { height: 300vh; }
   .photoScene { height: 150vh; }
   .photoFrame { width: min(100%, calc((100svh - 500px) * var(--ratio, 1.5))); min-width: min(100%, 240px); }
 }
+
+/* ------------------------------------------------------- CubeSat: deep space --
+   The stage turns from the portfolio's white into deep space while the satellite is on
+   screen (--space runs 0..1 with scroll) and back again as the section ends. */
+.sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: var(--space, 0);
+  pointer-events: none;
+  background:
+    radial-gradient(90% 70% at 18% 8%, rgba(60, 96, 168, 0.26), transparent 60%),
+    radial-gradient(120% 90% at 72% 118%, #10264a 0%, #070f20 46%, #03060c 100%);
+}
+.stage[data-space] > .view,
+.stage[data-space] > .caption { position: relative; z-index: 1; }
+/* the canvas and its labels run under the caption too, so Earth is never cut off by the model's area */
+.stage[data-space] .canvas,
+.stage[data-space] .labels {
+  top: calc(var(--above, 0px) * -1);
+  bottom: auto;
+  height: calc(100% + var(--above, 0px) + var(--below, 0px));
+}
+.stage[data-space] .leaders line { stroke: var(--leader, var(--ink)); }
+.stage[data-space] .leaders circle { fill: var(--leader, var(--ink)); }
+.stage[data-space] :global(.status-badge) { background: var(--badge-bg, rgba(255, 255, 255, 0.7)); }
+.scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--below, 0px) + 80px);
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--space, 0);
+  background: linear-gradient(to top, rgba(2, 5, 10, 0.9) 0%, rgba(2, 5, 10, 0.72) 55%, rgba(2, 5, 10, 0) 100%);
+}
+
+/* fallback for browsers without color-mix: switch once the sky is mostly in */
+.stage[data-space][data-dark='true'] {
+  --text: #f3f1ea;
+  --muted: rgba(243, 241, 234, 0.76);
+  --muted-strong: rgba(243, 241, 234, 0.86);
+  --faint: rgba(243, 241, 234, 0.6);
+  --border: rgba(243, 241, 234, 0.2);
+  --border-strong: rgba(243, 241, 234, 0.34);
+  --surface-1: rgba(255, 255, 255, 0.06);
+  --ctl-bg: rgba(12, 17, 28, 0.72);
+  --leader: #f3f1ea;
+  --badge-bg: rgba(255, 255, 255, 0.07);
+}
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+  .stage[data-space] {
+    --text: color-mix(in srgb, #f3f1ea calc(var(--space, 0) * 100%), #0d0d0d);
+    --muted: color-mix(in srgb, rgba(243, 241, 234, 0.76) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.64));
+    --muted-strong: color-mix(in srgb, rgba(243, 241, 234, 0.86) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.76));
+    --faint: color-mix(in srgb, rgba(243, 241, 234, 0.6) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.56));
+    --border: color-mix(in srgb, rgba(243, 241, 234, 0.2) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.14));
+    --border-strong: color-mix(in srgb, rgba(243, 241, 234, 0.34) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.3));
+    --surface-1: color-mix(in srgb, rgba(255, 255, 255, 0.06) calc(var(--space, 0) * 100%), rgba(13, 13, 13, 0.03));
+    --ctl-bg: color-mix(in srgb, rgba(12, 17, 28, 0.72) calc(var(--space, 0) * 100%), rgba(255, 255, 255, 0.82));
+    --leader: color-mix(in srgb, #f3f1ea calc(var(--space, 0) * 100%), #0d0d0d);
+    --badge-bg: color-mix(in srgb, rgba(255, 255, 255, 0.07) calc(var(--space, 0) * 100%), rgba(255, 255, 255, 0.7));
+  }
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

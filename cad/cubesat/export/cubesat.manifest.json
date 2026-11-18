@@ -1,0 +1,212 @@
+{
+ "units": "metres, Y up, origin at the centre of the 100 mm cube (CAD: millimetres, Z up; the antenna deploys along CAD +Z = glTF +Y)",
+ "groups": {
+  "frame": {
+   "label": "Frame",
+   "source": "reconstructed",
+   "nodes": [
+    "frame_lattice"
+   ]
+  },
+  "standoffs": {
+   "label": "PCB standoffs",
+   "source": "reconstructed",
+   "nodes": [
+    "standoff_1",
+    "standoff_2",
+    "standoff_3",
+    "standoff_4"
+   ]
+  },
+  "pcb": {
+   "label": "Flex-PCB base",
+   "source": "original",
+   "nodes": [
+    "pcb_base"
+   ]
+  },
+  "arduino_nano": {
+   "label": "Arduino Nano",
+   "source": "original",
+   "nodes": [
+    "arduino_nano_chips",
+    "arduino_nano_small",
+    "arduino_nano_headers",
+    "arduino_nano_board",
+    "arduino_nano_usb"
+   ]
+  },
+  "imu": {
+   "label": "MPU6050 IMU",
+   "source": "original",
+   "nodes": [
+    "imu_mpu6050_board",
+    "imu_mpu6050_parts"
+   ]
+  },
+  "mosfet": {
+   "label": "MOSFET",
+   "source": "original",
+   "nodes": [
+    "mosfet_body",
+    "mosfet_metal"
+   ]
+  },
+  "transmitter": {
+   "label": "Transmitter module",
+   "source": "original",
+   "nodes": [
+    "transmitter"
+   ]
+  },
+  "spring_source": {
+   "label": "Spring",
+   "source": "original",
+   "nodes": [
+    "spring_source"
+   ]
+  },
+  "battery": {
+   "label": "18650 cell and holder",
+   "source": "original",
+   "nodes": [
+    "battery_holder",
+    "battery_cell"
+   ]
+  },
+  "antenna_cassette": {
+   "label": "Antenna cassette",
+   "source": "reconstructed",
+   "nodes": [
+    "cassette_base",
+    "cassette_cheek_back",
+    "cassette_cheek_front",
+    "cassette_cap",
+    "cassette_hub"
+   ]
+  },
+  "burn_wire": {
+   "label": "Burn wire",
+   "source": "reconstructed",
+   "nodes": [
+    "cord_post_a",
+    "terminal_a",
+    "cord_post_b",
+    "terminal_b",
+    "restraint_cord",
+    "nichrome_helix",
+    "nichrome_lead_a",
+    "nichrome_lead_b"
+   ]
+  }
+ },
+ "sources": {
+  "original": "3d models/cubesat/madhav/ffpcb.stp (Creo export of fpcb_asm_1.asm): flex-PCB base, Arduino Nano, MPU6050, MOSFET, transmitter module, battery holder, 18650 cell, spring. Placement is mine; the STEP leaves them unmated.",
+  "reconstructed": "frame, standoffs, antenna cassette, burn-wire hardware, tape antenna: modelled here; no original geometry exists in a readable form."
+ },
+ "antenna": {
+  "kind": "steel tape-spring antenna (the case study says 'steel tape antenna'); stored energy is the coiled tape's elastic strain",
+  "tape": {
+   "width": 8.0,
+   "thickness": 0.4,
+   "sagitta": 1.4,
+   "length": 190.0,
+   "core_radius": 3.0,
+   "pitch": 0.75,
+   "hub": [
+    -4.0,
+    10.5
+   ],
+   "exit_x": 4.0,
+   "top_z": 20.5,
+   "stowed_stub": 6.0,
+   "deployed_extension": 150.0
+  },
+  "reference": {
+   "stowed": {
+    "extension": 6.0,
+    "coil_radius": 6.9137,
+    "straight_length": 14.9137,
+    "bend_length": 12.5657,
+    "spiral_length": 162.5206,
+    "spiral_turns": 5.2182,
+    "total_length": 189.98
+   },
+   "half": {
+    "extension": 75.0,
+    "coil_radius": 5.6244,
+    "straight_length": 82.6244,
+    "bend_length": 12.5657,
+    "spiral_length": 94.8098,
+    "spiral_turns": 3.4992,
+    "total_length": 189.983
+   },
+   "deployed": {
+    "extension": 150.0,
+    "coil_radius": 3.7647,
+    "straight_length": 155.7647,
+    "bend_length": 12.5657,
+    "spiral_length": 21.6695,
+    "spiral_turns": 1.0196,
+    "total_length": 189.992
+   }
+  },
+  "cassette_origin_mm": [
+   0.0,
+   0.0,
+   50.0
+  ],
+  "axis_mm": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "axis_note": "reel axis is the cassette's Y; the straight tape leaves at x=exit_x, directed +Z; all x/z values are relative to the cassette origin",
+  "restraint": {
+   "cord_z": 27.5,
+   "cord_radius": 0.4,
+   "cord_y": [
+    -5.8,
+    5.8
+   ],
+   "cord_x": 4.0,
+   "posts_y": [
+    -5.8,
+    5.8
+   ],
+   "nichrome": {
+    "wire_radius": 0.16,
+    "helix_radius": 0.62,
+    "turns": 4.5,
+    "y": [
+     -1.4,
+     1.4
+    ]
+   }
+  },
+  "sequence_s_illustrative": {
+   "heat": 1.1,
+   "deploy": 2.0,
+   "settle": 2.2,
+   "note": "timing is a depiction, not a measured or specified value"
+  }
+ },
+ "labels": {
+  "frame": "Frame",
+  "antenna_cassette": "Antenna tape",
+  "burn_wire": "Burn wire",
+  "arduino_nano": "Arduino Nano",
+  "imu": "MPU6050 IMU",
+  "battery": "18650 cell",
+  "mosfet": "MOSFET"
+ },
+ "assumptions": [
+  "Frame: 100 mm cube with 2.5 mm walls. The original Creo frame is unreadable; the 94.8 x 94.0 mm flex-PCB board in the source fits a 95 mm cavity. Window pattern: hexagonal opening, ribs and four screw holes per face are modelled on the Fusion study screenshots, not measured.",
+  "Top and bottom plates: ring of wedge slots modelled on the study screenshot of the top plate; the bottom plate is assumed to match.",
+  "Component layout: the STEP leaves every component at its own origin (duplicates coincide), so positions inside the frame are my arrangement.",
+  "Antenna: tape 8 x 0.4 mm, 190 mm long, transverse curvature 1.4 mm, 150 mm deployed. None of these is from the source; the source has no antenna geometry.",
+  "Release: a nylon-style restraint cord across the tape's exit, severed by heated nichrome wire. The case study names a burn-wire mechanism; its geometry is not in the source.",
+  "The source's spring (9.3 x 7.3 mm, thin wire) is shown as an original part. Its role in the real design is not documented and it is not animated.",
+  "Timing and speed of release and deployment are illustrative."
+ ]
+}

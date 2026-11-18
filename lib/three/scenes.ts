@@ -27,11 +27,11 @@ export type Stage = {
   dispose: () => void;
 };
 
-const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
-const smooth = (t: number) => t * t * (3 - 2 * t);
+export const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
+export const smooth = (t: number) => t * t * (3 - 2 * t);
 
 /** Renderer, camera, light and a soft contact shadow shared by both scenes. */
-function base(canvas: HTMLCanvasElement) {
+export function base(canvas: HTMLCanvasElement) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -106,7 +106,7 @@ function base(canvas: HTMLCanvasElement) {
   return { renderer, scene, camera, shadow, resize, dispose, fit, onResize };
 }
 
-function makeControls(camera: THREE.PerspectiveCamera, canvas: HTMLCanvasElement, target: THREE.Vector3) {
+export function makeControls(camera: THREE.PerspectiveCamera, canvas: HTMLCanvasElement, target: THREE.Vector3) {
   const controls = new OrbitControls(camera, canvas);
   controls.target.copy(target);
   controls.enableDamping = true;
@@ -115,11 +115,15 @@ function makeControls(camera: THREE.PerspectiveCamera, canvas: HTMLCanvasElement
   controls.maxPolarAngle = Math.PI * 0.47;   // never orbit below the ground
   controls.enabled = false;            // off until the visitor turns inspection on
   controls.enableZoom = false;
+  // OrbitControls writes an inline `touch-action: none` on construction, which would stop a finger
+  // swipe that starts on the canvas from scrolling the page. Let the stylesheet decide instead:
+  // `pan-y` normally, `none` only while the visitor is inspecting.
+  canvas.style.touchAction = '';
   return controls;
 }
 
 /** Drive a render loop only while the canvas is on screen. */
-function loop(tick: (dt: number) => boolean | void) {
+export function loop(tick: (dt: number) => boolean | void) {
   let raf = 0;
   let last = performance.now();
   let visible = true;

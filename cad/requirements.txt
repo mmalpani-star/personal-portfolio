@@ -11,3 +11,5 @@ rtree==1.4.1
 pygltflib==1.16.5      # writes the baked gait animation into the GLB
 fast-simplification==0.2.0   # quadric decimation of the heavy meshes (hydrosafe)
 matplotlib==3.11.2     # optional: quick inspection plots
+pillow==13.0.0         # earth_textures.py (resizing the Earth maps)
+pymupdf==2.1           # cubesat/survey.py (reads the Fusion study report PDF)

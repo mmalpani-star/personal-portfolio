@@ -1,4 +1,5 @@
 import { Reveal } from '@/components/animation';
+import { CubesatShowcase } from '@/components/projects/CubesatShowcase';
 import {
   AqmShowcase,
   HexapodShowcase,
@@ -22,6 +23,7 @@ const scenes: Record<string, (props: ShowcaseProps) => JSX.Element> = {
   hexapod: HexapodShowcase,
   'air-quality-monitor': AqmShowcase,
   hydrosafe: HydroSafeShowcase,
+  'cubesat-antenna-mechanism': CubesatShowcase,
 };
 
 export function Projects() {
