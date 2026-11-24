@@ -16,6 +16,10 @@ export type ModelSectionProps = {
   accent: string;
   /** Static fallback content when WebGL is unavailable or motion is reduced. */
   fallback?: React.ReactNode;
+  /** Twinkling white starfield behind the 3D model. */
+  stars?: boolean;
+  /** Shooting star streaking from bottom-left to top-right. */
+  shootingStar?: boolean;
 };
 
 /**
@@ -34,6 +38,8 @@ export function ModelSection({
   model,
   accent,
   fallback,
+  stars = false,
+  shootingStar = false,
 }: ModelSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
@@ -73,10 +79,11 @@ export function ModelSection({
 
         <div className={styles.canvasWrapper}>
           {showCanvas ? (
-            <ModelCanvas model={model} accent={accent} label={title} />
+            <ModelCanvas model={model} accent={accent} label={title} stars={stars} />
           ) : (
             fallback ?? <div className={styles.fallback}>{title}</div>
           )}
+          {shootingStar && <div className={styles.shootingStar} aria-hidden="true" />}
         </div>
 
         <p className={styles.description}>{description}</p>

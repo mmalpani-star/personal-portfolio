@@ -16,6 +16,8 @@ export function CubeSatSection() {
       description={project.summary}
       model="/models/cubesat.glb"
       accent="#ffd400"
+      stars
+      shootingStar
     />
   );
 }
