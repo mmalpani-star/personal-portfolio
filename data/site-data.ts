@@ -861,6 +861,7 @@ export const awards: Award[] = [
   {
     name: 'cOmpiled-2026 UCSD Hackathon',
     detail: 'Top 7 of 200+ teams',
+    year: '2026',
     figure: 'Top 7',
     context: 'of 200+ teams · 441 participants',
   },
