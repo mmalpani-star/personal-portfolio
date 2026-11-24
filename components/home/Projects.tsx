@@ -46,6 +46,7 @@ export function Projects() {
   const cubesat = bySlug.get('cubesat-antenna-mechanism');
   return (
     <section id="projects" className={`section ${styles.section}`} aria-labelledby="projects-title">
+      <div className={styles.stars} aria-hidden="true" />
       <div className="page-shell">
         <Reveal className={styles.heading}>
           <span className="section-index">02</span>
