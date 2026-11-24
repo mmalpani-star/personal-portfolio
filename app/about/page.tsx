@@ -8,7 +8,7 @@ import { Reveal } from '@/components/animation';
 import { CollabSection } from '@/components/shared/CollabSection';
 import { Magnetic } from '@/components/effects/Magnetic';
 import { Icon } from '@/components/ui/Icon';
-import { aboutPanels, currentlyBuilding, education, technicalInterests } from '@/data/site-data';
+import { aboutPanels, technicalInterests } from '@/data/site-data';
 import styles from './About.module.css';
 
 export const metadata: Metadata = {
@@ -36,7 +36,6 @@ function availableMedia() {
 }
 
 export default function AboutPage() {
-  const university = education[0];
   const media = availableMedia();
 
   return (
@@ -49,12 +48,8 @@ export default function AboutPage() {
           <div className={styles.introCopy}>
             <span className="label reveal-eager">About me</span>
             <h1 className={`${styles.title} reveal-eager`} style={{ animationDelay: '0.06s' }}>
-              I build things, then find out where they break.
+              I am interested in consumer robots and want to make generalised robots to help humans with manual day to day chores.
             </h1>
-            <p className={`${styles.lead} reveal-eager`} style={{ animationDelay: '0.12s' }}>
-              Robots are the part of me that shows up on a résumé. The rest is a basketball captain who started a
-              pickleball community, films everything, argues about anime arcs, and blames every lost round on ping.
-            </p>
             <div className="cta-row reveal-eager" style={{ animationDelay: '0.18s' }}>
               <Magnetic>
                 <Link href="/#projects" className="button button-primary">
@@ -72,39 +67,6 @@ export default function AboutPage() {
                 <Icon name="arrow-up-right" size={14} />
               </a>
             </div>
-          </div>
-
-          <div className={`${styles.profile} glass reveal-eager`} style={{ animationDelay: '0.2s' }}>
-            <div className={styles.profileHead}>
-              <span className={styles.monogram} aria-hidden="true">
-                MM
-              </span>
-              <span>
-                <span className={styles.profileName}>Madhav Malpani</span>
-                <span className={styles.profileRole}>AI · Robotics · Hardware</span>
-              </span>
-            </div>
-            <span className="label" style={{ display: 'block', margin: '4px 0 10px' }}>
-              Education
-            </span>
-            <dl className={styles.profileRows}>
-              <div>
-                <dt>Studying</dt>
-                <dd>{university.degree}</dd>
-              </div>
-              <div>
-                <dt>At</dt>
-                <dd>{university.institution}</dd>
-              </div>
-              <div>
-                <dt>Graduating</dt>
-                <dd>{university.expectedGraduation}</dd>
-              </div>
-              <div>
-                <dt>Now</dt>
-                <dd>{currentlyBuilding.organization}</dd>
-              </div>
-            </dl>
           </div>
         </div>
       </section>
