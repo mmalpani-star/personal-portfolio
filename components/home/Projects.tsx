@@ -14,36 +14,6 @@ import {
 import { displayProjects } from '@/data/site-data';
 import type { Project } from '@/data/site-data';
 import styles from './Projects.module.css';
-import { useEffect, useRef, useState } from 'react';
-
-/** Pointer-following gradient light for the projects section background. */
-function ProjectsGlow() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ x: 50, y: 50 });
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMove = (e: PointerEvent) => {
-      const rect = el.getBoundingClientRect();
-      setPos({
-        x: ((e.clientX - rect.left) / rect.width) * 100,
-        y: ((e.clientY - rect.top) / rect.height) * 100,
-      });
-    };
-    el.addEventListener('pointermove', onMove);
-    return () => el.removeEventListener('pointermove', onMove);
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={styles.pointerGlow}
-      style={({ '--gx': `${pos.x}%`, '--gy': `${pos.y}%` } as React.CSSProperties)}
-      aria-hidden="true"
-    />
-  );
-}
 
 type ShowcaseProps = { project: Project; index: number; total: number };
 
@@ -78,7 +48,7 @@ export function Projects() {
   const cubesat = bySlug.get('cubesat-antenna-mechanism');
   return (
     <section id="projects" className={`section ${styles.section}`} aria-labelledby="projects-title">
-      <ProjectsGlow />
+      <div className={styles.aurora} aria-hidden="true" />
       <div className="page-shell">
         <Reveal className={styles.heading}>
           <span className="section-index">02</span>
