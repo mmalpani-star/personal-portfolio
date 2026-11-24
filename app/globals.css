@@ -452,6 +452,108 @@ li::marker { color: var(--faint); }
   .button-secondary { background: rgba(255, 255, 255, 0.95); }
 }
 
+/* --------------------------------------------------------------------------
+   Glass button: Apple iOS liquid-glass inspired.
+   Translucent dark fill, backdrop-filter blur + saturate, thin light inner
+   border, soft top highlight, subtle shadow, smooth hover/press states.
+   Falls back to a solid dark fill where backdrop-filter is unsupported.
+   -------------------------------------------------------------------------- */
+
+.glass-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
+}
+
+/* Thin light inner border + soft top highlight, subtle shadow */
+.glass-button {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 10px 26px -14px rgba(0, 0, 0, 0.45);
+  background: rgba(15, 15, 18, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.glass-button:hover {
+  background: rgba(15, 15, 18, 0.72);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    0 14px 30px -14px rgba(0, 0, 0, 0.52);
+}
+
+.glass-button:active {
+  transform: scale(0.96);
+}
+
+.glass-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-button {
+    background: #0a0a0c;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+      0 10px 26px -14px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* Glass slider: for range inputs. Translucent dark track, light thumb. */
+.glass-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.10);
+  outline: none;
+  cursor: pointer;
+  transition: background var(--dur-fast) ease;
+}
+.glass-slider:hover { background: rgba(255, 255, 255, 0.18); }
+.glass-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out);
+}
+.glass-slider::-webkit-slider-thumb:hover { background: var(--accent); transform: scale(1.12); }
+.glass-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+.glass-slider::-moz-range-thumb:hover { background: var(--accent); }
+
 .button-text {
   min-height: 0;
   padding: 0.5rem 0;

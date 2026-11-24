@@ -32,7 +32,7 @@ export function Navbar() {
         </div>
 
         <div className={styles.actions}>
-          <a className={`button button-secondary ${styles.resume}`} href="/documents/resume.pdf" target="_blank" rel="noopener noreferrer">
+          <a className={`glass-button ${styles.resume}`} href="/documents/resume.pdf" target="_blank" rel="noopener noreferrer">
             Resume
             <Icon name="arrow-up-right" size={14} />
           </a>
