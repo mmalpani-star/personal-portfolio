@@ -1,3 +1,5 @@
+'use client';
+
 import { Reveal } from '@/components/animation';
 import { CollabSection } from '@/components/shared/CollabSection';
 import { SideEnter } from '@/components/projects/SideEnter';
@@ -12,14 +14,39 @@ import {
 import { displayProjects } from '@/data/site-data';
 import type { Project } from '@/data/site-data';
 import styles from './Projects.module.css';
+import { useEffect, useRef, useState } from 'react';
+
+/** Pointer-following gradient light for the projects section background. */
+function ProjectsGlow() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState({ x: 50, y: 50 });
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onMove = (e: PointerEvent) => {
+      const rect = el.getBoundingClientRect();
+      setPos({
+        x: ((e.clientX - rect.left) / rect.width) * 100,
+        y: ((e.clientY - rect.top) / rect.height) * 100,
+      });
+    };
+    el.addEventListener('pointermove', onMove);
+    return () => el.removeEventListener('pointermove', onMove);
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={styles.pointerGlow}
+      style={({ '--gx': `${pos.x}%`, '--gy': `${pos.y}%` } as React.CSSProperties)}
+      aria-hidden="true"
+    />
+  );
+}
 
 type ShowcaseProps = { project: Project; index: number; total: number };
 
-/**
- * One showcase per project, in presentation order. Projects with a CAD model
- * get a scroll-driven 3D scene; the rest use their project photo in the same
- * format. Each project appears exactly once.
- */
 const scenes: Record<string, (props: ShowcaseProps) => JSX.Element> = {
   'quadruped-leg-kinematics': QuadrupedShowcase,
   hexapod: HexapodShowcase,
@@ -28,11 +55,6 @@ const scenes: Record<string, (props: ShowcaseProps) => JSX.Element> = {
   'cubesat-antenna-mechanism': CubesatShowcase,
 };
 
-/**
- * Three rows of two. The side each tile slides in from is set by the brief, not by its column: row one's quadruped
- * comes from the right and the hexapod from the left, row two's TritonSpend from the left and BorderPulse from the
- * right, row three's HydroSafe from the right and the air quality monitor from the left. The CubeSat follows, untouched.
- */
 const rows: { slug: string; from: 'left' | 'right' }[][] = [
   [
     { slug: 'quadruped-leg-kinematics', from: 'right' },
@@ -56,6 +78,7 @@ export function Projects() {
   const cubesat = bySlug.get('cubesat-antenna-mechanism');
   return (
     <section id="projects" className={`section ${styles.section}`} aria-labelledby="projects-title">
+      <ProjectsGlow />
       <div className="page-shell">
         <Reveal className={styles.heading}>
           <span className="section-index">02</span>

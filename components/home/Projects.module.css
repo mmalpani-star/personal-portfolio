@@ -4,6 +4,19 @@
     var(--bg);
 }
 
+/** Pointer-following gradient light: cheap transform-only glow. */
+.pointerGlow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mask-image: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), #000 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), #000 40%, transparent 100%);
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 212, 0, 0.18), transparent 55%);
+  will-change: transform;
+  transition: opacity 400ms ease;
+}
+
 .heading { margin-bottom: clamp(28px, 4vw, 48px); }
 .heading h2 { margin: var(--space-3) 0 var(--space-3); }
 
