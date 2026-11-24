@@ -6,11 +6,17 @@
   transition: background var(--dur) ease, border-color var(--dur) ease, backdrop-filter var(--dur) ease;
 }
 
+/* Black / invisible by default: blends into the dark page. */
+.header {
+  background: transparent;
+}
+
 .header[data-scrolled="true"] {
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(6, 6, 9, 0.62);
   border-bottom-color: var(--border);
-  backdrop-filter: saturate(150%) blur(16px);
-  -webkit-backdrop-filter: saturate(150%) blur(16px);
+  backdrop-filter: saturate(160%) blur(20px);
+  -webkit-backdrop-filter: saturate(160%) blur(20px);
+  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.45);
 }
 
 .inner {

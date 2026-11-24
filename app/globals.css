@@ -408,54 +408,117 @@ li::marker { color: var(--faint); }
   align-items: center;
   justify-content: center;
   gap: 0.6em;
-  min-height: 46px;
-  padding: 0.8rem 1.35rem;
+  min-height: 44px;
+  padding: 0 1.2rem;
   border-radius: 999px;
   border: 1px solid transparent;
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1;
   letter-spacing: -0.005em;
   white-space: nowrap;
+  color: #fff;
+  cursor: pointer;
   transition:
-    border-color var(--dur-fast) ease,
     background var(--dur-fast) ease,
-    color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
     transform var(--dur-fast) var(--ease-out);
 }
 
-.button svg { transition: transform var(--dur) var(--ease-out); }
-.button:active { transform: scale(0.975); }
+/* Base glass fill for every button: translucent frosted dark, thin light inner
+   border, soft top highlight, subtle shadow. */
+.button {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.10),
+    rgba(255, 255, 255, 0.02)
+  );
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 12px 32px -12px rgba(0, 0, 0, 0.55);
+}
 
-/* Primary: filled coral, the single loudest element on a screen */
+.button svg { transition: transform var(--dur) var(--ease-out); }
+.button:active { transform: scale(0.96); }
+
+/* Primary: glass + accent emphasis (loudest button). */
 .button-primary {
-  background: var(--yellow);
-  border-color: rgba(13, 13, 13, 0.16);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 212, 0, 0.22),
+    rgba(255, 212, 0, 0.06)
+  );
+  border-color: rgba(255, 212, 0, 0.35);
   color: var(--on-accent);
   font-weight: 600;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 10px 26px -14px rgba(13, 13, 13, 0.4);
+    inset 0 1px 0 rgba(255, 212, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 212, 0, 0.25),
+    0 12px 32px -12px rgba(0, 0, 0, 0.55);
 }
 
-/* Secondary: the glass recipe above */
+.button-primary:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 212, 0, 0.35),
+    rgba(255, 212, 0, 0.12)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 212, 0, 0.70),
+    inset 0 0 0 1px rgba(255, 212, 0, 0.35),
+    0 16px 38px -14px rgba(0, 0, 0, 0.62);
+}
+
+/* Secondary: default dark glass. */
 .button-secondary {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  border-color: rgba(13, 13, 13, 0.18);
-  color: var(--text);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.10),
+    rgba(255, 255, 255, 0.02)
+  );
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 12px 32px -12px rgba(0, 0, 0, 0.55);
+}
+
+.button-secondary:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.08)
+  );
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 16px 38px -14px rgba(0, 0, 0, 0.62);
+}
+
+.button-secondary:disabled,
+.button-primary:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .button-secondary { background: rgba(255, 255, 255, 0.95); }
+  .button, .button-primary, .button-secondary {
+    background: #0a0a0c;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+      0 12px 32px -12px rgba(0, 0, 0, 0.55);
+  }
 }
 
 /* --------------------------------------------------------------------------
    Glass button: Apple iOS liquid-glass inspired.
-   Translucent dark fill, backdrop-filter blur + saturate, thin light inner
-   border, soft top highlight, subtle shadow, smooth hover/press states.
+   Translucent frosted fill, backdrop-filter blur + saturate, thin light
+   inner border, soft top highlight, subtle shadow, smooth hover/press.
    Falls back to a solid dark fill where backdrop-filter is unsupported.
    -------------------------------------------------------------------------- */
 
@@ -482,27 +545,39 @@ li::marker { color: var(--faint); }
     transform var(--dur-fast) var(--ease-out);
 }
 
-/* Thin light inner border + soft top highlight, subtle shadow */
+/* Frosted translucent fill + thin light inner border + soft top highlight. */
 .glass-button {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.10),
+    rgba(255, 255, 255, 0.02)
+  );
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 10px 26px -14px rgba(0, 0, 0, 0.45);
-  background: rgba(15, 15, 18, 0.55);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),   /* soft top highlight */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14), /* thin inner light border */
+    0 12px 32px -12px rgba(0, 0, 0, 0.55);     /* subtle drop shadow */
 }
 
 .glass-button:hover {
-  background: rgba(15, 15, 18, 0.72);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.08)
+  );
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.30),
     inset 0 1px 0 rgba(255, 255, 255, 0.70),
-    0 14px 30px -14px rgba(0, 0, 0, 0.52);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 16px 38px -14px rgba(0, 0, 0, 0.62);
 }
 
 .glass-button:active {
   transform: scale(0.96);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 8px 20px -10px rgba(0, 0, 0, 0.5);
 }
 
 .glass-button:disabled {
@@ -515,7 +590,7 @@ li::marker { color: var(--faint); }
     background: #0a0a0c;
     box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.10),
-      0 10px 26px -14px rgba(0, 0, 0, 0.45);
+      0 12px 32px -12px rgba(0, 0, 0, 0.55);
   }
 }
 
@@ -563,11 +638,6 @@ li::marker { color: var(--faint); }
 }
 
 @media (hover: hover) {
-  .button-primary:hover { background: #ffdd33; }
-  .button-secondary:hover {
-    border-color: rgba(13, 13, 13, 0.32);
-    background: rgba(255, 255, 255, 0.85);
-  }
   .button-text:hover { color: var(--text); }
   .button:hover svg { transform: translate(2px, -2px); }
   .button:hover svg[data-direction="right"] { transform: translateX(3px); }
