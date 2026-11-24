@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, Suspense } from 
 import { useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-import { Box3, Color, Group, Material, Mesh, Object3D, Vector3, Points, BufferGeometry, BufferAttribute, PointsMaterial } from 'three';
+import { Box3, Color, Group, Material, Mesh, Object3D, Vector3 } from 'three';
 import { motion } from 'framer-motion';
 import { useFinePointer } from '@/components/effects/useFinePointer';
 
@@ -17,8 +17,6 @@ type ModelCanvasProps = {
   label?: string;
   /** Accent colour used for emissive / glow. Defaults to the CSS accent token. */
   accent?: string;
-  /** Whether to show a starfield background behind the model. */
-  stars?: boolean;
 };
 
 /**
@@ -32,9 +30,8 @@ type ModelCanvasProps = {
  * - Smooth pointer look-at + hover emissive boost on fine pointers; static
  *   fallback under reduced motion / touch / when WebGL is unavailable.
  * - Cheap CSS radial-gradient glow behind the canvas that follows the pointer.
- * - Optional starfield background + continuous slow rotation for space scenes.
  */
-export function ModelCanvas({ model, label = '3D model', accent = '#ffd400', stars = false }: ModelCanvasProps) {
+export function ModelCanvas({ model, label = '3D model', accent = '#ffd400' }: ModelCanvasProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const fine = useFinePointer();
   const reduceMotion = useReducedMotion();
@@ -110,23 +107,6 @@ export function ModelCanvas({ model, label = '3D model', accent = '#ffd400', sta
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted, model]);
 
-  // Starfield geometry (created once, reused on remount).
-  const starGeometry = useMemo(() => {
-    const count = 1500;
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count * 3; i++) {
-      positions[i] = (Math.random() - 0.5) * 60;
-    }
-    const geometry = new BufferGeometry();
-    geometry.setAttribute('position', new BufferAttribute(positions, 3));
-    return geometry;
-  }, []);
-
-  const starMaterial = useMemo(
-    () => new PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.7 }),
-    []
-  );
-
   if (!mounted) return null;
 
   return (
@@ -147,9 +127,6 @@ export function ModelCanvas({ model, label = '3D model', accent = '#ffd400', sta
         <ambientLight intensity={0.5} />
         <directionalLight position={[3, 6, 4]} intensity={1.1} castShadow />
         <pointLight position={[-2, 3, 2]} intensity={0.5} color={accent} />
-        {stars && (
-          <points geometry={starGeometry} material={starMaterial} />
-        )}
         <Suspense fallback={null}>
           <ModelContent model={model} accent={accent} active={active} springX={springX} springY={springY} />
         </Suspense>
@@ -205,15 +182,13 @@ function ModelContent({
     };
   }, [clone]);
 
-  // Smooth pointer look-at + slow idle float + continuous orbit rotation.
+  // Smooth pointer look-at + slow idle float.
   useFrame(() => {
     if (!rootRef.current) return;
     const targetX = springX.get() * 0.12;
     const targetY = springY.get() * 0.12;
     rootRef.current.rotation.y += (targetX - rootRef.current.rotation.y) * 0.08;
     rootRef.current.rotation.x += (targetY - rootRef.current.rotation.x) * 0.08;
-    // Continuous slow orbit rotation (satellite tumbling in space).
-    rootRef.current.rotation.z += 0.004;
     rootRef.current.position.y = Math.sin(Date.now() * 0.0012) * 0.015;
   });
 

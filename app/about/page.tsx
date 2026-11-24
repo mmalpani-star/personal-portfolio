@@ -8,6 +8,7 @@ import { Reveal } from '@/components/animation';
 import { CollabSection } from '@/components/shared/CollabSection';
 import { Magnetic } from '@/components/effects/Magnetic';
 import { Icon } from '@/components/ui/Icon';
+import { Typewriter } from '@/components/about/Typewriter';
 import { aboutPanels, technicalInterests } from '@/data/site-data';
 import styles from './About.module.css';
 
@@ -17,23 +18,20 @@ export const metadata: Metadata = {
     'Madhav Malpani — robotics and AI student at UC San Diego. Builder, basketball captain, community organiser, and a long-running anime habit.',
 };
 
-const loop = [
-  { title: 'Understand', detail: 'Take the system apart: mechanics, electronics, control.' },
-  { title: 'Prototype', detail: 'Build a physical version, however rough.' },
-  { title: 'Experiment', detail: 'Run it, measure it, find where it breaks.' },
-  { title: 'Iterate', detail: 'Fix, rebuild, go around again.' },
-];
-
-/**
- * Panel media is dropped into `public/` by hand and may not be there yet, so the
- * page resolves which files actually exist at build time. Anything missing is
- * never requested, which keeps the console and the network panel clean.
- */
 function availableMedia() {
   return aboutPanels
     .flatMap((panel) => [panel.media?.src, ...(panel.images ?? []).map((image) => image.src)])
     .filter((src): src is string => Boolean(src) && existsSync(path.join(process.cwd(), 'public', src!)));
 }
+
+const INTEREST_CHIPS = [
+  'Tesla FSD (Fully Self Driving)',
+  "NVIDIA World Language Action (WLA) Research",
+  'Neural Network',
+  'Machine Learning',
+  'Reinforcement Learning',
+  'Computer Vision',
+];
 
 export default function AboutPage() {
   const media = availableMedia();
@@ -47,9 +45,10 @@ export default function AboutPage() {
         <div className={`page-shell ${styles.introGrid}`}>
           <div className={styles.introCopy}>
             <span className="label reveal-eager">About me</span>
-            <h1 className={`${styles.title} reveal-eager`} style={{ animationDelay: '0.06s' }}>
-              I am interested in consumer robots and want to make generalised robots to help humans with manual day to day chores.
-            </h1>
+            <Typewriter
+              text="I am interested in consumer robots and want to make generalised robots to help humans with manual day to day chores."
+              className={`${styles.title} reveal-eager typewriter`}
+            />
             <div className="cta-row reveal-eager" style={{ animationDelay: '0.18s' }}>
               <Magnetic>
                 <Link href="/#projects" className="button button-primary">
@@ -71,35 +70,22 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ---------- How I work ---------- */}
+      {/* ---------- Interested about ---------- */}
       <section className={`section ${styles.method}`} aria-labelledby="method-title">
         <div className="page-shell">
           <Reveal className={styles.heading}>
             <span className="section-index">01</span>
-            <h2 id="method-title">How I work</h2>
-            <p>Four steps, repeated until the thing actually runs.</p>
+            <h2 id="method-title">Interested about</h2>
+            <p>Technologies and fields I keep coming back to.</p>
           </Reveal>
 
-          <ol className={styles.stages}>
-            {loop.map((stage, index) => (
-              <Reveal as="li" key={stage.title} className={styles.stage} delay={index * 0.07}>
-                <span className={styles.stageIndex}>{String(index + 1).padStart(2, '0')}</span>
-                <span className={styles.stageTitle}>{stage.title}</span>
-                <span className={styles.stageDetail}>{stage.detail}</span>
-              </Reveal>
+          <ul className="tag-list interested-chips">
+            {INTEREST_CHIPS.map((chip) => (
+              <li key={chip} className="tag interested-chip">
+                {chip}
+              </li>
             ))}
-          </ol>
-
-          <Reveal className={styles.interests}>
-            <span className="label">Currently curious about</span>
-            <ul className="tag-list">
-              {technicalInterests.map((interest) => (
-                <li key={interest} className="tag">
-                  {interest}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+          </ul>
         </div>
       </section>
 
