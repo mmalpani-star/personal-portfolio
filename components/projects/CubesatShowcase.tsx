@@ -38,7 +38,7 @@ const DEPLOY_MESSAGE: Record<DeployState, string> = {
  * and the coiled steel-tape antenna deploys. The page behind turns to deep space while the
  * satellite is on screen and back again as the section ends.
  */
-export function CubesatShowcase({ project, index, total }: { project: Project } & Place) {
+export function CubesatShowcase({ project, index, total, standalone = false }: { project: Project } & Place & { standalone?: boolean }) {
   const hostRef = useRef<HTMLElement>(null);
   const stageEl = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -161,7 +161,7 @@ export function CubesatShowcase({ project, index, total }: { project: Project } 
   return (
     <section
       ref={hostRef}
-      className={`${styles.scene} ${styles.space}`}
+      className={`${styles.scene} ${standalone ? '' : styles.space}`}
       data-static={reduceMotion}
       aria-label={`${project.title}, 3D model`}
     >
