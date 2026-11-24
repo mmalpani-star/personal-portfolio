@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, Suspense } from 
 import { useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-import { Color, Group, Material, Mesh, Object3D } from 'three';
+import { Box3, Color, Group, Material, Mesh, Object3D, Vector3, Points, BufferGeometry, BufferAttribute, PointsMaterial } from 'three';
 import { motion } from 'framer-motion';
 import { useFinePointer } from '@/components/effects/useFinePointer';
 
@@ -17,6 +17,8 @@ type ModelCanvasProps = {
   label?: string;
   /** Accent colour used for emissive / glow. Defaults to the CSS accent token. */
   accent?: string;
+  /** Whether to show a starfield background behind the model. */
+  stars?: boolean;
 };
 
 /**
@@ -30,8 +32,9 @@ type ModelCanvasProps = {
  * - Smooth pointer look-at + hover emissive boost on fine pointers; static
  *   fallback under reduced motion / touch / when WebGL is unavailable.
  * - Cheap CSS radial-gradient glow behind the canvas that follows the pointer.
+ * - Optional starfield background + continuous slow rotation for space scenes.
  */
-export function ModelCanvas({ model, label = '3D model', accent = '#ffd400' }: ModelCanvasProps) {
+export function ModelCanvas({ model, label = '3D model', accent = '#ffd400', stars = false }: ModelCanvasProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const fine = useFinePointer();
   const reduceMotion = useReducedMotion();
@@ -107,6 +110,23 @@ export function ModelCanvas({ model, label = '3D model', accent = '#ffd400' }: M
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted, model]);
 
+  // Starfield geometry (created once, reused on remount).
+  const starGeometry = useMemo(() => {
+    const count = 1500;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 60;
+    }
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new BufferAttribute(positions, 3));
+    return geometry;
+  }, []);
+
+  const starMaterial = useMemo(
+    () => new PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.7 }),
+    []
+  );
+
   if (!mounted) return null;
 
   return (
@@ -122,11 +142,14 @@ export function ModelCanvas({ model, label = '3D model', accent = '#ffd400' }: M
         frameloop={frameloop}
         dpr={[1, 2]}
         shadows
-        camera={{ position: [0, 0, 3.2], fov: 35 }}
+        camera={{ position: [0, 0, 3], fov: 35 }}
       >
         <ambientLight intensity={0.5} />
         <directionalLight position={[3, 6, 4]} intensity={1.1} castShadow />
         <pointLight position={[-2, 3, 2]} intensity={0.5} color={accent} />
+        {stars && (
+          <points geometry={starGeometry} material={starMaterial} />
+        )}
         <Suspense fallback={null}>
           <ModelContent model={model} accent={accent} active={active} springX={springX} springY={springY} />
         </Suspense>
@@ -152,8 +175,25 @@ function ModelContent({
   const { scene } = useGLTF(model);
   const rootRef = useRef<Group>(null);
   const intensity = active ? 0.5 : 0.05;
-  // Clone once so we never mutate the shared GLTF cache.
-  const clone = useMemo(() => scene.clone(), [scene]);
+  // Clone once and fit to a uniform apparent size so all three models look
+  // the same scale regardless of their source units. Never mutates the shared
+  // GLTF cache because we operate on the clone.
+  const clone = useMemo(() => {
+    const c = scene.clone();
+    const box = new Box3().setFromObject(c);
+    const center = new Vector3();
+    box.getCenter(center);
+    const size = new Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z, 0.001);
+    const target = 1.5;
+    const s = target / maxDim;
+    // world = position + s * p_local; centre the bbox at origin and scale to target.
+    c.position.set(-s * center.x, -s * center.y, -s * center.z);
+    c.scale.setScalar(s);
+    c.updateMatrixWorld();
+    return c;
+  }, [scene]);
 
   // Add the clone to the declarative group so it is part of the scene graph.
   useLayoutEffect(() => {
@@ -165,13 +205,15 @@ function ModelContent({
     };
   }, [clone]);
 
-  // Smooth pointer look-at + slow idle float.
+  // Smooth pointer look-at + slow idle float + continuous orbit rotation.
   useFrame(() => {
     if (!rootRef.current) return;
     const targetX = springX.get() * 0.12;
     const targetY = springY.get() * 0.12;
     rootRef.current.rotation.y += (targetX - rootRef.current.rotation.y) * 0.08;
     rootRef.current.rotation.x += (targetY - rootRef.current.rotation.x) * 0.08;
+    // Continuous slow orbit rotation (satellite tumbling in space).
+    rootRef.current.rotation.z += 0.004;
     rootRef.current.position.y = Math.sin(Date.now() * 0.0012) * 0.015;
   });
 
