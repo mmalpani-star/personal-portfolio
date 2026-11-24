@@ -1113,8 +1113,7 @@ export const aboutPanels: AboutPanel[] = [
       color: true,
     },
     title: 'Basketball',
-    tag: 'School team captain, 2026',
-    line: 'Captained the school side. Projectile motion, but recreational — the arc is still a parabola.',
+    line: 'The guy who changed the game.',
     sfx: 'ダンッ',
     sfxRoman: 'dan',
     link: {
