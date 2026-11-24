@@ -39,10 +39,10 @@
 .column a { transition: color var(--dur-fast) ease; }
 .column a:hover { color: var(--text); }
 
-/* Elsewhere: row of social logo icons instead of text links */
+/* Elsewhere: row of social logo icons (bigger, no text labels) */
 .iconRow {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-6);
   margin-top: var(--space-2);
 }
 
@@ -50,60 +50,35 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  color: rgba(255, 255, 255, 0.5);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
   transition:
-    color var(--dur-fast) ease,
     border-color var(--dur-fast) ease,
     background var(--dur-fast) ease,
-    box-shadow var(--dur-fast) ease;
+    box-shadow var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
 }
-.iconLink svg {
-  width: 17px;
-  height: 17px;
+
+.iconLink img {
+  width: 22px;
+  height: 22px;
   display: block;
 }
-.iconLink:focus-visible {
-  outline: 2px solid var(--text);
-  outline-offset: 2px;
-}
 
-/* GitHub stays white on hover (black brand invisible on dark) */
-.githubLink:hover,
-.githubLink:focus-visible {
-  color: var(--brand, #fff);
-  border-color: var(--brand, #fff);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-/* LinkedIn blue */
-.linkedinLink:hover,
-.linkedinLink:focus-visible {
-  color: var(--brand, #0a66c2);
-  border-color: var(--brand, #0a66c2);
-  background: rgba(10, 102, 194, 0.10);
-}
-
-/* Instagram gradient */
-.instagramLink:hover,
-.instagramLink:focus-visible {
-  color: #fff;
-  border-color: transparent;
-  background: var(--brand, linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%));
+.iconLink:hover {
+  border-color: var(--accent-line);
+  background: rgba(255, 255, 255, 0.10);
+  transform: translateY(-2px);
   box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.45);
 }
 
-/* Handshake brand purple */
-.handshakeLink:hover,
-.handshakeLink:focus-visible {
-  color: var(--brand, #7c3aed);
-  border-color: var(--brand, #7c3aed);
-  background: rgba(124, 58, 237, 0.10);
+.iconLink:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
 }
 
 @media (max-width: 640px) {
