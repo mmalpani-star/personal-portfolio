@@ -69,15 +69,15 @@ export const experienceStory: StoryEntry[] = [
   },
   {
     id: 'borderpulse',
-    title: 'BorderPulse — Compiled-16 UCSD Hackathon',
-    organization: 'cOmpiled-16',
+    title: 'BorderPulse — Compiled-2026 UCSD Hackathon',
+    organization: 'cOmpiled-2026',
     descriptor: 'UC San Diego hackathon',
     intro:
-      'BorderPulse is the project I built at the Compiled-16 UCSD Hackathon: a logistics platform concept that helps dispatchers and receivers judge border-crossing conditions, spot delays and decide on rerouting.',
+      'BorderPulse is the project I built at the Compiled-2026 UCSD Hackathon: a logistics platform concept that helps dispatchers and receivers judge border-crossing conditions, spot delays and decide on rerouting.',
     points: [
       'Border-condition and delay awareness for rerouting decisions',
       'An automated driver-communication workflow that can contact truck drivers with rerouting instructions',
-      'Presented BorderPulse on the cOmpiled-16 stage and ran the product demonstration',
+      'Presented BorderPulse on the cOmpiled-2026 stage and ran the product demonstration',
     ],
     achievement: 'Top 7 of 200+ teams · 441 participants',
     links: [

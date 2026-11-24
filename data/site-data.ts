@@ -547,37 +547,37 @@ if __name__ == "__main__":
     title: 'BorderPulse',
     shortTitle: 'BorderPulse',
     teaser:
-      'Hackathon logistics tool for border-crossing delays and rerouting. Top 7 at cOmpiled-16.',
+      'Hackathon logistics tool for border-crossing delays and rerouting. Top 7 at cOmpiled-2026.',
     chips: ['Top 7 of 200+ teams', 'Rerouting decisions', 'Driver communication'],
     category: 'Hackathon / Logistics',
     status: 'PROTOTYPE',
-    statusNote: 'Hackathon prototype demonstrated at cOmpiled-16; not a deployed commercial logistics system.',
+    statusNote: 'Hackathon prototype demonstrated at cOmpiled-2026; not a deployed commercial logistics system.',
     summary:
       'A logistics platform concept for dispatchers and receivers that helps evaluate border-crossing conditions, identify delays, and make rerouting decisions.',
     description:
       'BorderPulse addresses uncertainty in cross-border freight logistics. It helps dispatchers evaluate border-crossing conditions, identify delays, and make rerouting decisions. Its core innovation is an automated driver communication workflow that can contact truck drivers and communicate rerouting instructions, reducing the need for manual coordination.',
-    role: 'cOmpiled-16 UCSD Hackathon project',
+    role: 'cOmpiled-2026 UCSD Hackathon project',
     technologies: ['Logistics', 'Routing Decisions', 'Driver Communication'],
     github: 'https://github.com/mmalpani-star/borderpulse',
     highlights: [
-      'Top 7 at the cOmpiled-16 UCSD Hackathon',
+      'Top 7 at the cOmpiled-2026 UCSD Hackathon',
       'Built for dispatchers and receivers navigating cross-border freight uncertainty',
       'Border-condition and delay awareness for rerouting decisions',
       'Automated driver communication workflow concept',
     ],
     sections: ['Overview', 'Hackathon / Presentation'],
     achievement: {
-      label: 'cOmpiled-16 UCSD Hackathon',
+      label: 'cOmpiled-2026 UCSD Hackathon',
       detail: 'Top 7 · 441 participants · 200+ teams',
     },
     gallerySection: {
       eyebrow: 'Hackathon / presentation',
-      title: 'BorderPulse at cOmpiled-16',
+      title: 'BorderPulse at cOmpiled-2026',
     },
     heroMedia: {
       type: 'image',
       src: '/images/projects/borderpulse/borderpulse-presentation.jpeg',
-      alt: 'BorderPulse presentation at the cOmpiled-16 UCSD Hackathon',
+      alt: 'BorderPulse presentation at the cOmpiled-2026 UCSD Hackathon',
       caption: 'BorderPulse presentation',
       width: 2000,
       height: 1333,
@@ -586,7 +586,7 @@ if __name__ == "__main__":
       {
         type: 'image',
         src: '/images/projects/borderpulse/borderpulse-demo-setup.jpeg',
-        alt: 'BorderPulse demo setup during the cOmpiled-16 presentation',
+        alt: 'BorderPulse demo setup during the cOmpiled-2026 presentation',
         caption: 'Demo setup',
         width: 2000,
         height: 1333,
@@ -602,7 +602,7 @@ if __name__ == "__main__":
       {
         type: 'image',
         src: '/images/projects/borderpulse/borderpulse-presentation-wide.jpeg',
-        alt: 'BorderPulse team presentation on the cOmpiled-16 stage',
+        alt: 'BorderPulse team presentation on the cOmpiled-2026 stage',
         caption: 'Presentation stage',
         width: 2000,
         height: 1333,
@@ -859,7 +859,7 @@ export const awards: Award[] = [
     context: '— MLH Best Use of Tiger Data',
   },
   {
-    name: 'cOmpiled-16 UCSD Hackathon',
+    name: 'cOmpiled-2026 UCSD Hackathon',
     detail: 'Top 7 of 200+ teams',
     figure: 'Top 7',
     context: 'of 200+ teams · 441 participants',
