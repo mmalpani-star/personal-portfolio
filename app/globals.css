@@ -3,41 +3,40 @@
    ========================================================================== */
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  /* ---- 60%: white ground ---- */
+  /* ---- 10%: near-black ground ---- */
   --white: #ffffff;
-  --paper: #f7f6f3;
-  --bg: var(--white);
+  --paper: #0f0f12;
+  --bg: #070709;
   --bg-elevated: var(--paper);
-  --bg-raised: #efede8;
+  --bg-raised: #121217;
 
-  /* ---- 30%: black type and structure ---- */
-  --ink: #0d0d0d;
+  /* ---- 90%: white type and structure ---- */
+  --ink: #ffffff;
   --text: var(--ink);
-  --muted-strong: rgba(13, 13, 13, 0.76);
-  --muted: rgba(13, 13, 13, 0.64);
-  --faint: rgba(13, 13, 13, 0.56);
+  --muted-strong: rgba(255, 255, 255, 0.76);
+  --muted: rgba(255, 255, 255, 0.55);
+  --faint: rgba(255, 255, 255, 0.4);
 
-  --surface-1: rgba(13, 13, 13, 0.035);
-  --surface-2: rgba(13, 13, 13, 0.06);
-  --surface-3: rgba(13, 13, 13, 0.1);
+  --surface-1: rgba(255, 255, 255, 0.03);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --surface-3: rgba(255, 255, 255, 0.1);
 
   /* Lines */
-  --border: rgba(13, 13, 13, 0.14);
-  --border-strong: rgba(13, 13, 13, 0.3);
-  --grid-line: rgba(13, 13, 13, 0.05);
+  --border: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.25);
+  --grid-line: rgba(255, 255, 255, 0.04);
 
   /* ---- 10%: yellow accent. Fills and markers only ----
-     Yellow on white is ~1.4:1, so it is never used for text on the ground;
-     it carries black text instead. */
+     Yellow on dark is reserved for glows, lines, and accents; text stays white. */
   --yellow: #ffd400;
   --accent: var(--yellow);
   --accent-soft: rgba(255, 212, 0, 0.16);
   --accent-line: rgba(255, 212, 0, 0.75);
   --accent-glow: rgba(255, 212, 0, 0.35);
 
-  /* Foreground colours for use ON a filled accent or dark surface */
+  /* Foreground colours for use ON a filled accent */
   --on-accent: #0d0d0d;
   --on-dark: #ffffff;
 
@@ -129,8 +128,8 @@ body::before {
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(rgba(13, 13, 13, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(13, 13, 13, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 64px 64px, 64px 64px, 16px 16px, 16px 16px;
   background-position: center top;
   mask-image: radial-gradient(ellipse 100% 80% at 50% 20%, #000 20%, transparent 80%);

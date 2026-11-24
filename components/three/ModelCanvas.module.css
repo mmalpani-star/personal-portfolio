@@ -1,0 +1,43 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 45vh, 560px);
+  min-height: 300px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.glow {
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    650px circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 212, 0, 0.14),
+    rgba(255, 212, 0, 0.04) 45%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 400ms ease;
+  will-change: transform;
+}
+
+.wrapper[data-active='true'] .glow,
+.wrapper:hover .glow {
+  opacity: 1;
+}
+
+canvas {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+}
