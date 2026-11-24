@@ -17,3 +17,5 @@ cad/**/__pycache__/
 cad/hexapod/export/views/
 cad/cubesat/export/step/cubesat_assembly.step
 cad/cubesat/cache/
+
+node-v24.21.0.pkg
