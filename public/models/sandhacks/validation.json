@@ -143,10 +143,7 @@
       ]
     },
     "tip_on_root": {
-      "tip_hole": [
-        32.7,
-        32.7
-      ],
+      "tip_point_over_root_far_hole_u_mm": 188.3,
       "root_far_hole": [
         224.41517902006203,
         249.08401526449433
@@ -154,21 +151,19 @@
       "z": [
         42.0,
         62.0
-      ]
+      ],
+      "note": "notched end is the free end (owner); overlap length and the screw into the tip are ASSUMED"
     },
     "cradle_on_tip": {
-      "between_tip_holes": [
-        [
-          50.4,
-          50.4
-        ],
-        [
-          68.1,
-          68.1
-        ]
+      "disc_centre_world_mm": [
+        248.66,
+        -0.93,
+        52.0
       ],
-      "z0": 62.0,
-      "note": "block centre x taken from the top view (about 67 mm); the cradle has no hole that mates the tip"
+      "disc_ahead_of_tip_end_mm": 11.53,
+      "disc_into_notch_mm": 4.47,
+      "tilt_deg": 45,
+      "note": "disc (32 x 8 mm) between the two 2 mm prongs of the 12 mm notch; tilt from the owner; height ASSUMED"
     },
     "modelled": [
       "lower_jaw",

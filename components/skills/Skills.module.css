@@ -1,4 +1,4 @@
-/* The Skills section keeps the portfolio's light theme: the page's own white ground, black type and yellow accent. */
+/* The Skills section: a dot-drawn bust (lib/three/dot-bust.ts) with the skill marks arranged around it. */
 
 .stage {
   position: relative;
@@ -6,12 +6,23 @@
   margin-top: var(--nav-h);
   min-height: calc(100svh - var(--nav-h));
   overflow: hidden;
-  background: transparent;
+  background: radial-gradient(ellipse 60% 70% at 50% 45%, #151a12 0%, #0f110d 60%, #0b0c09 100%);
   color: var(--text);
-  /* dragging the zipper must never select the page's text */
-  user-select: none;
-  -webkit-user-select: none;
 }
+html[data-theme='light'] .stage { background: radial-gradient(ellipse 60% 70% at 50% 45%, #fbfaf5 0%, var(--bg) 70%); }
+
+/* fine film grain over the whole scene */
+.stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.7 -0.6'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  filter: invert(1);
+  opacity: 0.05;
+}
+html[data-theme='light'] .stage::after { filter: none; opacity: 0.06; }
 
 /* ---------------------------------------------------------------- heading */
 
@@ -55,148 +66,74 @@
   color: var(--muted);
 }
 
-/* ---------------------------------------------------------------- backpack */
-
-.packWrap {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 2;
-  width: min(86vw, 560px);
-  aspect-ratio: 1 / 1.08;
-  transform-origin: 50% 50%;
-  transition: transform 1.15s var(--ease-out);
-}
+/* ---------------------------------------------------------------- the bust */
 
 .canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
   opacity: 0;
-  touch-action: none; /* closed: a finger drags the zipper, it never scrolls the page */
-  -webkit-tap-highlight-color: transparent;
-  transition: opacity 0.8s ease;
+  transition: opacity 0.6s ease;
 }
 .stage[data-ready='true'] .canvas { opacity: 1; }
-.stage[data-state='open'] .canvas,
-.stage[data-state='opening'] .canvas { touch-action: pan-y; }
-.stage[data-gl='off'] .packWrap { display: none; }
+.stage[data-gl='off'] .canvas { display: none; }
 
-/* ---------------------------------------------------------------- prompts */
-
-.cta {
-  position: absolute;
-  left: 50%;
-  bottom: 26px;
-  z-index: 4;
-  display: grid;
-  justify-items: center;
-  gap: 12px;
-  transform: translateX(-50%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-.cta[data-visible='true'] { opacity: 1; pointer-events: auto; }
-
-.hint {
-  margin: 0;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.unzip,
-.repack { min-height: 44px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
-
-.repack {
-  position: absolute;
-  left: 208px;
-  bottom: 38px;
-  z-index: 5;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease 0.9s;
-}
-.repack[data-visible='true'] { opacity: 1; pointer-events: auto; }
-
-/* ---------------------------------------------------------------- the groups */
+/* ---------------------------------------------------------------- the marks, around the bust */
 
 .groups {
   position: absolute;
-  left: var(--gutter);
-  right: var(--gutter);
-  top: 25%;
-  bottom: 200px;
+  inset: 0;
   z-index: 3;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-content: center;
-  gap: clamp(24px, 4vw, 64px);
   pointer-events: none;
 }
-.groups[data-state='open'],
-.groups[data-state='opening'] { pointer-events: auto; }
+.group { display: contents; }
 
-.group { min-width: 0; }
-
-.groupHead {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: baseline;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-.groups[data-state='open'] .groupHead,
-.groups[data-state='opening'] .groupHead { opacity: 1; transition-delay: 0.6s; }
-
-.groupCode,
-.groupCount {
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  letter-spacing: 0.08em;
-  color: var(--text);
-}
-.groupCount { color: var(--faint); }
-
+/* each group's name sits just above its first mark (placed by SkillsExperience) */
 .groupTitle {
+  position: absolute;
+  left: var(--x, -999px);
+  top: var(--y, -999px);
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+  opacity: 0;
+  transition: opacity 0.8s ease 1.6s;
 }
+.groupCode { color: var(--accent); margin-right: 4px; }
+html[data-theme='light'] .groupCode { color: var(--faint); } /* yellow is never text on white */
+.stage[data-ready='true'] .groupTitle,
+.stage[data-gl='off'] .groupTitle { opacity: 0.85; }
 
-.logos {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px 8px;
-  margin: 24px 0 0;
-  padding: 0;
-  list-style: none;
-}
+.logos { margin: 0; padding: 0; list-style: none; }
 
-/* Not boxed or carded: a mark and a name, in one ink. Hidden until they come out of the pack. */
 .item {
+  position: absolute;
+  left: var(--x, -999px);
+  top: var(--y, -999px);
   display: grid;
   justify-items: center;
+  transform: translate(-50%, -50%) scale(0.9);
   opacity: 0;
-  will-change: transform, opacity;
+  pointer-events: auto;
+  transition: opacity 0.7s ease, transform 0.9s var(--ease-out);
+  transition-delay: calc(1.2s + var(--i, 0) * 0.06s);
 }
-.groups[data-state='opening'] .item,
-.groups[data-state='open'] .item,
-.groups[data-state='repacking'] .item { opacity: 1; }
+.stage[data-ready='true'] .item,
+.stage[data-gl='off'] .item { opacity: 1; transform: translate(-50%, -50%); }
 
 .bob {
   display: grid;
   justify-items: center;
-  gap: 10px;
+  gap: 8px;
   animation: bob 7s ease-in-out infinite;
   animation-delay: var(--d, 0s);
 }
@@ -210,13 +147,15 @@
   --c2: currentColor;
   --ko: var(--bg);
   display: block;
-  width: 60px;
-  height: 60px;
+  width: 46px;
+  height: 46px;
   overflow: visible;
   color: var(--ink);
-  opacity: 0.82;
+  opacity: 0.86;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.55));
   transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
 }
+html[data-theme='light'] .logoBox { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9)); }
 
 /* the saved Claude file, drawn as a mask in the same ink: its own shape and proportions */
 .mask {
@@ -229,47 +168,43 @@
   mask-size: contain;
 }
 
-/* hover is quiet and still monochrome: the mark firms up and lifts a little */
 .item:hover .logoBox { opacity: 1; transform: translateY(-3px); }
 
 .label {
-  max-width: 11ch;
+  max-width: 12ch;
   text-align: center;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.09em;
-  line-height: 1.35;
+  line-height: 1.3;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--muted-strong);
   transition: color 0.25s ease;
 }
 .item:hover .label { color: var(--text); }
 
-/* ---------------------------------------------------------------- narrow screens */
+/* ---------------------------------------------------------------- narrow screens: bust on top, marks below */
 
-@media (max-width: 900px) {
-  /* stack the groups under the heading; they take no room until the pack is opened */
+@media (max-width: 899px) {
+  .stage { min-height: 0; padding-bottom: 72px; }
+  .canvas { position: relative; inset: auto; height: 62svh; margin-top: 150px; }
   .groups {
     position: relative;
     inset: auto;
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 32px;
-    margin-top: 168px;
-    padding: 0 var(--gutter);
-    max-height: 0;
-    overflow: hidden;
+    gap: 36px;
+    padding: 24px var(--gutter) 0;
   }
-  .groups[data-state='opening'],
-  .groups[data-state='open'],
-  .groups[data-state='repacking'] { max-height: none; overflow: visible; padding-bottom: 96px; }
-
-  .repack { left: auto; right: 16px; bottom: auto; top: 148px; }
-  .cta { width: calc(100% - 2 * var(--gutter)); }
+  .group { display: block; }
+  .groupTitle { position: static; transform: none; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .logos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 8px; margin-top: 20px; }
+  .item { position: static; transform: none; }
+  .stage[data-ready='true'] .item,
+  .stage[data-gl='off'] .item { transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .bob { animation: none; }
-  .packWrap { transition: none; }
+  .item, .groupTitle, .canvas { transition: none; }
 }

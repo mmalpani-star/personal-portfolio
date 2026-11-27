@@ -9,10 +9,13 @@ What this is, and is not (so it can be checked):
             tip, phone cradle; no servos; screws join the parts. Hole alignment fixes the rest:
               - arm root on the upper jaw's raised block: the root's end hole (12 mm) over the block's near-end hole,
                 root pointing straight out. One pivot screw.
-              - arm tip on the arm root: the tip's first hole over the root's far hole (both 12 mm), tip continuing
-                straight out. One pivot screw.
-              - phone cradle on the arm tip, its 32 mm clamp block between the tip's 2nd and 3rd holes (25 mm apart),
-                cradle along the arm with the frame toward the free end.
+              - arm tip on the arm root: the tip's notched end (a 12 mm half-round notch leaving two 2 mm prongs) is the
+                arm's free outer end (owner, 2026-11-26). Its plain end lies on the root's far end, overlapping 23 mm
+                past the root's far hole (overlap length ASSUMED); one screw up through that hole into the tip (ASSUMED,
+                the tip has no hole there).
+              - phone cradle: its round boss (32 mm disc, 8 mm thick, 6.8 mm hole; MEASURED) stands between the tip's
+                two prongs, in line with the arm, with the cradle tilted up 45 degrees and out (owner, 2026-11-26).
+                The disc reaches as far into the notch as the notch allows; it sits at the tip's mid-height (ASSUMED).
               - lower jaw under the upper jaw, held by two screws through the upper jaw's two 6.8 mm holes (170 mm apart).
             Where the files and the description leave a choice it is flagged below as ASSUMED.
   MODELLED  Not in the supplied files, added from the description: the lower jaw (a plain cuboid, size ASSUMED to match
@@ -223,20 +226,22 @@ def main():
     root_top = jaw_top + parts['arm_root_print']['d']
     far = apply('arm_root_print', root_h[1])
 
-    tip_h = [hole('arm_tip_print', (c, c), r=6.0) for c in (32.7, 50.4, 68.1)]
-    pin('arm_tip_print', tip_h[0], tip_h[2], far, out, root_top)                      # tip on the root, first hole over the far hole
+    # The tip's long axis runs along (1, 1) in its source frame: u = (x + y) / sqrt 2 along it, 21.3 (notched end) .. 211.3 (plain end).
+    S2 = math.sqrt(2)
+    on_tip = lambda u: (u / S2, u / S2)
+    TIP_NOTCH_U, TIP_PLAIN_U, OVERLAP = 21.3, 211.3, 23.0
+    tip_h = [hole('arm_tip_print', (c, c), r=6.0) for c in (32.7, 50.4, 68.1)]     # checked to exist; nothing mates them now
+    # tip on the root: the point OVERLAP mm in from the plain end sits over the root's far hole, notched end pointing out
+    pin('arm_tip_print', on_tip(TIP_PLAIN_U - OVERLAP), on_tip(TIP_NOTCH_U), far, out, root_top)
     tip_top = root_top + parts['arm_tip_print']['d']
-    mid = tuple((apply('arm_tip_print', tip_h[1])[i] + apply('arm_tip_print', tip_h[2])[i]) / 2 for i in (0, 1))
-
-    # cradle: along the arm, its 32 mm clamp block (centre x ~ 67, across the cradle's full width) midway between tip holes 2 and 3
-    cb = (67.0, parts['phone_cradle_print']['holes'] and 44.7)
-    cc = rot(out, cb)
-    A['phone_cradle_print'] = (out, (mid[0] - cc[0], mid[1] - cc[1]), tip_top - parts['phone_cradle_print']['zmin'])
+    notch_end = apply('arm_tip_print', on_tip(TIP_NOTCH_U))                     # centre of the notched end face, assembled xy
 
     # global frame: rotate so the jaw's long axis lies along X, then centre the assembly on the origin
     G = -principal_angle(parts['upper_jaw_print']['src'])
     corners = []
     for n, p in parts.items():
+        if n not in A:                                         # the cradle is placed in 3D afterwards, off the tip's end
+            continue
         for q in p['src']:
             a, o, dz = A[n]
             r = rot(a + G, (q[0], q[1])); o2 = rot(G, o)
@@ -246,6 +251,8 @@ def main():
 
     placements = {}
     for n, p in parts.items():
+        if n not in A:
+            continue
         a, o, dz = A[n]
         phi = a + G - p['t']                                   # local -> assembled rotation about z
         cx, cy, cz = p['c']
@@ -253,6 +260,27 @@ def main():
         shift = rot(G, o)
         tr = rot(phi, (cx, cy))
         placements[n] = dict(assembled=dict(x=tr[0] + shift[0] - gx, y=tr[1] + shift[1] - gy, z=dz + cz, rot=phi))
+
+    # ---- cradle: disc between the tip's prongs, cradle tilted up and out. Full 3D placement (z-up, mm).
+    cr = parts['phone_cradle_print']
+    DISC_C, DISC_R, DISC_T = (16.0, 47.2, 19.0), 16.0, 8.0          # MEASURED in the cradle's source frame (centre x, y, z)
+    NOTCH_R, TILT = 6.0, math.radians(45)
+    P = (DISC_C[0] - cr['c'][0], DISC_C[1] - cr['c'][1], DISC_C[2] - cr['c'][2])   # disc centre in the stored local frame
+    phi = out + G                                                    # world heading of "out"
+    a = -TILT                                                        # about local y: takes local +x (toward the frame) up
+    def M(q):                                                        # local -> world rotation: Ry(a) then Rz(phi)
+        x = q[0] * math.cos(a) + q[2] * math.sin(a)
+        z = -q[0] * math.sin(a) + q[2] * math.cos(a)
+        r = rot(phi, (x, q[1]))
+        return (r[0], r[1], z)
+    into = math.sqrt(NOTCH_R ** 2 - (DISC_T / 2) ** 2)               # how far the notch wall is behind the end face at the disc's faces
+    r_ = rot(G, notch_end)
+    ne = (r_[0] - gx, r_[1] - gy)                                    # same as to_world() below
+    ux, uy = math.cos(phi), math.sin(phi)
+    ahead = DISC_R - into                                            # disc centre this far beyond the end face
+    W = (ne[0] + ux * ahead, ne[1] + uy * ahead, root_top + parts['arm_tip_print']['d'] / 2)
+    MP = M(P)
+    placements['phone_cradle_print'] = dict(assembled=dict(x=W[0] - MP[0], y=W[1] - MP[1], z=W[2] - MP[2], rot=phi, tilt=a))
 
     # ---- LAID OUT pose: side by side, nothing inferred
     total = sum(p['h'] for p in parts.values()) + GAP * (len(parts) - 1)
@@ -285,7 +313,7 @@ def main():
         ('screw_jaw_1', jaw_pt(hole('upper_jaw_print', (26.7, 26.7), r=3.4)), -lj_d, lj_d + 12 + 3, 3.0, 5.0, 4.0),
         ('screw_jaw_2', jaw_pt(hole('upper_jaw_print', (147.0, 147.0), r=3.4)), -lj_d, lj_d + 12 + 3, 3.0, 5.0, 4.0),
         ('screw_pivot_jaw_root', jaw_pt(jaw_h2), 6.0, 42.0 - 6.0 + 3, 2.5, 4.5, 4.0),     # head sits in the 10 mm counterbore
-        ('screw_pivot_root_tip', root_far, 62.0, -(62.0 - 22.0) - 3, 4.5, 7.5, 6.0),      # head on top of the tip, shank down
+        ('screw_pivot_root_tip', root_far, 22.0, 30.0, 4.5, 7.5, 6.0),                     # head under the root, up into the tip (ASSUMED)
     ]
     for k, (nm, xy, z0, length, sr, hr, hh) in enumerate(screws):
         flip = length < 0
@@ -307,9 +335,20 @@ def main():
         bin_chunks.extend(data)
         return len(views) - 1
 
+    def qmul(p_, q_):
+        return (p_[3] * q_[0] + p_[0] * q_[3] + p_[1] * q_[2] - p_[2] * q_[1],
+                p_[3] * q_[1] - p_[0] * q_[2] + p_[1] * q_[3] + p_[2] * q_[0],
+                p_[3] * q_[2] + p_[0] * q_[1] - p_[1] * q_[0] + p_[2] * q_[3],
+                p_[3] * q_[3] - p_[0] * q_[0] - p_[1] * q_[1] - p_[2] * q_[2])
+
     def gl(pl):
+        # z-up rotation about z by rot is a glTF rotation about +Y; an optional tilt about the part's own y axis
+        # (z-up) is a glTF rotation about -Z, applied first.
+        q = (0.0, math.sin(pl['rot'] / 2), 0.0, math.cos(pl['rot'] / 2))
+        if pl.get('tilt'):
+            q = qmul(q, (0.0, 0.0, math.sin(-pl['tilt'] / 2), math.cos(-pl['tilt'] / 2)))
         return dict(t=[round(pl['x'] * 0.001, 6), round(pl['z'] * 0.001, 6), round(-pl['y'] * 0.001, 6)],
-                    q=[0.0, round(math.sin(pl['rot'] / 2), 6), 0.0, round(math.cos(pl['rot'] / 2), 6)])
+                    q=[round(v, 6) for v in q])
 
     for k, (n, label, colour, _) in enumerate(PARTS):
         p = parts[n]
@@ -368,9 +407,11 @@ def main():
         f.write(glb)
     report['mates'] = dict(
         root_on_jaw=dict(root_hole=list(root_h[0]), jaw_hole=list(jaw_h2), z=[jaw_top, root_top]),
-        tip_on_root=dict(tip_hole=list(tip_h[0]), root_far_hole=list(far), z=[root_top, tip_top]),
-        cradle_on_tip=dict(between_tip_holes=[list(tip_h[1]), list(tip_h[2])], z0=tip_top,
-                           note='block centre x taken from the top view (about 67 mm); the cradle has no hole that mates the tip'),
+        tip_on_root=dict(tip_point_over_root_far_hole_u_mm=TIP_PLAIN_U - OVERLAP, root_far_hole=list(far), z=[root_top, tip_top],
+                         note='notched end is the free end (owner); overlap length and the screw into the tip are ASSUMED'),
+        cradle_on_tip=dict(disc_centre_world_mm=[round(v, 2) for v in W], disc_ahead_of_tip_end_mm=round(ahead, 2),
+                           disc_into_notch_mm=round(into, 2), tilt_deg=45,
+                           note='disc (32 x 8 mm) between the two 2 mm prongs of the 12 mm notch; tilt from the owner; height ASSUMED'),
         modelled=[k for k in modelled],
     )
     with open(os.path.join(OUT, 'validation.json'), 'w') as f:

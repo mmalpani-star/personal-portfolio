@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -9,6 +9,8 @@ import { CollabSection } from '@/components/shared/CollabSection';
 import { Magnetic } from '@/components/effects/Magnetic';
 import { Icon } from '@/components/ui/Icon';
 import { Typewriter } from '@/components/about/Typewriter';
+import { InterestBuoys } from '@/components/about/InterestBuoys';
+import { OceanZone } from '@/components/about/OceanZone';
 import { aboutPanels, technicalInterests } from '@/data/site-data';
 import styles from './About.module.css';
 
@@ -17,6 +19,16 @@ export const metadata: Metadata = {
   description:
     'Madhav Malpani — robotics and AI student at UC San Diego. Builder, basketball captain, community organiser, and a long-running anime habit.',
 };
+
+/** Every model saved in public/models/about/crew/, in file-name order (name them 01-luffy.glb, 02-zoro.glb, ...). */
+function crewModels() {
+  const dir = path.join(process.cwd(), 'public', 'models', 'about', 'crew');
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => /\.(glb|gltf)$/i.test(f))
+    .sort()
+    .map((f) => `/models/about/crew/${encodeURIComponent(f)}`);
+}
 
 function availableMedia() {
   return aboutPanels
@@ -40,14 +52,15 @@ export default function AboutPage() {
     <main>
       <ReactorIntro />
 
+      <OceanZone crew={crewModels()}>
       {/* ---------- Opening ---------- */}
       <section className={`page-top ${styles.intro}`}>
-        <div className={`page-shell ${styles.introGrid}`}>
+        <div className={`page-shell ${styles.introGrid} ${styles.introCentered}`}>
           <div className={styles.introCopy}>
             <span className="label reveal-eager">About me</span>
             <Typewriter
               text="I am interested in consumer robots and want to make generalised robots to help humans with manual day to day chores."
-              className={`${styles.title} reveal-eager typewriter`}
+              className={`${styles.typewriter} reveal-eager`}
             />
             <div className="cta-row reveal-eager" style={{ animationDelay: '0.18s' }}>
               <Magnetic>
@@ -76,18 +89,12 @@ export default function AboutPage() {
           <Reveal className={styles.heading}>
             <span className="section-index">01</span>
             <h2 id="method-title">Interested about</h2>
-            <p>Technologies and fields I keep coming back to.</p>
           </Reveal>
 
-          <ul className="tag-list interested-chips">
-            {INTEREST_CHIPS.map((chip) => (
-              <li key={chip} className="tag interested-chip">
-                {chip}
-              </li>
-            ))}
-          </ul>
+          <InterestBuoys items={INTEREST_CHIPS} />
         </div>
       </section>
+      </OceanZone>
 
       {/* ---------- Off the clock ---------- */}
       <MangaPanels availableMedia={media} />

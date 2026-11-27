@@ -5,6 +5,7 @@ import { PointerFX } from '@/components/effects/PointerFX';
 import { BackToHanger } from '@/components/hub/BackToHanger';
 import { HangerHub } from '@/components/hub/HangerHub';
 import { Footer, Navbar } from '@/components/layout';
+import { themeBootScript } from '@/lib/theme';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
 const interTight = Inter_Tight({ subsets: ['latin'], display: 'swap', variable: '--font-inter-tight' });
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#070707',
-  colorScheme: 'dark',
+  themeColor: '#070709', // updated per theme by lib/theme.ts
+  colorScheme: 'dark light',
 };
 
 /**
@@ -35,6 +36,10 @@ const hubBootScript = `(function(){try{var d=document.documentElement,h=location
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Before first paint, so a light-theme visitor never sees a dark flash. */}
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body id="top">
         <script dangerouslySetInnerHTML={{ __html: hubBootScript }} />
         <a href="#main" className="skip-link">

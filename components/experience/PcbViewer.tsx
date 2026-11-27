@@ -207,9 +207,14 @@ export function PcbViewer({ label }: { label: string }) {
         pivot.scale.setScalar(scale);
         scene.add(pivot);
 
-        let yaw = -0.35;
-        let pitch = 0.32;
+        // Rests face-on and centred, swaying the same amount either side; a drag turns it, then it eases home.
+        const REST_PITCH = 0.16;
+        const SWAY = 0.42;
+        let yaw = 0;
+        let pitch = REST_PITCH;
         let vel = 0;
+        let clock = 0;
+        let idleFor = 10;
         let dragging = false;
         let lastX = 0;
         let lastY = 0;
@@ -237,12 +242,22 @@ export function PcbViewer({ label }: { label: string }) {
           last = now;
           if (!dragging) {
             vel *= Math.exp(-dt * 3);
-            yaw += vel * dt + (reduced ? 0 : 0.18 * dt);
+            yaw += vel * dt;
+            idleFor += dt;
+            if (idleFor > 1.5) {
+              // home: the nearest face-on turn, and the resting tilt
+              const home = Math.round(yaw / (2 * Math.PI)) * 2 * Math.PI;
+              const k = 1 - Math.exp(-dt * 2.2);
+              yaw += (home - yaw) * k;
+              pitch += (REST_PITCH - pitch) * k;
+            }
           }
-          pivot.rotation.set(pitch, yaw, 0, 'YXZ');
+          if (!reduced) clock += dt;
+          const sway = reduced ? 0 : SWAY * Math.sin(clock * 0.55) * Math.min(1, Math.max(0, idleFor - 1.5));
+          pivot.rotation.set(pitch, yaw + sway, 0, 'YXZ');
           renderer.render(scene, camera);
           if (visible && !reduced) raf = requestAnimationFrame(frame);
-          else if (visible && (dragging || Math.abs(vel) > 0.01)) raf = requestAnimationFrame(frame);
+          else if (visible && (dragging || Math.abs(vel) > 0.01 || idleFor < 4)) raf = requestAnimationFrame(frame);
         };
         const wake = () => {
           if (!raf) {
@@ -252,6 +267,7 @@ export function PcbViewer({ label }: { label: string }) {
         };
         const down = (e: PointerEvent) => {
           dragging = true;
+          idleFor = 0;
           lastX = e.clientX;
           lastY = e.clientY;
           canvas.setPointerCapture(e.pointerId);
@@ -267,6 +283,7 @@ export function PcbViewer({ label }: { label: string }) {
           yaw += dx * 0.012;
           pitch = Math.max(-1.1, Math.min(1.1, pitch + dy * 0.008));
           vel = dx * 0.012 * 60;
+          idleFor = 0;
           wake();
         };
         const up = () => {

@@ -1,0 +1,86 @@
+/* Highlights wall behind the hanger rack. Sits under the WebGL canvas; never takes pointer input. */
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.36;
+  /* the wall runs straight behind the rack; it only eases off along the bottom, under the caption and button */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, rgba(0, 0, 0, 0.35) 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 70%, rgba(0, 0, 0, 0.35) 100%);
+}
+:global(html[data-theme='light']) .backdrop { opacity: 0.42; }
+
+.tilt {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 50%;
+  display: grid;
+  gap: 20px;
+  transform: translateY(-50%) rotate(-7deg);
+}
+
+.row {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  animation-name: drift-left;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.row[data-dir='right'] { animation-name: drift-right; }
+.row:nth-child(2n) { margin-left: -180px; }
+.row:nth-child(3n) { margin-left: -90px; }
+
+@keyframes drift-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes drift-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+/* only move while the hanger is on screen */
+:global(html:not([data-hub='open'])) .row { animation-play-state: paused; }
+
+.pic,
+.fact {
+  flex: none;
+  height: 142px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.pic { position: relative; background: var(--surface-2); }
+.pic img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.7); }
+
+.fact {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  padding: 0 26px;
+  min-width: 220px;
+  background: var(--surface-1);
+}
+.fact strong {
+  font-family: var(--font-display);
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+  color: var(--text);
+}
+.fact span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 700px) {
+  .pic, .fact { height: 104px; }
+  .fact strong { font-size: 30px; }
+  .backdrop { opacity: 0.32; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row { animation: none; }
+}

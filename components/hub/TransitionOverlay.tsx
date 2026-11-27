@@ -5,9 +5,9 @@ import type { HubTag } from '@/lib/hub/tags';
 import type { TransitionMedia } from '@/lib/hub/media-cache';
 import styles from './TransitionOverlay.module.css';
 
-/** Fade up to full cover, hold the clip, fade out into the section: about 3.7 s in all. */
+/** Fade up to full cover, hold the clip, fade out into the section: about 2.5 s in all. */
 export const FADE_IN_MS = 450;
-export const HOLD_MS = 3000;
+export const HOLD_MS = 1400;
 export const FADE_OUT_MS = 650;
 const SKIP_FADE_MS = 280;
 /** Fill the screen by cropping only when little of the picture is lost; otherwise show it whole. */

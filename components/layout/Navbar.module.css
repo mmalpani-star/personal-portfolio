@@ -12,11 +12,11 @@
 }
 
 .header[data-scrolled="true"] {
-  background: rgba(6, 6, 9, 0.62);
+  background: rgba(var(--chrome-rgb), 0.62);
   border-bottom-color: var(--border);
   backdrop-filter: saturate(160%) blur(20px);
   -webkit-backdrop-filter: saturate(160%) blur(20px);
-  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, calc(0.45 * var(--shadow-k)));
 }
 
 .inner {
@@ -74,4 +74,7 @@
 @media (max-width: 520px) {
   .brandName { display: none; }
   .resume { padding: 0.6rem 0.75rem; }
+  /* monogram | back | slider + resume must fit 360 px: size the side columns to their content */
+  .inner { grid-template-columns: auto 1fr auto; gap: 8px; }
+  .actions { gap: 4px; }
 }

@@ -8,6 +8,9 @@ import styles from './ReactorIntro.module.css';
 
 const STORAGE_KEY = 'reactor-seen';
 
+/** Fired on window once the reactor overlay has fully faded out (see Typewriter). */
+export const REACTOR_DONE_EVENT = 'reactor:done';
+
 /** The supplied animated reactor (500 x 282, black background, 10 frames, loops). */
 const REACTOR_SRC = '/images/about/arc-reactor.webp';
 
@@ -51,6 +54,9 @@ export function ReactorIntro() {
     } catch {
       seen = false;
     }
+    // Mark the page as covered right away (before the Typewriter's observer can fire), so the
+    // heading underneath waits for the reactor instead of typing out unseen.
+    if (!seen) document.documentElement.dataset.reactor = 'playing';
     setPlaying(!seen);
   }, [reduceMotion]);
 
@@ -85,7 +91,12 @@ export function ReactorIntro() {
   }, [finish, playing, ready]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence
+      onExitComplete={() => {
+        delete document.documentElement.dataset.reactor;
+        window.dispatchEvent(new Event(REACTOR_DONE_EVENT));
+      }}
+    >
       {playing ? (
         <motion.div
           className={styles.overlay}

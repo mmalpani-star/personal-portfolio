@@ -1,22 +1,32 @@
 .section {
   background:
     radial-gradient(ellipse 70% 50% at 85% 0%, rgba(255, 212, 0, 0.04), transparent 60%),
-    linear-gradient(180deg, var(--bg), #0a0f1a 60%, #05080d 100%);
-  overflow: hidden;
+    linear-gradient(180deg, var(--bg), var(--section-deep-1) 60%, var(--section-deep-2) 100%);
+  /* clip, not hidden: `hidden` makes this a scroll container, which stops the CubeSat stage's
+     position: sticky from sticking to the viewport (it would scroll away mid-animation). */
+  overflow: clip;
 }
 
-/** Pointer-following gradient light: cheap transform-only glow. */
-.pointerGlow {
-  position: fixed;
+/* GPU particle cloud: a layer the full height of the section whose canvas sticks to the viewport,
+   so the cloud stays put behind the content while the section scrolls past. */
+.section > * { position: relative; z-index: 1; }
+.section > .particles {
+  position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  mask-image: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), #000 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), #000 40%, transparent 100%);
-  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 212, 0, 0.18), transparent 55%);
-  will-change: transform;
-  transition: opacity 400ms ease;
 }
+.particlesCanvas {
+  position: sticky;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.particlesCanvas[data-ready='true'] { opacity: 1; }
 
 .heading { margin-bottom: clamp(28px, 4vw, 48px); }
 .heading h2 { margin: var(--space-3) 0 var(--space-3); }

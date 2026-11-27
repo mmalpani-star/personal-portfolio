@@ -131,14 +131,14 @@
   padding: 0 12px;
   border: 1px solid transparent;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.10), rgba(var(--glass-rgb), 0.02));
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 12px 32px -12px rgba(0, 0, 0, 0.55);
-  color: #fff;
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.14),
+    0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));
+  color: var(--glass-fg);
   font: 500 var(--text-sm) / 1 var(--font-sans);
   cursor: pointer;
   transition:
@@ -150,20 +150,20 @@
 .control:hover,
 .iconButton:hover,
 .segment button:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.08));
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.18), rgba(var(--glass-rgb), 0.08));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.70),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
-    0 16px 38px -14px rgba(0, 0, 0, 0.62);
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.25),
+    0 16px 38px -14px rgba(0, 0, 0, calc(0.62 * var(--shadow-k)));
 }
 .control[aria-pressed='true'],
 .segment button[aria-pressed='true'] {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.22), rgba(var(--glass-rgb), 0.08));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
-    0 8px 20px -10px rgba(0, 0, 0, 0.5);
-  color: #fff;
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.25),
+    0 8px 20px -10px rgba(0, 0, 0, calc(0.5 * var(--shadow-k)));
+  color: var(--glass-fg);
 }
 .control:focus-visible,
 .iconButton:focus-visible,
@@ -182,14 +182,14 @@
   padding: 4px 9px;
   border: 1px solid transparent;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.10), rgba(var(--glass-rgb), 0.02));
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 12px 32px -12px rgba(0, 0, 0, 0.55);
-  color: #fff;
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.14),
+    0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));
+  color: var(--glass-fg);
   font: 600 11px / 1.2 var(--font-mono);
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -198,7 +198,7 @@
   pointer-events: none;
 }
 .tag[data-visible='true'] { opacity: 1; pointer-events: auto; }
-.tag[data-active='true'] { background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)); z-index: 1; }
+.tag[data-active='true'] { background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.22), rgba(var(--glass-rgb), 0.08)); z-index: 1; }
 
 .leaders {
   position: absolute;
@@ -258,6 +258,18 @@
 }
 .stage[data-space] > .view,
 .stage[data-space] > .caption { position: relative; z-index: 1; }
+/* The stage is deep space in both site themes, so its glass buttons and part tags follow the
+   stage's own space-driven text colour instead of the site theme (light theme made them dark-on-dark). */
+.stage[data-space] {
+  --glass-fg: var(--text);
+  --glass-rgb: 255, 255, 255;
+}
+/* the toolbar sits over Earth's bright clouds: give the see-through glass a dark base so it reads */
+.stage[data-space] .control,
+.stage[data-space] .iconButton,
+.stage[data-space] .segment button {
+  background-color: var(--ctl-bg, rgba(12, 17, 28, 0.72));
+}
 /* the canvas and its labels run under the caption too, so Earth is never cut off by the model's area */
 .stage[data-space] .canvas,
 .stage[data-space] .labels {

@@ -1,13 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { verifiedSkills } from '@/data/site-data';
-import { flyLogos, type Flight } from '@/lib/skills/burst';
 import { SKILL_LOGOS, type SkillGroupId, type SkillLogo } from '@/lib/skills/logos';
-import type { BackpackHandle } from '@/lib/three/backpack';
+import type { DotBust } from '@/lib/three/dot-bust';
 import styles from './Skills.module.css';
-
-type Phase = 'closed' | 'opening' | 'open' | 'repacking';
 
 const GROUPS: Array<{ id: SkillGroupId; title: string }> = [
   { id: 'programming', title: 'Programming' },
@@ -15,35 +12,31 @@ const GROUPS: Array<{ id: SkillGroupId; title: string }> = [
   { id: 'software', title: 'Software & Tools' },
 ];
 
+/** Width / height of the whole bust (model bounds 1.49 x 1.90). */
+const BUST_ASPECT = 1.491 / 1.899;
+/** Where each group's marks sit on the ellipse around the bust, in degrees (0 = right, 90 = down). */
+const ARCS: Record<SkillGroupId, [number, number]> = {
+  programming: [222, 142],   // left side, top to bottom
+  engineering: [-42, 42],    // right side, top to bottom
+  software: [122, 58],       // along the bottom, in front of the shoulders, left to right
+};
+const WIDE = 900;
+
 const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
-const sleep = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
 /**
- * The Skills section: a 3D backpack whose zipper the visitor drags open. As it opens, light spills out and the
- * skills burst from it into their three groups; the pack settles into a corner and Repack puts everything back.
- * The groups are a real list in the page at all times, so assistive technology never needs the animation.
+ * The Skills section: a head-and-shoulders bust drawn from 66,000 dots (lib/three/dot-bust.ts) that turns to look
+ * at the cursor, with the skill marks arranged around it. The marks are a real list in the page, grouped under
+ * headings, so assistive technology never needs the picture.
  */
 export function SkillsExperience() {
   const stageRef = useRef<HTMLElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const handleRef = useRef<BackpackHandle | null>(null);
-  const flightRef = useRef<Flight | null>(null);
-  const phaseRef = useRef<Phase>('closed');
-  const reducedRef = useRef(false);
-
-  const [phase, setPhaseState] = useState<Phase>('closed');
+  const bustRef = useRef<DotBust | null>(null);
+  const layoutRef = useRef<() => void>(() => undefined);
   const [ready, setReady] = useState(false);
-  const [grabbing, setGrabbing] = useState(false);
   const [gl, setGl] = useState<'pending' | 'ok' | 'off'>('pending');
-  const [reduced, setReduced] = useState(false);
 
-  const setPhase = useCallback((next: Phase) => {
-    phaseRef.current = next;
-    setPhaseState(next);
-  }, []);
-
-  // every skill in the data file has a mark; the order follows the data
   const groups = useMemo(
     () =>
       GROUPS.map((group) => ({
@@ -55,165 +48,118 @@ export function SkillsExperience() {
     [],
   );
 
-  /* ----- reduced motion ----- */
-  useEffect(() => {
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const apply = () => {
-      reducedRef.current = query.matches;
-      setReduced(query.matches);
-      handleRef.current?.setReducedMotion(query.matches);
-    };
-    apply();
-    query.addEventListener('change', apply);
-    return () => query.removeEventListener('change', apply);
-  }, []);
-
-  /* ----- where the backpack sits: centred while closed, a small mark in a corner once open ----- */
-  const place = useCallback((mode: 'center' | 'corner') => {
-    const stage = stageRef.current;
-    const wrap = wrapRef.current;
-    if (!stage || !wrap) return;
-    const sw = stage.clientWidth;
-    const closedH = Math.max(420, window.innerHeight - 64);
-    const w = wrap.offsetWidth;
-    const h = wrap.offsetHeight;
-    const narrow = window.innerWidth < 900;
-    let cx = sw / 2;
-    let cy = closedH / 2;
-    let scale = 1;
-    if (mode === 'corner') {
-      scale = Math.min(0.42, (narrow ? 124 : 176) / w);
-      cx = narrow ? sw - 14 - (w * scale) / 2 : 24 + (w * scale) / 2;
-      cy = narrow ? 14 + (h * scale) / 2 : stage.clientHeight - 24 - (h * scale) / 2;
-    }
-    wrap.style.transform = `translate3d(${cx - w / 2}px, ${cy - h / 2}px, 0) scale(${scale})`;
-  }, []);
-
+  /* ----- layout: size the bust to the stage, then put the marks on an ellipse around it ----- */
   useIsoLayoutEffect(() => {
-    place('center');
-    const onResize = () => place(phaseRef.current === 'open' || phaseRef.current === 'opening' ? 'corner' : 'center');
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, [place]);
+    const stage = stageRef.current;
+    if (!stage) return;
+    const layout = () => {
+      const W = stage.clientWidth;
+      const H = stage.clientHeight;
+      const wide = window.innerWidth >= WIDE;
+      let fit: number;
+      if (wide) {
+        const room = W / 2 - 300;                                          // keep a band each side for the marks
+        fit = Math.max(0.45, Math.min(0.86, (2 * room) / (H * BUST_ASPECT)));
+        const halfW = (fit * H * BUST_ASPECT) / 2;
+        const halfH = (fit * H) / 2;
+        const rx = halfW + 125;
+        const ry = halfH * 0.94;
+        const cx = W / 2;
+        const cy = H / 2;
+        for (const group of GROUPS) {
+          const items = Array.from(stage.querySelectorAll<HTMLElement>(`[data-group="${group.id}"] [data-logo]`));
+          const [a0, a1] = ARCS[group.id];
+          items.forEach((el, i) => {
+            const f = items.length > 1 ? i / (items.length - 1) : 0.5;
+            const a = toRad(a0 + (a1 - a0) * f);
+            el.style.setProperty('--x', `${(cx + Math.cos(a) * rx).toFixed(1)}px`);
+            el.style.setProperty('--y', `${(cy + Math.sin(a) * ry).toFixed(1)}px`);
+          });
+          const head = stage.querySelector<HTMLElement>(`[data-group="${group.id}"] [data-head]`);
+          if (head && items[0]) {
+            const x = parseFloat(items[0].style.getPropertyValue('--x'));
+            const y = parseFloat(items[0].style.getPropertyValue('--y'));
+            // software starts low on the left, under Programming's last mark: its name goes to the left instead of above
+            const left = group.id === 'software';
+            head.style.setProperty('--x', `${left ? x - 130 : x}px`);
+            head.style.setProperty('--y', `${left ? y : y - 62}px`);
+          }
+        }
+      } else {
+        const canvas = canvasRef.current;
+        const ch = canvas?.clientHeight ?? H;
+        fit = Math.max(0.4, Math.min(0.9, (W * 0.88) / (ch * BUST_ASPECT)));
+      }
+      bustRef.current?.setFit(fit);
+    };
+    layoutRef.current = layout;
+    layout();
+    const ro = new ResizeObserver(layout);
+    ro.observe(stage);
+    return () => ro.disconnect();
+  }, []);
 
   /* ----- the scene ----- */
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const stage = stageRef.current;
+    if (!canvas || !stage) return;
     let cancelled = false;
-    let handle: BackpackHandle | null = null;
-    import('@/lib/three/backpack')
-      .then(({ createBackpack }) => {
+    let bust: DotBust | null = null;
+    let visible = false;
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      bust?.setActive(visible);
+    });
+    io.observe(stage);
+    const theme = new MutationObserver(() => bust?.setLight(document.documentElement.dataset.theme === 'light'));
+    theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    import('@/lib/three/dot-bust')
+      .then(({ createDotBust }) => {
         if (cancelled) return;
-        handle = createBackpack({
+        bust = createDotBust({
           canvas,
-          reducedMotion: reducedRef.current,
-          events: {
-            onReady: () => setReady(true),
-            onError: () => setGl('off'),
-            onGrab: setGrabbing,
-            onThreshold: () => {
-              if (phaseRef.current === 'closed') setPhase('opening');
-            },
-            onProgress: () => undefined,
+          src: '/models/skills/bust.glb',
+          reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+          light: document.documentElement.dataset.theme === 'light',
+          onReady: () => {
+            if (cancelled) return;
+            setGl('ok');
+            setReady(true);
           },
+          onError: () => !cancelled && setGl('off'),
         });
-        handleRef.current = handle;
-        setGl((current) => (current === 'off' ? current : 'ok'));
+        bustRef.current = bust;
+        layoutRef.current(); // the layout ran before the scene existed: give it its fit now
+        bust.setActive(visible);
       })
       .catch(() => setGl('off'));
     return () => {
       cancelled = true;
-      flightRef.current?.cancel();
-      handle?.dispose();
-      handleRef.current = null;
+      io.disconnect();
+      theme.disconnect();
+      bust?.dispose();
+      bustRef.current = null;
     };
-  }, [setPhase]);
+  }, []);
 
-  // Without WebGL there is no backpack to unzip, so simply show the skills.
-  useEffect(() => {
-    if (gl === 'off') setPhase('open');
-  }, [gl, setPhase]);
-
-  const collect = () => {
-    const stage = stageRef.current;
-    if (!stage) return [];
-    return Array.from(stage.querySelectorAll<HTMLElement>('[data-logo]')).map((el) => ({ el }));
-  };
-
-  /* ----- opening: logos burst out, the pack moves to its corner ----- */
-  useIsoLayoutEffect(() => {
-    if (phase !== 'opening') return;
-    handleRef.current?.setInteractive(false);
-    void handleRef.current?.animateTo(1, 650);
-    const handle = handleRef.current;
-    if (reducedRef.current || !handle) {
-      place('corner');
-      setPhase('open');
-      return;
-    }
-    flightRef.current = flyLogos({ items: collect(), getMouth: () => handle.getMouthPoint(), direction: 'out' });
-    const move = window.setTimeout(() => place('corner'), 800);
-    let alive = true;
-    flightRef.current.done.then(() => {
-      if (alive && phaseRef.current === 'opening') setPhase('open');
-    });
-    return () => {
-      alive = false;
-      window.clearTimeout(move);
-    };
-  }, [phase, place, setPhase]);
-
-  /* ----- repacking: logos return to the pack, the zipper closes ----- */
-  useEffect(() => {
-    if (phase !== 'repacking') return;
-    let alive = true;
-    (async () => {
-      const handle = handleRef.current;
-      place('center');
-      if (!reducedRef.current && handle) {
-        await sleep(520); // let the pack travel back so the logos have somewhere to go
-        if (!alive) return;
-        flightRef.current = flyLogos({ items: collect(), getMouth: () => handle.getMouthPoint(), direction: 'in' });
-        await flightRef.current.done;
-        if (!alive) return;
-      }
-      await handle?.animateTo(0, 900);
-      if (!alive) return;
-      handle?.rearm();
-      handle?.setInteractive(true);
-      setPhase('closed');
-      // the logos were left hidden by the flight: hand them back to the stylesheet
-      collect().forEach(({ el }) => {
-        el.style.opacity = '';
-        el.style.transform = '';
-      });
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [phase, place, setPhase]);
-
-  const unzip = () => {
-    if (phaseRef.current !== 'closed') return;
-    // Opening by button runs the same zipper animation; the threshold then fires by itself.
-    void handleRef.current?.animateTo(1, reducedRef.current ? 1 : 1500);
-  };
-  const repack = () => {
-    if (phaseRef.current === 'open') setPhase('repacking');
-  };
-
+  let n = 0;
   return (
     <section
       ref={stageRef}
       className={styles.stage}
-      data-state={phase}
       data-ready={ready}
       data-gl={gl}
-      data-grabbing={grabbing}
-      data-reduced={reduced}
       aria-labelledby="skills-title"
     >
+      <canvas
+        ref={canvasRef}
+        className={styles.canvas}
+        role="img"
+        aria-label="A head-and-shoulders bust drawn from thousands of small glowing dots. It turns to look at the cursor."
+      />
+
       <header className={styles.heading}>
         <span className={styles.index}>05</span>
         <h1 id="skills-title" className={styles.title}>
@@ -222,67 +168,45 @@ export function SkillsExperience() {
         <p className={styles.lead}>Languages, hardware and tools I work with.</p>
       </header>
 
-      <div ref={wrapRef} className={styles.packWrap} data-state={phase}>
-        <canvas
-          ref={canvasRef}
-          className={styles.canvas}
-          role="img"
-          aria-label="A 3D backpack. Drag its zipper puller to open it, or use the Unzip button."
-        />
-      </div>
-
-      <div className={styles.cta} data-visible={phase === 'closed' && gl !== 'off'}>
-        <p className={styles.hint}>Drag the zipper to open the backpack</p>
-        <button type="button" className={`button button-secondary ${styles.unzip}`} onClick={unzip} disabled={phase !== 'closed'}>
-          Unzip it for me
-        </button>
-      </div>
-
-      <button type="button" className={`button button-secondary ${styles.repack}`} onClick={repack} disabled={phase !== 'open'} data-visible={phase === 'open' && gl !== 'off'}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M4 12a8 8 0 1 0 2.34-5.66M4 4v4h4" />
-        </svg>
-        Repack
-      </button>
-
-      <div className={styles.groups} data-state={phase}>
+      <div className={styles.groups}>
         {groups.map((group, index) => (
-          <section key={group.id} className={styles.group} aria-labelledby={`skills-${group.id}`}>
-            <div className={styles.groupHead}>
-              <span className={styles.groupCode}>S.{index + 1}</span>
-              <h2 id={`skills-${group.id}`} className={styles.groupTitle}>
-                {group.title}
-              </h2>
-              <span className={styles.groupCount}>{String(group.items.length).padStart(2, '0')}</span>
-            </div>
+          <section key={group.id} className={styles.group} data-group={group.id} aria-labelledby={`skills-${group.id}`}>
+            <h2 id={`skills-${group.id}`} className={styles.groupTitle} data-head="">
+              <span className={styles.groupCode}>S.{index + 1}</span> {group.title}
+            </h2>
             <ul className={styles.logos}>
-              {group.items.map((logo, i) => (
-                <li
-                  key={logo.label}
-                  className={styles.item}
-                  data-logo=""
-                  style={{ '--d': `${-(i * 0.9 + index * 0.5)}s` } as CSSProperties}
-                >
-                  <span className={styles.bob}>
-                    {logo.src ? (
-                      // the saved file, drawn in the ink colour: its own shape and proportions, one colour
-                      <span
-                        className={`${styles.logoBox} ${styles.mask}`}
-                        style={{ WebkitMaskImage: `url(${logo.src})`, maskImage: `url(${logo.src})` }}
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <svg className={styles.logoBox} viewBox="0 0 24 24" aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: logo.svg }} />
-                    )}
-                    <span className={styles.label}>{logo.label}</span>
-                  </span>
-                </li>
-              ))}
+              {group.items.map((logo, i) => {
+                n += 1;
+                return (
+                  <li
+                    key={logo.label}
+                    className={styles.item}
+                    data-logo=""
+                    style={{ '--d': `${-(i * 0.9 + index * 0.5)}s`, '--i': n } as CSSProperties}
+                  >
+                    <span className={styles.bob}>
+                      {logo.src ? (
+                        <span
+                          className={`${styles.logoBox} ${styles.mask}`}
+                          style={{ WebkitMaskImage: `url(${logo.src})`, maskImage: `url(${logo.src})` }}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <svg className={styles.logoBox} viewBox="0 0 24 24" aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: logo.svg }} />
+                      )}
+                      <span className={styles.label}>{logo.label}</span>
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         ))}
       </div>
-
     </section>
   );
+}
+
+function toRad(deg: number) {
+  return (deg * Math.PI) / 180;
 }

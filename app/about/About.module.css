@@ -192,22 +192,36 @@
   line-height: 1;
 }
 
-/* ---------- Typewriter title ---------- */
+/* ---------- Typewriter title ----------
+   Centred, and sized so the one-sentence intro sits on two balanced lines on desktop
+   (it wraps to more lines on phones, where two lines would make the type too small). */
+
+.introCentered { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+.introCentered .introCopy { display: grid; justify-items: center; text-align: center; }
+.introCentered :global(.cta-row) { justify-content: center; }
 
 .typewriter {
-  max-width: none;
+  max-width: 34em;
+  margin: var(--space-5) auto var(--space-6);
   text-align: center;
-  margin: var(--space-5) 0 var(--space-4);
+  font-size: clamp(1.5rem, 2.9vw, 2.6rem);
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
+/* zero net width, so the cursor never pushes a word onto the next line */
 .typewriter .cursor {
   display: inline-block;
-  width: 8px;
-  height: 1.1em;
+  width: 3px;
+  height: 1em;
+  margin-right: -3px;
+  vertical-align: -0.1em;
   background: var(--accent);
-  margin-left: 4px;
   animation: blink 1s steps(2, start) infinite;
 }
+
+.untyped { visibility: hidden; }
 
 @keyframes blink {
   50% { opacity: 0; }

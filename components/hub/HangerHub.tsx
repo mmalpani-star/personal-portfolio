@@ -6,6 +6,8 @@ import { HUB_TAGS, type HubTag } from '@/lib/hub/tags';
 import { createTransitionMedia, preloadMedia, type TransitionMedia } from '@/lib/hub/media-cache';
 import { rackMemory, sectionForHash, useHubUrl, useLocationKey } from '@/lib/hub/store';
 import type { RackHandle } from '@/lib/three/hanger-rack';
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
+import { HubBackdrop } from './HubBackdrop';
 import { TransitionOverlay } from './TransitionOverlay';
 import styles from './HangerHub.module.css';
 
@@ -349,7 +351,6 @@ export function HangerHub() {
   const shown = tip ? tip.index : kb >= 0 ? kb : front;
   const current = HUB_TAGS[shown] ?? HUB_TAGS[0];
   const interactive = phase === 'open';
-  const fine = typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches;
 
   return (
     <>
@@ -365,6 +366,7 @@ export function HangerHub() {
       tabIndex={-1}
       onKeyDown={onKeyDown}
     >
+      <HubBackdrop />
       <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
 
       <div className={styles.brand} aria-hidden="true">
@@ -402,11 +404,14 @@ export function HangerHub() {
         ))}
       </ul>
 
-      {!reduced && gl !== 'off' ? (
-        <button type="button" className={styles.pause} aria-pressed={paused} onClick={togglePause} disabled={!interactive}>
-          {paused ? 'Resume rotation' : 'Pause rotation'}
-        </button>
-      ) : null}
+      <div className={styles.topRight}>
+        {!reduced && gl !== 'off' ? (
+          <button type="button" className={styles.pause} aria-pressed={paused} onClick={togglePause} disabled={!interactive}>
+            {paused ? 'Resume rotation' : 'Pause rotation'}
+          </button>
+        ) : null}
+        <ThemeToggle />
+      </div>
 
       {gl === 'off' ? (
         <div className={styles.fallback} aria-hidden="true">
@@ -471,12 +476,6 @@ export function HangerHub() {
         </p>
       ) : null}
 
-      {tip && fine && interactive ? (
-        <span className={styles.tip} aria-hidden="true" style={{ transform: `translate3d(${tip.x + 16}px, ${tip.y + 20}px, 0)` }}>
-          {HUB_TAGS[tip.index].label}
-          <span className={styles.tipArrow}>↗</span>
-        </span>
-      ) : null}
     </div>
 
     {showing ? (

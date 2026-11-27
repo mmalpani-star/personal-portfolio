@@ -40,6 +40,18 @@
   --on-accent: #0d0d0d;
   --on-dark: #ffffff;
 
+  /* ---- Theme-dependent glass and chrome (see html[data-theme='light'] below) ----
+     --glass-rgb tints glass fills and hairline rings; --chrome-rgb is the frosted bar/pill fill;
+     --shadow-k scales the big dark drop shadows, which read as smudges on a white page. */
+  --glass-rgb: 255, 255, 255;
+  --chrome-rgb: 6, 6, 9;
+  --glass-fg: #ffffff;
+  --glass-solid: #0a0a0c;
+  --grid-minor: rgba(255, 255, 255, 0.03);
+  --shadow-k: 1;
+  --section-deep-1: #0a0f1a;
+  --section-deep-2: #05080d;
+
   --shadow-media: 0 30px 60px -32px rgba(13, 13, 13, 0.3);
   --shadow-raised: 0 18px 46px -26px rgba(13, 13, 13, 0.26), 0 0 0 1px var(--border);
 
@@ -90,6 +102,45 @@
   --dur-slow: 800ms;
 }
 
+/* Light theme: the white / black / yellow palette the site used before the dark tokens (commit 1a3a7aa^).
+   Set on <html> by the boot script in app/layout.tsx and by the theme slider (components/layout/ThemeToggle). */
+html[data-theme='light'] {
+  color-scheme: light;
+
+  --paper: #f7f6f3;
+  --bg: var(--white);
+  --bg-raised: #efede8;
+
+  --ink: #0d0d0d;
+  --muted-strong: rgba(13, 13, 13, 0.76);
+  --muted: rgba(13, 13, 13, 0.64);
+  --faint: rgba(13, 13, 13, 0.56);
+
+  --surface-1: rgba(13, 13, 13, 0.035);
+  --surface-2: rgba(13, 13, 13, 0.06);
+  --surface-3: rgba(13, 13, 13, 0.1);
+
+  --border: rgba(13, 13, 13, 0.14);
+  --border-strong: rgba(13, 13, 13, 0.3);
+  --grid-line: rgba(13, 13, 13, 0.05);
+
+  --glass-rgb: 13, 13, 13;
+  --chrome-rgb: 255, 255, 255;
+  --glass-fg: #0d0d0d;
+  --glass-solid: #f7f6f3;
+  --grid-minor: rgba(13, 13, 13, 0.02);
+  --shadow-k: 0.35;
+  --section-deep-1: #f7f6f3;
+  --section-deep-2: #efede8;
+}
+
+/* Theme switch: a single cross-fade of the whole page (View Transitions), not per-element transitions. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ease-out);
+}
+
 /* ==========================================================================
    Base
    ========================================================================== */
@@ -128,8 +179,8 @@ body::before {
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
   background-size: 64px 64px, 64px 64px, 16px 16px, 16px 16px;
   background-position: center top;
   mask-image: radial-gradient(ellipse 100% 80% at 50% 20%, #000 20%, transparent 80%);
@@ -417,7 +468,7 @@ li::marker { color: var(--faint); }
   line-height: 1;
   letter-spacing: -0.005em;
   white-space: nowrap;
-  color: #fff;
+  color: var(--glass-fg);
   cursor: pointer;
   transition:
     background var(--dur-fast) ease,
@@ -428,17 +479,13 @@ li::marker { color: var(--faint); }
 /* Base glass fill for every button: translucent frosted dark, thin light inner
    border, soft top highlight, subtle shadow. */
 .button {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.10),
-    rgba(255, 255, 255, 0.02)
-  );
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.10), rgba(var(--glass-rgb), 0.02));
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 12px 32px -12px rgba(0, 0, 0, 0.55);
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.14),
+    0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));
 }
 
 .button svg { transition: transform var(--dur) var(--ease-out); }
@@ -452,12 +499,12 @@ li::marker { color: var(--faint); }
     rgba(255, 212, 0, 0.06)
   );
   border-color: rgba(255, 212, 0, 0.35);
-  color: #fff;
+  color: var(--glass-fg);
   font-weight: 600;
   box-shadow:
     inset 0 1px 0 rgba(255, 212, 0, 0.55),
     inset 0 0 0 1px rgba(255, 212, 0, 0.25),
-    0 12px 32px -12px rgba(0, 0, 0, 0.55);
+    0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));
 }
 
 .button-primary:hover {
@@ -466,39 +513,31 @@ li::marker { color: var(--faint); }
     rgba(255, 212, 0, 0.35),
     rgba(255, 212, 0, 0.12)
   );
-  color: #fff;
+  color: var(--glass-fg);
   box-shadow:
     inset 0 1px 0 rgba(255, 212, 0, 0.70),
     inset 0 0 0 1px rgba(255, 212, 0, 0.35),
-    0 16px 38px -14px rgba(0, 0, 0, 0.62);
+    0 16px 38px -14px rgba(0, 0, 0, calc(0.62 * var(--shadow-k)));
 }
 
 /* Secondary: default dark glass. */
 .button-secondary {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.10),
-    rgba(255, 255, 255, 0.02)
-  );
-  border-color: rgba(255, 255, 255, 0.14);
-  color: #fff;
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.10), rgba(var(--glass-rgb), 0.02));
+  border-color: rgba(var(--glass-rgb), 0.14);
+  color: var(--glass-fg);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 12px 32px -12px rgba(0, 0, 0, 0.55);
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.14),
+    0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));
 }
 
 .button-secondary:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.18),
-    rgba(255, 255, 255, 0.08)
-  );
-  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.18), rgba(var(--glass-rgb), 0.08));
+  border-color: rgba(var(--glass-rgb), 0.25);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.70),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
-    0 16px 38px -14px rgba(0, 0, 0, 0.62);
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.25),
+    0 16px 38px -14px rgba(0, 0, 0, calc(0.62 * var(--shadow-k)));
 }
 
 .button-secondary:disabled,
@@ -509,10 +548,10 @@ li::marker { color: var(--faint); }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .button, .button-primary, .button-secondary {
-    background: #0a0a0c;
+    background: var(--glass-solid);
     box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.10),
-      0 12px 32px -12px rgba(0, 0, 0, 0.55);
+      inset 0 0 0 1px rgba(var(--glass-rgb), 0.10),
+      0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));
   }
 }
 
@@ -532,7 +571,7 @@ li::marker { color: var(--faint); }
   padding: 0 18px;
   border-radius: inherit;
   border: 1px solid transparent;
-  color: #fff;
+  color: var(--glass-fg);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: 600;
@@ -548,37 +587,29 @@ li::marker { color: var(--faint); }
 
 /* Frosted translucent fill + thin light inner border + soft top highlight. */
 .glass-button {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.10),
-    rgba(255, 255, 255, 0.02)
-  );
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.10), rgba(var(--glass-rgb), 0.02));
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),   /* soft top highlight */
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14), /* thin inner light border */
-    0 12px 32px -12px rgba(0, 0, 0, 0.55);     /* subtle drop shadow */
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.14), /* thin inner light border */
+    0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));     /* subtle drop shadow */
 }
 
 .glass-button:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.18),
-    rgba(255, 255, 255, 0.08)
-  );
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.18), rgba(var(--glass-rgb), 0.08));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.70),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
-    0 16px 38px -14px rgba(0, 0, 0, 0.62);
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.25),
+    0 16px 38px -14px rgba(0, 0, 0, calc(0.62 * var(--shadow-k)));
 }
 
 .glass-button:active {
   transform: scale(0.96);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 8px 20px -10px rgba(0, 0, 0, 0.5);
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.14),
+    0 8px 20px -10px rgba(0, 0, 0, calc(0.5 * var(--shadow-k)));
 }
 
 .glass-button:disabled {
@@ -588,10 +619,10 @@ li::marker { color: var(--faint); }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass-button {
-    background: #0a0a0c;
+    background: var(--glass-solid);
     box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.10),
-      0 12px 32px -12px rgba(0, 0, 0, 0.55);
+      inset 0 0 0 1px rgba(var(--glass-rgb), 0.10),
+      0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));
   }
 }
 
@@ -601,12 +632,12 @@ li::marker { color: var(--faint); }
   appearance: none;
   height: 6px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(var(--glass-rgb), 0.10);
   outline: none;
   cursor: pointer;
   transition: background var(--dur-fast) ease;
 }
-.glass-slider:hover { background: rgba(255, 255, 255, 0.18); }
+.glass-slider:hover { background: rgba(var(--glass-rgb), 0.18); }
 .glass-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -681,20 +712,20 @@ li::marker { color: var(--faint); }
   padding: 0.38rem 0.6rem 0.38rem 0.5rem;
   border-radius: var(--radius-xs);
   border: 1px solid transparent;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(180deg, rgba(var(--glass-rgb), 0.10), rgba(var(--glass-rgb), 0.02));
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 12px 32px -12px rgba(0, 0, 0, 0.55);
+    inset 0 0 0 1px rgba(var(--glass-rgb), 0.14),
+    0 12px 32px -12px rgba(0, 0, 0, calc(0.55 * var(--shadow-k)));
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   line-height: 1;
-  color: #fff;
+  color: var(--glass-fg);
 }
 
 .status-badge::before {

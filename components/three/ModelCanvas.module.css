@@ -33,7 +33,7 @@
   opacity: 1;
 }
 
-canvas {
+.wrapper canvas {
   position: relative;
   z-index: 1;
   width: 100%;

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { BackToHanger } from '@/components/hub/BackToHanger';
 import { Icon } from '@/components/ui/Icon';
+import { ThemeToggle } from './ThemeToggle';
 import styles from './Navbar.module.css';
 
 /**
@@ -32,6 +33,7 @@ export function Navbar() {
         </div>
 
         <div className={styles.actions}>
+          <ThemeToggle />
           <a className={`glass-button ${styles.resume}`} href="/documents/resume.pdf" target="_blank" rel="noopener noreferrer">
             Resume
             <Icon name="arrow-up-right" size={14} />

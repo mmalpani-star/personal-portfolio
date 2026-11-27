@@ -14,34 +14,62 @@ import {
 import { displayProjects } from '@/data/site-data';
 import type { Project } from '@/data/site-data';
 import styles from './Projects.module.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import type { ParticleField } from '@/lib/three/particle-field';
 
-/** Pointer-following gradient light for the projects section background. */
-function ProjectsGlow() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ x: 50, y: 50 });
+/**
+ * GPU particle cloud behind the Projects section, stirred by the cursor (lib/three/particle-field.ts).
+ * It only runs while the section is on screen, and is skipped where float render targets are missing.
+ */
+function ProjectsParticles() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMove = (e: PointerEvent) => {
-      const rect = el.getBoundingClientRect();
-      setPos({
-        x: ((e.clientX - rect.left) / rect.width) * 100,
-        y: ((e.clientY - rect.top) / rect.height) * 100,
+    const wrap = wrapRef.current;
+    const canvas = canvasRef.current;
+    if (!wrap || !canvas) return;
+    let field: ParticleField | null = null;
+    let cancelled = false;
+    let visible = false;
+    let themeObserver: MutationObserver | null = null;
+
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !field && !cancelled) start();
+      field?.setActive(visible);
+    }, { rootMargin: '200px 0px' });
+    io.observe(wrap);
+
+    async function start() {
+      const { createParticleField } = await import('@/lib/three/particle-field');
+      if (cancelled || field || !canvas) return;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      field = createParticleField({
+        canvas,
+        side: window.innerWidth < 768 ? 181 : 720, // ~33k on phones, ~518k on desktop
+        reducedMotion,
+        light: document.documentElement.dataset.theme === 'light',
       });
+      if (!field) return;
+      canvas.dataset.ready = 'true';
+      field.setActive(visible);
+      themeObserver = new MutationObserver(() => field?.setLight(document.documentElement.dataset.theme === 'light'));
+      themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+
+    return () => {
+      cancelled = true;
+      io.disconnect();
+      themeObserver?.disconnect();
+      field?.dispose();
     };
-    el.addEventListener('pointermove', onMove);
-    return () => el.removeEventListener('pointermove', onMove);
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className={styles.pointerGlow}
-      style={({ '--gx': `${pos.x}%`, '--gy': `${pos.y}%` } as React.CSSProperties)}
-      aria-hidden="true"
-    />
+    <div ref={wrapRef} className={styles.particles} aria-hidden="true">
+      <canvas ref={canvasRef} className={styles.particlesCanvas} />
+    </div>
   );
 }
 
@@ -78,7 +106,7 @@ export function Projects() {
   const cubesat = bySlug.get('cubesat-antenna-mechanism');
   return (
     <section id="projects" className={`section ${styles.section}`} aria-labelledby="projects-title">
-      <ProjectsGlow />
+      <ProjectsParticles />
       <div className="page-shell">
         <Reveal className={styles.heading}>
           <span className="section-index">02</span>

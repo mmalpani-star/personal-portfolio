@@ -15,7 +15,7 @@ export function BackToHanger() {
         <path d="M16 3a3.5 3.5 0 1 1 3.5 3.5c-1.9 0-3.5 1.4-3.5 3.2v1.3" />
         <path d="M16 11L3 22.5c-.9.8-.3 2.5 1 2.5h24c1.3 0 1.9-1.7 1-2.5L16 11z" />
       </svg>
-      <span>Back to Hanger</span>
+      <span className={styles.text}>Back to Hanger</span>
     </Link>
   );
 }
