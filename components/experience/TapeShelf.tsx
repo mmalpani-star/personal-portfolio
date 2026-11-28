@@ -67,29 +67,38 @@ function Cover({ entry, index, total }: { entry: StoryEntry; index: number; tota
   );
 }
 
-/* ------------------------------------------------------------------ gallery inside the detail sheet */
+/* ------------------------------------------------------------------ media around the poster */
 
-function Gallery({ items }: { items: GalleryItem[] }) {
+/** One photo, clip or model in an equal-sized tile; the caption sits over its foot. */
+function Tile({ item, place }: { item: GalleryItem; place: string }) {
   return (
-    <div className={styles.gallery}>
-      {items.map((item, i) => (
-        <figure key={i} className={styles.gItem} data-kind={item.kind}>
-          {item.kind === 'image' ? (
-            <Image src={item.src} alt={item.alt} width={item.w} height={item.h} sizes="(max-width: 767px) 92vw, 44vw" quality={78} className={styles.gImg} />
-          ) : item.kind === 'video' ? (
-            <video className={styles.gImg} controls muted playsInline preload="none" poster={item.poster} aria-label={item.label}>
-              <source src={item.src} type="video/mp4" />
-            </video>
-          ) : item.kind === 'pcb' ? (
-            <div className={styles.gModel}><PcbViewer label="Interactive 3D model of the CAN FD transceiver breakout board. Drag to rotate." /></div>
-          ) : (
-            <div className={styles.gModel}><HardwareViewer label="3D model of the four printed parts of the chair attachment. Drag to rotate." /></div>
-          )}
-          <figcaption className={styles.gCap}>{item.caption}</figcaption>
-        </figure>
-      ))}
-    </div>
+    <figure className={styles.tile} data-kind={item.kind} data-place={place} data-tile="" title={item.caption}>
+      {item.kind === 'image' ? (
+        <Image src={item.src} alt={item.alt} fill sizes="(max-width: 767px) 46vw, 22vw" quality={78} className={styles.tileMedia} />
+      ) : item.kind === 'video' ? (
+        <video className={styles.tileMedia} controls muted playsInline preload="none" poster={item.poster} aria-label={item.label}>
+          <source src={item.src} type="video/mp4" />
+        </video>
+      ) : item.kind === 'pcb' ? (
+        <div className={styles.tileModel}><PcbViewer label="Interactive 3D model of the CAN FD transceiver breakout board. Drag to rotate." /></div>
+      ) : (
+        <div className={styles.tileModel}><HardwareViewer label="3D model of the four printed parts of the chair attachment. Drag to rotate." /></div>
+      )}
+      <figcaption className={styles.tileCap}>{item.caption}</figcaption>
+    </figure>
   );
+}
+
+/**
+ * Arranges an experience's media around its poster so it is mirror-even. With four or more, two stacked tiles go
+ * either side of the poster (first half left, second half right) and any extra are centred in a row underneath;
+ * with fewer, they all sit in one centred row under the poster, which suits wide photos and 3D models better than
+ * tall side tiles. The poster's own photo is not repeated.
+ */
+function arrange(entry: StoryEntry) {
+  const rest = entry.gallery.filter((g) => !(g.kind === 'image' && g.src === entry.shelf.poster));
+  const perSide = rest.length >= 4 ? 2 : 0;
+  return { left: rest.slice(0, perSide), right: rest.slice(perSide, perSide * 2), below: rest.slice(perSide * 2) };
 }
 
 /* ------------------------------------------------------------------ the shelf */
@@ -234,6 +243,11 @@ export function TapeShelf({ entries }: { entries: StoryEntry[] }) {
     linesRef.current?.querySelectorAll<HTMLElement>('[data-rise]').forEach((el, i) => {
       el.animate([{ transform: 'translateY(110%)' }, { transform: 'translateY(0)' }], {
         duration: s.reduced ? 1 : 900, delay: s.reduced ? 0 : 620 + i * 75, easing: EASE, fill: 'both',
+      });
+    });
+    sheet.querySelectorAll<HTMLElement>('[data-tile]').forEach((el, i) => {
+      el.animate([{ clipPath: 'inset(50% 50% 50% 50%)' }, { clipPath: 'inset(0% 0% 0% 0%)' }], {
+        duration: s.reduced ? 1 : 900, delay: s.reduced ? 0 : 700 + i * 110, easing: SHEET_EASE, fill: 'both',
       });
     });
     // ink: each blot grows from nothing after its own delay
@@ -439,6 +453,7 @@ export function TapeShelf({ entries }: { entries: StoryEntry[] }) {
   };
 
   const shown = openIndex === null ? null : entries[openIndex];
+  const arranged = shown ? arrange(shown) : { left: [], right: [], below: [] };
   const [d0, d1, d2] = shown ? hex(shown.shelf.dark) : [0, 0, 0];
   const [l0, l1, l2] = shown ? hex(shown.shelf.light) : [1, 1, 1];
 
@@ -551,6 +566,8 @@ export function TapeShelf({ entries }: { entries: StoryEntry[] }) {
                   ) : null}
                 </div>
 
+                <div className={styles.cluster} data-sides={arranged.left.length}>
+                {arranged.left.map((item, i) => <Tile key={`l${i}`} item={item} place={`left-${i}`} />)}
                 <div className={styles.poster} aria-hidden="true">
                   <svg viewBox="0 0 474 900" preserveAspectRatio="xMidYMid meet">
                     <defs>
@@ -586,11 +603,18 @@ export function TapeShelf({ entries }: { entries: StoryEntry[] }) {
                     </g>
                   </svg>
                 </div>
-              </div>
-
-              <div className={styles.sheetGallery}>
-                <span className={styles.sLabel}>From the tape</span>
-                <Gallery items={shown.gallery} />
+                {arranged.right.map((item, i) => <Tile key={`r${i}`} item={item} place={`right-${i}`} />)}
+                {arranged.below.length ? (
+                  <div className={styles.below}>
+                    {arranged.below.map((item, i) => <Tile key={`b${i}`} item={item} place="below" />)}
+                  </div>
+                ) : null}
+                {shown.gallery.some((g) => 'note' in g && g.note) ? (
+                  <p className={styles.notes}>
+                    {shown.gallery.map((g) => ('note' in g ? g.note : null)).filter(Boolean).join(' ')}
+                  </p>
+                ) : null}
+                </div>
               </div>
             </div>,
             document.body,

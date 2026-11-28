@@ -385,7 +385,7 @@ html:not([data-theme='light']) .sheet {
 
 .sheetGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
   gap: 4vw;
   align-items: center;
   min-height: calc(100svh - 166px);
@@ -414,21 +414,77 @@ html:not([data-theme='light']) .sheet {
 }
 .sLink:hover { background: var(--cobalt); color: var(--sheet); }
 
-.poster { justify-self: center; height: min(78vh, 900px); aspect-ratio: 474 / 900; }
+/* the poster in the middle, the experience's other media in equal tiles either side of it */
+.cluster {
+  --ph: min(64vh, 600px);           /* poster height; two stacked tiles plus their gap make the same height */
+  --gap: 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(var(--ph) * 474 / 900) minmax(0, 1fr);
+  grid-template-rows: repeat(2, calc((var(--ph) - var(--gap)) / 2));
+  gap: var(--gap);
+  width: 100%;
+}
+.poster { grid-column: 2; grid-row: 1 / span 2; height: var(--ph); aspect-ratio: 474 / 900; }
+.tile[data-place='left-0'] { grid-column: 1; grid-row: 1; }
+.tile[data-place='left-1'] { grid-column: 1; grid-row: 2; }
+.tile[data-place='right-0'] { grid-column: 3; grid-row: 1; }
+.tile[data-place='right-1'] { grid-column: 3; grid-row: 2; }
+.cluster[data-sides='1'] .tile[data-place$='-0'] { grid-row: 1 / span 2; }  /* one per side: a tall tile */
+.below {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: var(--gap);
+}
+.below .tile { flex: 0 1 calc(50% - var(--gap) / 2); aspect-ratio: 16 / 10; }
+.below .tile:only-child { flex-basis: 72%; }  /* a single extra photo: wide and centred under the poster */
+.notes { grid-column: 1 / -1; margin: 2px 0 0; text-align: center; font-family: var(--sans); font-size: 11.5px; line-height: 1.5; color: var(--muted); }
+/* inside a tile the caption already says "drag to turn": drop the viewers' own hint, which collided with their controls */
+.tileModel :global([class*='_hint__']) { display: none; }
+
+.tile {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+}
+.tileMedia { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.tile[data-kind='video'] .tileMedia { background: #000; }
+/* the 3D viewers keep their own framing; here they fill the tile instead of their usual ratio */
+.tileModel { position: absolute; inset: 0; }
+.tileModel > div { width: 100%; height: 100% !important; aspect-ratio: auto !important; border-radius: 0; }
+.tileCap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 26px 10px 8px;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.78), transparent);
+  color: #f2efe8;
+  font-family: var(--sans);
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* the video's own controls sit at its foot: keep the caption off them */
+.tile[data-kind='video'] .tileCap { top: 0; bottom: auto; padding: 8px 10px 22px; background: linear-gradient(to bottom, rgba(10, 10, 10, 0.78), transparent); }
+
+@media (max-width: 1100px) {
+  .sheetGrid { grid-template-columns: 1fr; }
+  .cluster { --ph: min(60vh, 560px); max-width: 860px; justify-self: center; }
+}
 .poster svg { display: block; width: 100%; height: 100%; }
 .pTop { font-family: var(--font-inter-tight), sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.16em; }
 .pTitle { font-family: var(--font-newsreader), Georgia, serif; font-size: 66px; letter-spacing: -0.03em; }
 .pRole { font-family: var(--font-inter-tight), sans-serif; font-weight: 600; font-size: 17px; letter-spacing: 0.06em; }
 .pBadge { font-family: var(--font-inter-tight), sans-serif; font-weight: 600; font-size: 19px; }
-
-/* everything that belongs to the experience, in one even two-column flow */
-.sheetGallery { display: grid; gap: 18px; margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--rule); }
-.gallery { columns: 2; column-gap: 28px; }
-.gItem { break-inside: avoid; margin: 0 0 28px; display: grid; gap: 10px; }
-.gImg { display: block; width: 100%; height: auto; max-height: min(72vh, 640px); object-fit: contain; border-radius: 2px; background: color-mix(in srgb, var(--ink) 6%, transparent); }
-/* the viewer sets its own proportions; forcing another ratio here cropped the board and pushed it off-centre */
-.gModel { position: relative; width: 100%; border-radius: 2px; overflow: hidden; }
-.gCap { font-family: var(--sans); font-size: 12px; line-height: 1.45; letter-spacing: 0.02em; color: var(--muted); }
 
 /* ---------------------------------------------------------------- narrow screens */
 
@@ -443,8 +499,14 @@ html:not([data-theme='light']) .sheet {
   .close { top: 21px; left: 16px; }
   .sheetBrand { height: 64px; }
   .sheetGrid { grid-template-columns: 1fr; gap: 24px; min-height: 0; }
-  .poster { order: -1; height: 46svh; }
+  .sheetGrid > .cluster { order: -1; }
+  /* phones: the poster on top, the tiles two to a row underneath */
+  .cluster { --ph: 46svh; grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .cluster[data-sides='0'] { grid-template-columns: 1fr; }
+  .poster { grid-column: 1 / -1 !important; grid-row: 1 !important; justify-self: center; }
+  .tile[data-place] { grid-column: auto !important; grid-row: auto !important; aspect-ratio: 4 / 3; }
+  .below { display: contents; }
+  .below .tile { aspect-ratio: 4 / 3; }
   .sTitle { font-size: 42px; }
   .sBody { font-size: 16px; }
-  .gallery { columns: 1; }
 }

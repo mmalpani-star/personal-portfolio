@@ -9,8 +9,8 @@ export type StoryLink = { label: string; href: string; internal?: boolean };
 export type GalleryItem =
   | { kind: 'image'; src: string; w: number; h: number; alt: string; caption: string }
   | { kind: 'video'; src: string; poster: string; label: string; caption: string }
-  | { kind: 'pcb'; caption: string }
-  | { kind: 'hardware'; caption: string };
+  | { kind: 'pcb'; caption: string; note?: string }
+  | { kind: 'hardware'; caption: string; note?: string };
 
 /** How the experience looks as a tape on the shelf: a duotone print of its own photo in its own colours. */
 export type ShelfLook = {
@@ -68,7 +68,7 @@ export const experienceStory: StoryEntry[] = [
     shelf: { short: 'Triton Robotics', year: '2026', poster: '/images/experience/triton-robotics-purdue-arcc.jpg', focus: '50% 62%', card: '#E2B93B', dark: '#141414', light: '#F3E6B8', type: '#141414' },
     gallery: [
       { kind: 'image', src: '/images/experience/triton-robotics-purdue-arcc.jpg', w: 802, h: 602, alt: 'Three Triton Robotics robots, numbered 1 and 3 visible, in front of the Purdue University arch', caption: "ARCC 2026 · Triton Robotics' three robots at Purdue University" },
-      { kind: 'pcb', caption: 'Capstone · the CAN FD transceiver breakout board, from the EasyEDA 3D export (PCB_caps_4). Drag to turn it over.' },
+      { kind: 'pcb', caption: 'Capstone · CAN FD breakout board, 3D (drag to turn)', note: 'The CAN FD board model is the EasyEDA 3D export of the final design (PCB_caps_4).' },
       { kind: 'image', src: '/images/experience/caps_3.png', w: 498, h: 792, alt: 'CAN FD breakout board PCB Version 3 layout', caption: 'Capstone · PCB V3 layout' },
       { kind: 'image', src: '/images/experience/lm555.jpg', w: 827, h: 1536, alt: 'LM555 timer circuit prototype on a perfboard', caption: 'Weeks 1 & 3 · the LM555 timer circuit on a perfboard' },
       { kind: 'video', src: '/videos/experience/lm555 demo.mp4', poster: '/images/experience/lm555-demo-poster.jpg', label: 'LM555 timer demonstration', caption: 'Weeks 1 & 3 · LM555 demonstration' },
@@ -103,7 +103,7 @@ export const experienceStory: StoryEntry[] = [
     gallery: [
       { kind: 'image', src: '/images/experience/sand-hacks-team.jpg', w: 2524, h: 1684, alt: "The Sitwise team at SanD Hacks in front of the winners' slide", caption: 'The Sitwise team at SanD Hacks' },
       { kind: 'image', src: '/images/experience/sand-hacks-hardware.jpg', w: 1200, h: 1600, alt: 'Two people at a table, one holding the black printed arm of the chair attachment with a red and a green part at its end', caption: 'The chair-attachment hardware I worked on' },
-      { kind: 'hardware', caption: "The four printed parts from the CAD files on the modelled lower jaw and screws. The arm root is placed from its holes; the arm tip's notched end and the cradle's boss sitting in it, tilted up, follow my description; the arm overlap is an estimate. Drag to turn it, or lay the parts out." },
+      { kind: 'hardware', caption: 'Chair attachment · 3D (drag to turn)', note: "The four printed parts are from the CAD files; the lower jaw and screws are modelled from my description. The arm root is placed from its holes; the arm tip's notched end and the cradle's boss sitting in it, tilted up, follow my description; the arm overlap is an estimate." },
     ],
   },
   {

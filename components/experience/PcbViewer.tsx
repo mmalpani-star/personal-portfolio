@@ -228,7 +228,7 @@ export function PcbViewer({ label }: { label: string }) {
           renderer.setSize(w, h, false);
           camera.aspect = w / h;
           const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-          const dist = Math.max(1.12 / tan, 0.78 / (tan * camera.aspect));
+          const dist = Math.max(1.34 / tan, 0.98 / (tan * camera.aspect)); // margin for the sway and the tilt
           camera.position.set(0, 0, dist);
           camera.updateProjectionMatrix();
         };
